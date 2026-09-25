@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import '@delosi/ui/tokens.css'
 import './globals.css'
 import { serverEnv } from '@/shared/config/server-env'
+import { WebVitalsReporter } from '@/shared/observability/WebVitalsReporter'
 import { SiteFooter } from '@/shared/ui/SiteFooter'
 import { SiteHeader } from '@/shared/ui/SiteHeader'
 import { MAIN_CONTENT_ID, SkipLink } from '@/shared/ui/SkipLink'
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
           {children}
         </main>
         <SiteFooter />
+        <WebVitalsReporter />
       </body>
     </html>
   )
