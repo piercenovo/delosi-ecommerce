@@ -36,7 +36,7 @@ Cada comportamiento se prueba en el nivel más barato que da confianza real sobr
 
 ## Consecuencias
 
-- 384 tests unitarios y de integración (318 en la app, 66 en el Design System) corren en segundos; la app tiene ~98 % de cobertura de líneas.
+- 398 tests unitarios y de integración (332 en la app, 66 en el Design System) corren en segundos; la app tiene ~98 % de cobertura de líneas.
 - Los E2E cubren 26 escenarios (más los ejemplos de los esquemas) en tres navegadores, en unos 3 minutos en CI.
 - Agregar un escenario E2E suele ser escribir Gherkin reutilizando pasos existentes.
 - El mock debe mantenerse alineado con la API: si FakeStore cambia su contrato, falla primero el adaptador (Zod) y hay que regenerar el snapshot.
