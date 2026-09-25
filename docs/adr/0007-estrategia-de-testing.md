@@ -36,8 +36,8 @@ Cada comportamiento se prueba en el nivel más barato que da confianza real sobr
 
 ## Consecuencias
 
-- 412 tests unitarios y de integración (346 en la app, 66 en el Design System) corren en segundos; la app tiene ~98 % de cobertura de líneas.
-- Los E2E cubren 26 escenarios (más los ejemplos de los esquemas) en tres navegadores, en unos 3 minutos en CI.
+- 424 tests unitarios y de integración (352 en la app, 72 en el Design System) corren en segundos; la app tiene ~98 % de cobertura de líneas.
+- Los E2E cubren 29 escenarios (más los ejemplos de los esquemas) en tres navegadores, en unos 3 minutos en CI.
 - Agregar un escenario E2E suele ser escribir Gherkin reutilizando pasos existentes.
 - El mock debe mantenerse alineado con la API: si FakeStore cambia su contrato, falla primero el adaptador (Zod) y hay que regenerar el snapshot.
 - Queda fuera un smoke test contra el preview de Vercel, que requiere un token de bypass de Deployment Protection. Se puede agregar con una etiqueta `@smoke`.
