@@ -5,10 +5,10 @@ import { parseProductId } from '@/modules/products/domain/product'
 export const NOT_FOUND_PATH = '/404'
 
 /**
- * With Cache Components the product page streams its shell before `notFound()` runs, so a
- * missing product is a soft 404 (status 200 + noindex). A malformed id can be rejected here,
- * before rendering, with a real 404 and no data access. Unknown numeric ids stay soft 404s:
- * checking existence would add a data read in front of every product request.
+ * A malformed product id (`abc`, `0`, `05`) is answered here with a real 404, before any
+ * rendering and without reading data. Unknown numeric ids reach the page, which calls
+ * `notFound()` before anything streams (the product page has no loading boundary), so they
+ * get a real 404 too.
  */
 export function proxy(request: NextRequest) {
   const rawId = request.nextUrl.pathname.split('/').at(-1) ?? ''

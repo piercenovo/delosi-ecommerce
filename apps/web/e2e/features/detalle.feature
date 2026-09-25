@@ -31,7 +31,8 @@ Característica: Detalle de producto
     Entonces la respuesta tiene el estado 404
     Y veo el mensaje "No encontramos esta página"
 
-  Escenario: Un producto que no existe no se indexa
+  Escenario: Un producto que no existe responde 404 y no se indexa
     Cuando abro la página "/products/999"
-    Entonces veo el mensaje "No encontramos esta página"
+    Entonces la respuesta tiene el estado 404
+    Y veo el mensaje "No encontramos esta página"
     Y la página pide no ser indexada

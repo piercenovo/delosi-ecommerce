@@ -1,8 +1,6 @@
-import { Skeleton } from '@delosi/ui'
 import type { ReactNode } from 'react'
 import type { Product } from '../domain/product'
 import { ProductGrid } from './ProductGrid'
-import { ProductGridSkeleton } from './ProductGridSkeleton'
 import styles from './RelatedProducts.module.css'
 
 const TITLE = 'También te puede interesar'
@@ -30,14 +28,5 @@ export function RelatedProducts({ products, renderAction }: RelatedProductsProps
         {...(renderAction ? { renderAction } : {})}
       />
     </section>
-  )
-}
-
-export function RelatedProductsSkeleton({ count = 4 }: { count?: number }) {
-  return (
-    <div className={styles.related}>
-      <Skeleton aria-hidden="true" className={styles.titlePlaceholder} />
-      <ProductGridSkeleton count={count} />
-    </div>
   )
 }
