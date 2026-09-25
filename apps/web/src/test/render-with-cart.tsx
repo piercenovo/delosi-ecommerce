@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react'
 import type { ReactElement } from 'react'
 import { CART_STORAGE_KEY, CART_STORAGE_VERSION } from '@/modules/cart/store/cart-store'
-import { CartStoreProvider } from '@/modules/cart/store/CartStoreProvider'
+import { CartProvider } from '@/modules/cart/ui/CartProvider'
 
 export interface SavedLine {
   productId: number
@@ -27,7 +27,7 @@ export function saveCart(lines: SavedLine[]): void {
   )
 }
 
-/** Renders with the real cart store, backed by jsdom's localStorage. */
+/** Renders with the real cart store (jsdom's localStorage) and the shared announcer. */
 export function renderWithCart(ui: ReactElement) {
-  return render(<CartStoreProvider>{ui}</CartStoreProvider>)
+  return render(<CartProvider>{ui}</CartProvider>)
 }
