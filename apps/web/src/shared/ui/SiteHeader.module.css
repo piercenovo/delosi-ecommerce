@@ -1,9 +1,18 @@
 .header {
+  /* Semantic roles on the brand band: text, hover surface and focus ring all read on purple. */
+  --color-bg: var(--color-brand);
+  --color-text: var(--color-on-brand);
+  --color-surface-muted: var(--color-brand-hover);
+  --color-focus: var(--color-highlight);
+  /* --focus-ring is computed where it is declared (:root), so it is redeclared here to use the
+     remapped colors: a purple gap and a maracuyá ring. */
+  --focus-ring: 0 0 0 2px var(--color-brand), 0 0 0 4px var(--color-highlight);
+
   position: sticky;
   top: 0;
   z-index: 5;
-  border-bottom: var(--border-width) solid var(--color-border);
-  background: var(--color-bg);
+  background: var(--color-brand);
+  color: var(--color-on-brand);
 }
 
 .inner {
@@ -19,18 +28,24 @@
 .brand {
   display: inline-flex;
   align-items: center;
+  gap: var(--space-3);
   min-height: var(--target-min);
   border-radius: var(--radius-sm);
-  color: var(--color-primary);
+  color: var(--color-on-brand);
   font-size: var(--text-xl);
   font-weight: var(--weight-bold);
   letter-spacing: -0.03em;
   text-decoration: none;
 }
 
+.mark {
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+}
+
 .brandSuffix {
-  margin-left: 0.25em;
-  color: var(--color-text);
+  color: var(--color-on-brand-muted);
   font-weight: var(--weight-regular);
 }
 

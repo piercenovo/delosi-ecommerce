@@ -9,7 +9,7 @@
   position: relative;
   aspect-ratio: 1 / 1;
   border-radius: var(--radius-md);
-  background: var(--color-surface-muted);
+  background: var(--color-media);
 }
 
 /* After the base .media rule: same specificity, so the later declaration wins. */
@@ -37,31 +37,83 @@
 
 .info {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-6);
   align-content: start;
 }
 
-.title {
-  margin: 0;
-  font-size: clamp(var(--text-2xl), 1rem + 2vw, 2.5rem);
-  font-weight: var(--weight-bold);
-  line-height: 1.1;
-  letter-spacing: -0.025em;
-  text-wrap: balance;
-}
-
-.price {
-  margin-top: var(--space-2);
+/* Title and rating: one tight group. */
+.heading {
+  display: grid;
+  gap: var(--space-2);
 }
 
 /*
- * Room for the purchase actions (large button + one helper line), also used by the loading
- * skeleton, so the description below never moves.
+ * The price leads: at most as large as the title, and bold where the title is semibold. The
+ * full title stays (it is the page's h1), but it no longer outweighs the purchase.
+ */
+.title {
+  margin: 0;
+  font-size: clamp(var(--text-xl), 1rem + 1.2vw, var(--text-3xl));
+  font-weight: var(--weight-semibold);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.buy {
+  display: grid;
+  gap: var(--space-3);
+}
+
+/*
+ * Room for the purchase actions (large button + one helper line), so the description below
+ * never moves when the helper line appears.
  */
 .actions {
-  display: flex;
   min-height: calc(3.25rem + var(--space-2) + var(--text-sm) * var(--leading-normal));
-  gap: var(--space-3);
+}
+
+/*
+ * Phones: the action stays within thumb reach. Sticky to the bottom of the screen while the
+ * product information is in view, released at the end of it (before related products). CSS
+ * only: sticky never moves other content, so nothing shifts.
+ */
+@media (max-width: 767px) {
+  /*
+   * A sticky element never leaves its parent's box, and .buy is only as tall as the price and
+   * the button. Without its box, .actions sticks within .info (the whole product information).
+   */
+  .buy {
+    display: contents;
+  }
+
+  .actions {
+    /* Keeps the price-to-button spacing of .buy, now inside .info's larger gap. */
+    margin-top: calc(var(--space-3) - var(--space-6));
+    margin-inline: calc(-1 * var(--layout-gutter));
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    /* Lets .actionsBar know when the bar is stuck (see below). */
+    container-type: scroll-state;
+  }
+
+  .actionsBar {
+    padding: var(--space-3) var(--layout-gutter);
+    /* Clear of the home indicator on phones that have one. */
+    padding-bottom: max(var(--space-3), env(safe-area-inset-bottom));
+    background: var(--color-bg);
+  }
+
+  /*
+   * The separator only makes sense while the bar is stuck over the content scrolling behind
+   * it. Progressive enhancement: browsers without scroll-state queries show no line.
+   */
+  @container scroll-state(stuck: bottom) {
+    .actionsBar {
+      border-top: var(--border-width) solid var(--color-border);
+    }
+  }
 }
 
 .description {

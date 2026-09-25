@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect, fn, userEvent, within } from 'storybook/test'
 import landscapeImage from '../../stories-assets/landscape-product.png'
 import portraitImage from '../../stories-assets/portrait-product.png'
-import { Button } from '../Button'
+import { IconButton } from '../IconButton'
 import { Card } from './Card'
 
 const meta = {
@@ -14,14 +14,27 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
+function CartPlusIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h8.9a1 1 0 0 0 1-.8L20 8H6" />
+      <circle cx="9" cy="20" r="1.5" />
+      <circle cx="17" cy="20" r="1.5" />
+      <path d="M13 9v5M10.5 11.5h5" />
+    </svg>
+  )
+}
+
 interface ProductCardProps {
   title: string
   price: string
+  rating: string
   image: string
-  onAddToCart?: () => void
+  onQuickAdd?: () => void
 }
 
-function ProductCard({ title, price, image, onAddToCart }: ProductCardProps) {
+/** Composed like the store's product card: photo, title, rating, price and a quick add. */
+function ProductCard({ title, price, rating, image, onQuickAdd }: ProductCardProps) {
   return (
     <Card className="sb-card">
       <Card.Media>
@@ -31,26 +44,34 @@ function ProductCard({ title, price, image, onAddToCart }: ProductCardProps) {
         <Card.Title>
           <Card.Link href="#producto">{title}</Card.Link>
         </Card.Title>
-        <p>{price}</p>
+        <p className="sb-muted">{rating}</p>
+        <p className="sb-price">{price}</p>
       </Card.Body>
-      <Card.Footer>
-        <Button size="sm" onClick={onAddToCart}>
-          Agregar al carrito
-        </Button>
-      </Card.Footer>
+      <Card.Action>
+        <IconButton
+          variant="floating"
+          shape="circle"
+          size="sm"
+          aria-label={`Agregar «${title}» al carrito`}
+          onClick={onQuickAdd}
+        >
+          <CartPlusIcon />
+        </IconButton>
+      </Card.Action>
     </Card>
   )
 }
 
-const addToCart = fn()
+const quickAdd = fn()
 
 export const Product: Story = {
   render: () => (
     <ProductCard
       title="WD 2TB Elements Portable External Hard Drive - USB 3.0"
-      price="US$ 64.00"
+      price="USD 64.00"
+      rating="★ 3.3 (203)"
       image={portraitImage}
-      onAddToCart={addToCart}
+      onQuickAdd={quickAdd}
     />
   ),
   play: async ({ canvasElement }) => {
@@ -58,13 +79,22 @@ export const Product: Story = {
     const link = canvas.getByRole('link', {
       name: 'WD 2TB Elements Portable External Hard Drive - USB 3.0',
     })
+    const action = canvas.getByRole('button', { name: /^Agregar «WD 2TB/ })
 
     await expect(canvas.getByRole('article')).toContainElement(link)
     await expect(canvas.getByRole('heading', { level: 3 })).toContainElement(link)
+    // No border: the rounded photo carries the shape.
+    await expect(getComputedStyle(canvas.getByRole('article')).borderTopStyle).toBe('none')
 
-    // The footer action works on its own, above the stretched link.
-    await userEvent.click(canvas.getByRole('button', { name: 'Agregar al carrito' }))
-    await expect(addToCart).toHaveBeenCalledOnce()
+    // Tab order reads the title first, then the action over the photo.
+    await userEvent.tab()
+    await expect(link).toHaveFocus()
+    await userEvent.tab()
+    await expect(action).toHaveFocus()
+
+    // The action works on its own, above the stretched link.
+    await userEvent.click(action)
+    await expect(quickAdd).toHaveBeenCalledOnce()
   },
 }
 
@@ -74,10 +104,16 @@ export const MixedImageRatios: Story = {
     <div className="sb-row">
       <ProductCard
         title="WD 2TB Elements Portable External Hard Drive - USB 3.0"
-        price="US$ 64.00"
+        price="USD 64.00"
+        rating="★ 3.3 (203)"
         image={portraitImage}
       />
-      <ProductCard title="Solid Gold Petite Micropave" price="US$ 168.00" image={landscapeImage} />
+      <ProductCard
+        title="Solid Gold Petite Micropave"
+        price="USD 168.00"
+        rating="★ 3.9 (70)"
+        image={landscapeImage}
+      />
     </div>
   ),
   play: async ({ canvasElement }) => {

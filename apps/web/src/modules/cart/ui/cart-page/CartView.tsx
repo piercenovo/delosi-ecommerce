@@ -2,21 +2,31 @@
 
 import { Button, EmptyState, Skeleton } from '@delosi/ui'
 import Link from 'next/link'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { formatPrice } from '@/shared/lib/format-price'
 import a11y from '@/shared/ui/a11y.module.css'
+import type { CartItem } from '../../domain/cart'
 import { selectSubtotal, selectTotalItems } from '../../domain/cart-selectors'
 import { useCartHydrated, useCartStore } from '../../store/hooks'
+import { useCartAnnouncer } from '../CartProvider'
 import { CartLine } from './CartLine'
 import styles from './CartView.module.css'
 
 const SUMMARY_HEADING_ID = 'cart-summary'
 
+const units = (count: number) => `${count} ${count === 1 ? 'producto' : 'productos'}`
+const countUnits = (items: readonly CartItem[]) =>
+  items.reduce((total, item) => total + item.quantity, 0)
+
 /**
  * The /cart page body. The saved cart only exists in the browser, so the server (and the
  * first render) show a placeholder. Removing a line moves focus to a neighbour line, or to
  * the page title when the cart empties, so keyboard users never land on <body>.
+ *
+ * Emptying the cart asks nothing: recovery is safe, so it offers "Deshacer" instead of a
+ * confirmation. There is no timer (a time limit would be a barrier, WCAG 2.2.1): undo stays
+ * available until the visitor leaves the page.
  */
 export function CartView() {
   const hydrated = useCartHydrated()
@@ -26,6 +36,12 @@ export function CartView() {
   const setQuantity = useCartStore((state) => state.setQuantity)
   const remove = useCartStore((state) => state.remove)
   const clear = useCartStore((state) => state.clear)
+  const add = useCartStore((state) => state.add)
+  const announce = useCartAnnouncer()
+
+  // The lines removed by "Vaciar carrito", kept only while the cart stays empty.
+  const [cleared, setCleared] = useState<readonly CartItem[] | null>(null)
+  if (cleared && items.length > 0) setCleared(null) // refilled elsewhere (another tab)
 
   const headingRef = useRef<HTMLHeadingElement>(null)
   const linkRefs = useRef(new Map<number, HTMLAnchorElement>())
@@ -41,8 +57,28 @@ export function CartView() {
   }
 
   function handleClear() {
-    flushSync(clear)
+    const removed = items
+    flushSync(() => {
+      clear()
+      setCleared(removed)
+    })
     headingRef.current?.focus()
+    announce('Vaciaste tu carrito. Puedes deshacerlo con el botón Deshacer.')
+  }
+
+  function handleUndo() {
+    if (!cleared) return
+    const restored = cleared
+    // One commit for every line, so the first line's link exists when it gets the focus.
+    flushSync(() => {
+      for (const { productId, title, price, image, quantity } of restored) {
+        add({ id: productId, title, price, image }, quantity)
+      }
+      setCleared(null)
+    })
+    const first = restored[0]
+    if (first) linkRefs.current.get(first.productId)?.focus()
+    announce(`Recuperaste ${units(countUnits(restored))}.`)
   }
 
   return (
@@ -53,6 +89,19 @@ export function CartView() {
 
       {!hydrated ? (
         <CartSkeleton />
+      ) : items.length === 0 && cleared ? (
+        <EmptyState
+          title="Vaciaste tu carrito"
+          description={`Quitamos ${units(countUnits(cleared))}.`}
+          action={
+            <div className={styles.emptyActions}>
+              <Button onClick={handleUndo}>Deshacer</Button>
+              <Button as={Link} href="/products" variant="secondary">
+                Ver el catálogo
+              </Button>
+            </div>
+          }
+        />
       ) : items.length === 0 ? (
         <EmptyState
           title="Tu carrito está vacío"
@@ -97,7 +146,11 @@ export function CartView() {
               </div>
             </dl>
             <p className={styles.note}>El pago no forma parte de esta demo.</p>
-            <Button variant="secondary" fullWidth onClick={handleClear}>
+            <Button as={Link} href="/products" fullWidth>
+              Seguir comprando
+            </Button>
+            {/* A minor action: it can be undone, so it never competes with the main one. */}
+            <Button variant="ghost" size="sm" onClick={handleClear} className={styles.clear}>
               Vaciar carrito
             </Button>
           </section>

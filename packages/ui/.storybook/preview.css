@@ -1,3 +1,8 @@
+/* Same role as the app's next/font variable: the design system reads it through --font-sans. */
+:root {
+  --font-brand: 'Schibsted Grotesk Variable';
+}
+
 body {
   margin: 0;
   background: var(--color-bg);
@@ -21,4 +26,27 @@ body {
 
 .sb-card {
   width: 17rem;
+}
+
+/* A photo well (the store's --color-media) to show actions that float over product photos. */
+.sb-photo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  width: 12rem;
+  aspect-ratio: 1 / 1;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--color-media);
+}
+
+/* Text roles of the store's product card, for stories that compose one. */
+.sb-muted {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.sb-price {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
 }

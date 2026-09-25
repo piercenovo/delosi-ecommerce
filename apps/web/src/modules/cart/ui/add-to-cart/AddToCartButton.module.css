@@ -8,6 +8,13 @@
   min-width: 14rem;
 }
 
+/* Phones: full width, within thumb reach (the product page pins it to the bottom). */
+@media (max-width: 767px) {
+  .addToCart {
+    justify-items: stretch;
+  }
+}
+
 .labels {
   display: inline-grid;
 }

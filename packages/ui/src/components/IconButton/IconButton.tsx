@@ -2,8 +2,14 @@ import type { ComponentPropsWithRef, ReactNode } from 'react'
 import { cx } from '../../utils/cx'
 import styles from './IconButton.module.css'
 
-export type IconButtonVariant = 'ghost' | 'secondary'
+/**
+ * `floating`: a white button with a soft shadow, for actions over photos.
+ * `highlight`: maracuyá, for a moment of value such as an "added" confirmation.
+ */
+export type IconButtonVariant = 'ghost' | 'secondary' | 'floating' | 'highlight'
 export type IconButtonSize = 'sm' | 'md'
+/** Independent of the variant, so a button can change variant without changing shape. */
+export type IconButtonShape = 'square' | 'circle'
 
 export interface IconButtonProps extends Omit<
   ComponentPropsWithRef<'button'>,
@@ -15,11 +21,13 @@ export interface IconButtonProps extends Omit<
   children: ReactNode
   variant?: IconButtonVariant
   size?: IconButtonSize
+  shape?: IconButtonShape
 }
 
 export function IconButton({
   variant = 'ghost',
   size = 'md',
+  shape = 'square',
   type = 'button',
   className,
   children,
@@ -28,7 +36,13 @@ export function IconButton({
   return (
     <button
       type={type}
-      className={cx(styles.iconButton, styles[variant], styles[size], className)}
+      className={cx(
+        styles.iconButton,
+        styles[variant],
+        styles[size],
+        shape === 'circle' && styles.circle,
+        className,
+      )}
       {...props}
     >
       <span className={styles.icon} aria-hidden="true">

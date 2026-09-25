@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { Decorator, Meta, StoryObj } from '@storybook/react-vite'
 import { expect, fn, userEvent, within } from 'storybook/test'
 import { IconButton } from './IconButton'
 
@@ -24,7 +24,11 @@ const meta = {
   component: IconButton,
   args: { 'aria-label': 'Ver carrito', children: <CartIcon />, onClick: fn() },
   argTypes: {
-    variant: { control: 'inline-radio', options: ['ghost', 'secondary'] },
+    variant: {
+      control: 'inline-radio',
+      options: ['ghost', 'secondary', 'floating', 'highlight'],
+    },
+    shape: { control: 'inline-radio', options: ['square', 'circle'] },
     size: { control: 'inline-radio', options: ['sm', 'md'] },
   },
 } satisfies Meta<typeof IconButton>
@@ -69,4 +73,29 @@ export const Unavailable: Story = {
     await expect(button).toHaveAttribute('aria-disabled', 'true')
     await expect(Number(getComputedStyle(button).opacity)).toBeLessThan(1)
   },
+}
+
+const overPhoto: Decorator = (Story) => (
+  <div className="sb-photo">
+    <Story />
+  </div>
+)
+
+/** Over a product photo: the store's quick add. White, round and lifted by a soft shadow. */
+export const Floating: Story = {
+  args: { variant: 'floating', shape: 'circle', size: 'sm', 'aria-label': 'Agregar al carrito' },
+  decorators: [overPhoto],
+  play: async ({ canvasElement }) => {
+    const button = within(canvasElement).getByRole('button', { name: 'Agregar al carrito' })
+    const { width, height } = button.getBoundingClientRect()
+
+    await expect(width).toBe(height)
+    await expect(getComputedStyle(button).borderRadius).toBe('999px')
+  },
+}
+
+/** The confirmation that replaces Floating for a moment: same shape, maracuyá. */
+export const Highlight: Story = {
+  args: { variant: 'highlight', shape: 'circle', size: 'sm', 'aria-label': 'Agregado' },
+  decorators: [overPhoto],
 }

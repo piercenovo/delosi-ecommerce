@@ -45,3 +45,6 @@ pnpm-debug.log*
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+
+# Impeccable design-review snapshots (local working artifacts)
+.impeccable/

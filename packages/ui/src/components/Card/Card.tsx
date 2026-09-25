@@ -2,6 +2,7 @@ import type { ComponentPropsWithRef, ElementType, ReactNode } from 'react'
 import { cx } from '../../utils/cx'
 import styles from './Card.module.css'
 
+/** A product tile: rounded media, text below, no border or fill. */
 function CardRoot({ className, ...props }: ComponentPropsWithRef<'article'>) {
   return <article className={cx(styles.card, className)} {...props} />
 }
@@ -47,14 +48,18 @@ interface CardLinkOwnProps<E extends ElementType> {
 export type CardLinkProps<E extends ElementType = 'a'> = CardLinkOwnProps<E> &
   Omit<ComponentPropsWithRef<E>, keyof CardLinkOwnProps<E>>
 
-/** Its hit area stretches over the whole card; actions in `Card.Footer` stay clickable. */
+/** Its hit area stretches over the whole card; `Card.Action` stays clickable above it. */
 function CardLink<E extends ElementType = 'a'>({ as, className, ...props }: CardLinkProps<E>) {
   const Component: ElementType = as ?? 'a'
   return <Component className={cx(styles.link, className)} {...props} />
 }
 
-function CardFooter({ className, ...props }: ComponentPropsWithRef<'div'>) {
-  return <div className={cx(styles.footer, className)} {...props} />
+/**
+ * One action over the media's top-right corner (a quick add, for example). Render it after the
+ * title so the tab order reads title first; it sits above the stretched link and stays clickable.
+ */
+function CardAction({ className, ...props }: ComponentPropsWithRef<'div'>) {
+  return <div className={cx(styles.action, className)} {...props} />
 }
 
 export const Card = Object.assign(CardRoot, {
@@ -62,5 +67,5 @@ export const Card = Object.assign(CardRoot, {
   Body: CardBody,
   Title: CardTitle,
   Link: CardLink,
-  Footer: CardFooter,
+  Action: CardAction,
 })

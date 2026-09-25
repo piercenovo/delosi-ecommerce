@@ -1,19 +1,59 @@
 .footer {
   margin-top: var(--space-12);
-  border-top: var(--border-width) solid var(--color-border);
+  background: var(--color-surface-muted);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
 }
 
+/* Brand and note side by side when they fit; stacked on phones. */
 .inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-8);
   max-width: var(--layout-max);
   margin: 0 auto;
-  padding: var(--space-8) var(--layout-gutter);
+  padding: var(--space-8) var(--layout-gutter) max(var(--space-8), env(safe-area-inset-bottom));
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.03em;
+}
+
+.mark {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.brandSuffix {
+  color: var(--color-text-muted);
+  font-weight: var(--weight-regular);
+}
+
+.note {
+  max-width: 60ch;
+  margin: 0;
+  line-height: var(--leading-normal);
 }
 
 .link {
-  color: inherit;
+  color: var(--color-text);
+  /* The source's name never splits across lines. */
+  white-space: nowrap;
   text-underline-offset: 0.2em;
+}
+
+.link:hover {
+  text-decoration-thickness: 2px;
 }
 
 .link:focus-visible {

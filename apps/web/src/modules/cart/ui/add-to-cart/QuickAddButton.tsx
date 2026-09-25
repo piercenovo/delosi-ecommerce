@@ -15,7 +15,9 @@ export function QuickAddButton({ product }: { product: CartProduct }) {
 
   return (
     <IconButton
-      variant="secondary"
+      // Floating over the photo; maracuyá for a moment after adding. Same round shape in both.
+      variant={justAdded ? 'highlight' : 'floating'}
+      shape="circle"
       size="sm"
       aria-label={`Agregar «${product.title}» al carrito`}
       disabled={unavailable}

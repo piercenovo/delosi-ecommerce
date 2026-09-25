@@ -2,7 +2,8 @@ import type { ComponentPropsWithRef, ElementType, ReactNode } from 'react'
 import { cx } from '../../utils/cx'
 import styles from './Button.module.css'
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost'
+/** `highlight`: maracuyá, for a moment of value such as an "added" confirmation. */
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'highlight'
 export type ButtonSize = 'sm' | 'md' | 'lg'
 
 interface ButtonOwnProps<E extends ElementType> {

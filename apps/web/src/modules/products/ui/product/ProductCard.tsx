@@ -52,7 +52,7 @@ export function ProductCard({
         <ProductPrice price={product.price} className={styles.price} />
       </Card.Body>
       {/* After the title in the DOM (tab order: title, then action), shown over the image. */}
-      {action && <div className={styles.action}>{action}</div>}
+      {action && <Card.Action>{action}</Card.Action>}
     </Card>
   )
 }

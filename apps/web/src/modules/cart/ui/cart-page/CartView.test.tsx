@@ -2,7 +2,7 @@ import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderToString } from 'react-dom/server'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { CartStoreProvider } from '@/modules/cart/store/CartStoreProvider'
+import { CartProvider } from '@/modules/cart/ui/CartProvider'
 import { renderWithCart, saveCart } from '@/test/render-with-cart'
 import { CartView } from './CartView'
 
@@ -74,17 +74,55 @@ describe('CartView', () => {
     expect(screen.getByRole('link', { name: 'Naga Bracelet' })).toHaveFocus()
   })
 
-  it('shows the empty state, with focus on the page title, when the cart is emptied', async () => {
+  it('offers "Seguir comprando" as the main action, and emptying the cart as a minor one', () => {
+    renderWithCart(<CartView />)
+
+    const links = within(summary()).getAllByRole('link')
+    expect(links[0]).toHaveAccessibleName('Seguir comprando')
+    expect(links[0]).toHaveAttribute('href', '/products')
+    expect(within(summary()).getByRole('button', { name: 'Vaciar carrito' })).toBeInTheDocument()
+  })
+
+  it('empties the cart without asking, and offers to undo it', async () => {
     renderWithCart(<CartView />)
 
     await userEvent.click(screen.getByRole('button', { name: 'Vaciar carrito' }))
 
     expect(screen.getByRole('heading', { level: 1, name: 'Tu carrito' })).toHaveFocus()
-    expect(screen.getByRole('heading', { name: 'Tu carrito está vacío' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Vaciaste tu carrito' })).toBeInTheDocument()
+    expect(screen.getByText('Quitamos 3 productos.')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Deshacer' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Ver el catálogo' })).toHaveAttribute(
       'href',
       '/products',
     )
+    expect(
+      screen.getByText('Vaciaste tu carrito. Puedes deshacerlo con el botón Deshacer.'),
+    ).toHaveAttribute('role', 'status')
+  })
+
+  it('brings back every line, with its quantity, when the emptying is undone', async () => {
+    renderWithCart(<CartView />)
+    await userEvent.click(screen.getByRole('button', { name: 'Vaciar carrito' }))
+
+    await userEvent.click(screen.getByRole('button', { name: 'Deshacer' }))
+
+    expect(lines()).toHaveLength(2)
+    expect(lines()[0]).toHaveTextContent('Naga Bracelet')
+    expect(screen.getByRole('group', { name: 'Cantidad de «Princess Ring»' })).toHaveTextContent(
+      '2',
+    )
+    expect(summary()).toHaveTextContent('Productos3')
+    expect(screen.getByRole('link', { name: 'Naga Bracelet' })).toHaveFocus()
+    expect(screen.getByText('Recuperaste 3 productos.')).toHaveAttribute('role', 'status')
+  })
+
+  it('shows the plain empty state, with nothing to undo, when the cart was already empty', () => {
+    window.localStorage.clear()
+    renderWithCart(<CartView />)
+
+    expect(screen.getByRole('heading', { name: 'Tu carrito está vacío' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Deshacer' })).not.toBeInTheDocument()
   })
 
   it('keeps the changes after leaving and coming back', async () => {
@@ -101,9 +139,9 @@ describe('CartView', () => {
 
   it('renders a loading placeholder on the server, never the saved lines', () => {
     const html = renderToString(
-      <CartStoreProvider>
+      <CartProvider>
         <CartView />
-      </CartStoreProvider>,
+      </CartProvider>,
     )
 
     expect(html).toContain('Cargando tu carrito')

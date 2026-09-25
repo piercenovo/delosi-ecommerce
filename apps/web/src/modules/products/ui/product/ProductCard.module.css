@@ -28,17 +28,6 @@
   font-size: var(--text-lg);
 }
 
-/*
- * Over the image's top-right corner: it fits at any card width and never changes the card's
- * height (cards and skeletons keep matching). z-index lifts it above the stretched link.
- */
-.action {
-  position: absolute;
-  top: var(--space-2);
-  right: var(--space-2);
-  z-index: 1;
-}
-
 .ratingPlaceholder {
   width: 5em;
 }

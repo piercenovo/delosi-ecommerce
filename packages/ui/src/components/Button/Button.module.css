@@ -59,6 +59,15 @@
   background: var(--color-surface-muted);
 }
 
+.highlight {
+  background: var(--color-highlight);
+  color: var(--color-on-highlight);
+}
+
+.highlight:hover:not(:disabled) {
+  background: var(--color-highlight-hover);
+}
+
 .sm {
   min-height: 2.25rem;
   padding-inline: var(--space-3);
