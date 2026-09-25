@@ -22,7 +22,7 @@ Necesitamos builds reproducibles, upgrades conscientes y protección frente a at
    - **TypeScript 6.0.x**, no 7: `typescript-eslint` exige `typescript <6.1.0`.
    - **ESLint 9.x**, no 10: se probó ESLint 10 y `eslint-plugin-react` (incluido por `eslint-config-next` 16.3) falla al cargar sus reglas (`contextOrFilename.getFilename is not a function`). ESLint 9 ya no recibe soporte upstream; se acepta porque es una herramienta solo de desarrollo y es la versión que usa la plantilla oficial de `create-next-app` 16.3. Se revisará cuando `eslint-config-next` soporte ESLint 10.
 6. **Menos dependencias cuando la plataforma ya lo resuelve:** no se usa `vite-tsconfig-paths` (deprecated), porque Vite 8 resuelve los alias de tsconfig de forma nativa (`resolve.tsconfigPaths`).
-7. **Dependabot** semanal con PRs agrupados por dominio (Next/React, testing, Storybook, lint). Ignora TypeScript ≥ 6.1 y ESLint ≥ 10 mientras duren los techos del punto 5.
+7. **Dependabot** semanal con PRs agrupados por dominio (Next/React, testing, Storybook, lint). Ignora TypeScript ≥ 6.1 y ESLint ≥ 10 mientras duren los techos del punto 5, y `@types/node` ≥ 25, porque los tipos de Node deben coincidir con la versión mayor del runtime (Node 24).
 
 ### Cadena de suministro
 
