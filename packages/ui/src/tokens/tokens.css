@@ -69,7 +69,6 @@
   --radius-pill: 999px;
   --border-width: 1px;
   --shadow-sm: 0 1px 2px rgb(29 27 34 / 0.06);
-  --shadow-md: 0 6px 20px -8px rgb(29 27 34 / 0.18);
 
   /* Interaction */
   --focus-ring: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-focus);
