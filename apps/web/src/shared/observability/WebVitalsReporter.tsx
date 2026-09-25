@@ -26,6 +26,8 @@ const sendToEndpoint: ReportWebVitalsCallback = (metric) => {
 }
 
 /** Renders nothing: keeps the client boundary to this hook only. */
+// In dev, StrictMode mounts twice and web-vitals listeners can't be removed, so each
+// metric is logged twice. Production mounts once.
 export function WebVitalsReporter() {
   useReportWebVitals(sendToEndpoint)
   return null

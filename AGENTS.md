@@ -20,12 +20,15 @@ E-commerce storefront built with the Next.js App Router on top of the FakeStore 
 | Lint                     | `pnpm lint`                                                   |
 | Type check               | `pnpm typecheck`                                              |
 | Unit + integration tests | `pnpm test`                                                   |
-| E2E (after `pnpm build`) | `pnpm --filter @delosi/web e2e`                               |
+| E2E (after `pnpm build`) | `pnpm --filter @delosi/web e2e` (`e2e:ui`, `e2e:report`)      |
+| Lighthouse budgets       | `pnpm --filter @delosi/web lighthouse` (after `pnpm build`)   |
 | Production build         | `pnpm build`                                                  |
 | Storybook (dev / build)  | `pnpm --filter @delosi/ui storybook` / `pnpm build-storybook` |
 | Format                   | `pnpm format`                                                 |
 
 In non-interactive shells, load nvm first: `source ~/.nvm/nvm.sh && nvm use`.
+
+Architecture overview: `docs/architecture.md`; testing strategy: `docs/testing-strategy.md`. `docs/architecture.html` is generated with Archify from `docs/architecture.archify.json` (both excluded from Prettier): edit the JSON and regenerate, never the HTML.
 
 ## Architecture rules
 
@@ -53,6 +56,8 @@ In non-interactive shells, load nvm first: `source ~/.nvm/nvm.sh && nvm use`.
 - Version ceilings (see ADR 0009): TypeScript 6.0.x (typescript-eslint requires `<6.1.0`) and ESLint 9.x (`eslint-config-next` plugins crash on ESLint 10).
 - Node 24 (`.nvmrc`, `engines >=24.15.0`) and pnpm only.
 - Next.js 16 APIs (caching, metadata) change often: read the docs bundled with the installed version in `node_modules/next/dist/docs/` before using them.
+- This file is the only agent guide: `agentRules: false` in `next.config.ts` stops `next dev` from generating `AGENTS.md`/`CLAUDE.md` in `apps/web`.
+- `/products/[id]` blocks on purpose (real 404 status, complete HTML for crawlers; ADR 0011): do not add `loading.tsx` or a Suspense boundary around its data.
 
 ## Testing
 
@@ -61,6 +66,7 @@ In non-interactive shells, load nvm first: `source ~/.nvm/nvm.sh && nvm use`.
 - Mock HTTP with MSW, never by mocking `fetch` directly.
 - Query elements by role and accessible name, not by class names or test ids.
 - Reuse the fakes in `src/test/` (`inMemoryProductRepository`, `makeProduct`, `setupMswServer`).
+- Strategy and rationale: `docs/testing-strategy.md` (ADR 0007).
 - `pnpm test` runs with coverage; thresholds: 80% global, 95% for `domain/`. Routes and the composition root are covered by E2E tests.
 - In `packages/ui` every story is a test (`src/test/stories.test.tsx`): it runs in Chromium (Vitest browser mode), executes its `play` function and must pass axe (WCAG 2.2 AA) in light and dark themes. Add a story for each relevant state. Install Chromium once with `pnpm --filter @delosi/ui exec playwright install chromium`.
 - APIs that prevent accessibility mistakes get type tests with `@ts-expect-error`.

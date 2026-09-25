@@ -10,3 +10,5 @@ test-results
 next-env.d.ts
 .planning
 apps/web/src/modules/products/infrastructure/snapshot/fakestore-snapshot.json
+docs/architecture.html
+docs/architecture.archify.json

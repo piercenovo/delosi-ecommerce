@@ -20,6 +20,11 @@ import { serverEnv } from '@/shared/config/server-env'
 import { Breadcrumbs, type BreadcrumbItem } from '@/shared/ui/Breadcrumbs'
 import { toCartProduct } from '../to-cart-product'
 
+// Blocking on purpose (ADR 0011): ids outside generateStaticParams render on demand with no
+// Suspense, so an unknown id gets a real 404 status and crawlers get the complete HTML.
+// This opts the page out of Next's dev-only "instant navigation" validation.
+export const instant = false
+
 // Every known product is prerendered at build time; ids added later render on demand.
 export async function generateStaticParams() {
   const products = await productRepository.findAll()
