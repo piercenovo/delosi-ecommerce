@@ -5,6 +5,7 @@ export class CartPage {
   readonly lines: Locator
   readonly summary: Locator
   readonly clearCart: Locator
+  readonly undoClear: Locator
   readonly emptyState: Locator
 
   constructor(private readonly page: Page) {
@@ -12,6 +13,7 @@ export class CartPage {
     this.lines = page.getByRole('list', { name: 'Productos en tu carrito' }).getByRole('listitem')
     this.summary = page.getByRole('region', { name: 'Resumen' })
     this.clearCart = page.getByRole('button', { name: 'Vaciar carrito' })
+    this.undoClear = page.getByRole('button', { name: 'Deshacer' })
     this.emptyState = page.getByRole('heading', { name: 'Tu carrito está vacío' })
   }
 

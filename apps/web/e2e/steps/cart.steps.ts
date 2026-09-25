@@ -29,8 +29,20 @@ When('vacío el carrito', async ({ cart }) => {
   await cart.clearCart.click()
 })
 
+When('deshago el vaciado', async ({ cart }) => {
+  await cart.undoClear.click()
+})
+
 Then('el carrito tiene {int} producto(s)', async ({ header }, count: number) => {
   await expect(header.cartLink).toHaveAccessibleName(cartName(count))
+})
+
+Then('el carrito está vacío', async ({ header }) => {
+  await expect(header.cartLink).toHaveAccessibleName('Carrito vacío')
+})
+
+Then('veo {string} en el carrito', async ({ cart }, title: string) => {
+  await expect(cart.line(title)).toBeVisible()
 })
 
 Then('el subtotal es {string}', async ({ cart }, amount: string) => {

@@ -94,6 +94,18 @@
   font-size: var(--text-sm);
 }
 
+.clear {
+  justify-self: center;
+  color: var(--color-text-muted);
+}
+
+.emptyActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
 .skeletonLine {
   display: grid;
   grid-template-columns: 6rem minmax(0, 1fr);

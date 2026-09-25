@@ -44,4 +44,14 @@ Característica: Carrito de compras
     Y elimino "Mens Cotton Jacket"
     Entonces el carrito tiene 1 producto
     Cuando vacío el carrito
-    Entonces veo el mensaje "Tu carrito está vacío"
+    Entonces veo el mensaje "Vaciaste tu carrito"
+    Y el carrito está vacío
+
+  Escenario: Deshacer el vaciado del carrito
+    Dado que tengo "Mens Cotton Jacket" en el carrito
+    Y que tengo "Mens Casual Slim Fit" en el carrito
+    Cuando abro el carrito
+    Y vacío el carrito
+    Y deshago el vaciado
+    Entonces el carrito tiene 2 productos
+    Y veo "Mens Cotton Jacket" en el carrito
