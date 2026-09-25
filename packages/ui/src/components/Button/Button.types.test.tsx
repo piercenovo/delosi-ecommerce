@@ -34,6 +34,10 @@ describe('Button types', () => {
       </Button>
     )
 
+    // A CSS Modules class is `string | undefined` under exactOptionalPropertyTypes.
+    const moduleClass: string | undefined = undefined
+    void (<Button className={moduleClass}>Agregar</Button>)
+
     // @ts-expect-error: a button has no href (use `as="a"` or a router link)
     void (<Button href="/products">Quitar filtros</Button>)
     // @ts-expect-error: the router link requires href
