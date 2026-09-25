@@ -47,4 +47,12 @@ describe('ProductCard', () => {
     expect(image()).toHaveAttribute('loading', 'eager')
     expect(image()).toHaveAttribute('fetchpriority', 'high')
   })
+
+  it('renders an action next to the price, above the stretched link', () => {
+    render(<ProductCard product={product} action={<button type="button">Agregar</button>} />)
+
+    const action = screen.getByRole('button', { name: 'Agregar' })
+    expect(screen.getByRole('article')).toContainElement(action)
+    expect(action.parentElement?.className).toMatch(/action/)
+  })
 })

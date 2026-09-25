@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { Product } from '../domain/product'
 import { ProductCard } from './ProductCard'
 import styles from './product-grid.module.css'
@@ -12,6 +13,8 @@ interface ProductGridProps {
   /** How many leading images load with high priority; 0 below the fold. */
   priorityCount?: number
   headingLevel?: 'h2' | 'h3'
+  /** Per-card action (quick add), composed by the page. */
+  renderAction?: (product: Product) => ReactNode
 }
 
 export function ProductGrid({
@@ -19,6 +22,7 @@ export function ProductGrid({
   label = 'Productos',
   priorityCount = PRIORITY_IMAGE_COUNT,
   headingLevel = 'h2',
+  renderAction,
 }: ProductGridProps) {
   return (
     // role="list" restores list semantics that Safari drops with `list-style: none`.
@@ -29,6 +33,7 @@ export function ProductGrid({
             product={product}
             highPriority={index < priorityCount}
             headingLevel={headingLevel}
+            action={renderAction?.(product)}
           />
         </li>
       ))}

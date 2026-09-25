@@ -68,7 +68,7 @@ Solo se aceptan las etiquetas anteriores. Sin secreto configurado, el endpoint r
 
 ## Carrito
 
-El botón "Agregar al carrito" de cada producto actualiza un estado global que se refleja en el contador del Header y en `/cart`: cantidades (1–99), eliminar, vaciar y subtotal. Detalles en el [ADR 0003](docs/adr/0003-estado-del-carrito.md):
+Se agrega desde el detalle ("Agregar al carrito") o desde cada tarjeta del catálogo (botón rápido sobre la imagen). Ambos actualizan un estado global que se refleja en el contador del Header y en `/cart`: cantidades (1–99), eliminar, vaciar y subtotal. Detalles en el [ADR 0003](docs/adr/0003-estado-del-carrito.md):
 
 - **Zustand** con suscripción por selector: el contador solo se re-renderiza cuando cambia el total. La lógica es un **reducer puro**, testeado sin React.
 - **Persistencia** en `localStorage` (clave `delosi-cart`, versionada). Lo guardado se valida con Zod, un storage bloqueado no rompe nada y el carrito **se sincroniza entre pestañas**.

@@ -14,10 +14,12 @@ import {
 } from '@/modules/products/seo/product-json-ld'
 import { buildProductMetadata } from '@/modules/products/seo/product-metadata'
 import { AddToCartButton } from '@/modules/cart/ui/AddToCartButton'
+import { QuickAddButton } from '@/modules/cart/ui/QuickAddButton'
 import { ProductDetail } from '@/modules/products/ui/ProductDetail'
 import { RelatedProducts, RelatedProductsSkeleton } from '@/modules/products/ui/RelatedProducts'
 import { serverEnv } from '@/shared/config/server-env'
 import { Breadcrumbs, type BreadcrumbItem } from '@/shared/ui/Breadcrumbs'
+import { toCartProduct } from '../to-cart-product'
 
 // Every known product is prerendered at build time; ids added later render on demand.
 export async function generateStaticParams() {
@@ -87,7 +89,12 @@ function breadcrumbTrail(product: Product, category: Category | null): Breadcrum
 }
 
 async function Related({ product }: { product: Product }) {
-  return <RelatedProducts products={await getRelatedProducts(productRepository, product)} />
+  return (
+    <RelatedProducts
+      products={await getRelatedProducts(productRepository, product)}
+      renderAction={(related) => <QuickAddButton product={toCartProduct(related)} />}
+    />
+  )
 }
 
 function JsonLd({ data }: { data: Record<string, unknown> }) {

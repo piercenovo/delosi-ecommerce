@@ -1,6 +1,7 @@
 import { Card } from '@delosi/ui'
 import Image from 'next/image'
 import Link from 'next/link'
+import type { ReactNode } from 'react'
 import type { Product } from '../domain/product'
 import styles from './ProductCard.module.css'
 import { ProductPrice } from './ProductPrice'
@@ -15,12 +16,18 @@ interface ProductCardProps {
   highPriority?: boolean
   /** `h2` in the catalog; `h3` under a section heading (related products). */
   headingLevel?: 'h2' | 'h3'
+  /**
+   * A card action (quick add to cart), floating over the image corner so it never changes
+   * the card's height. A slot: products/ does not import the cart module.
+   */
+  action?: ReactNode
 }
 
 export function ProductCard({
   product,
   highPriority = false,
   headingLevel = 'h2',
+  action,
 }: ProductCardProps) {
   return (
     <Card className={styles.card}>
@@ -44,6 +51,8 @@ export function ProductCard({
         </div>
         <ProductPrice price={product.price} className={styles.price} />
       </Card.Body>
+      {/* After the title in the DOM (tab order: title, then action), shown over the image. */}
+      {action && <div className={styles.action}>{action}</div>}
     </Card>
   )
 }

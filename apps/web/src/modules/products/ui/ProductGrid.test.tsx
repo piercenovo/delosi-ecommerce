@@ -39,4 +39,15 @@ describe('ProductGrid', () => {
     expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(6)
     expect(document.querySelector('img[fetchpriority="high"]')).toBeNull()
   })
+
+  it('renders one action per card when the page provides it', () => {
+    render(
+      <ProductGrid
+        products={products}
+        renderAction={(product) => <button type="button">Agregar {product.title}</button>}
+      />,
+    )
+
+    expect(screen.getAllByRole('button', { name: /^Agregar Product \d$/ })).toHaveLength(6)
+  })
 })

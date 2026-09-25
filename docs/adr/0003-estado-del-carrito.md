@@ -44,7 +44,11 @@ El carrito no importa el módulo `products` (regla de ESLint): la página le pas
    - Si leer el storage falla, `persist` nunca marca el store como hidratado y la UI quedaría esperando para siempre (lo verificamos en el código de Zustand 5.0.15). Por eso el storage propio **nunca lanza**: un JSON corrupto, `localStorage` bloqueado (modo privado) o la cuota excedida se tratan como "sin carrito guardado", y el carrito sigue funcionando en memoria.
    - **`localStorage` es entrada del usuario:** `merge` la valida con Zod (ids, precios, cantidades 1–99 e imágenes con ruta local, porque `next/image` rechazaría un host desconocido). Si no valida, se descarta.
 6. **Sincronización entre pestañas:** el evento `storage` de la clave `delosi-cart` dispara `rehydrate()`, así que el contador se actualiza en todas las pestañas abiertas.
-7. **El precio es el del momento de agregar.** Alcanza para una demo. En un checkout real, el servidor recalcularía los precios antes de cobrar.
+7. **Dos puntos de entrada, una sola lógica:** "Agregar al carrito" en la PDP y el botón rápido de cada tarjeta del catálogo usan el mismo hook `useAddToCart` (agregar, anunciar y feedback breve).
+   - `products` no importa `cart`: la tarjeta expone un slot `action` y la página compone el botón. `toCartProduct` es el único punto donde un `Product` se convierte en `CartProduct`.
+   - **Un solo anuncio accesible** para toda la tienda: una región `aria-live` en `CartProvider`, no una por tarjeta (serían 20 en el catálogo).
+   - El botón rápido flota sobre la esquina de la imagen: cabe en tarjetas de 320 px y no cambia la altura de la tarjeta (se verificó que en la fila del precio no entraba en mobile).
+8. **El precio es el del momento de agregar.** Alcanza para una demo. En un checkout real, el servidor recalcularía los precios antes de cobrar.
 
 ## Alternativas consideradas
 
@@ -57,5 +61,6 @@ El carrito no importa el módulo `products` (regla de ESLint): la página le pas
 ## Consecuencias
 
 - El HTML del servidor nunca incluye el carrito. El contador y `/cart` muestran un placeholder hasta la hidratación, que dura un render.
+- **Sin variantes:** FakeStore no tiene tallas ni colores, así que agregar desde el catálogo es válido. Con variantes, el botón rápido abriría un selector en lugar de agregar directamente.
 - Cambiar el esquema persistido requiere subir `CART_STORAGE_VERSION` y manejar la versión anterior en `migrate`.
 - `domain/` concentra la lógica con cobertura mínima del 95 %. `store/` se prueba con el `localStorage` real de jsdom (persistencia, rehidratación, pestañas) y con un storage en memoria (fallos).

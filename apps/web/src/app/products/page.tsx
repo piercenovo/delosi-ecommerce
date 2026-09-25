@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { productRepository } from '@/composition-root'
+import { QuickAddButton } from '@/modules/cart/ui/QuickAddButton'
 import { getCatalog } from '@/modules/products/application/get-catalog'
 import { parseCatalogQuery, type RawSearchParams } from '@/modules/products/catalog-search-params'
 import { buildCatalogMetadata } from '@/modules/products/seo/catalog-metadata'
@@ -13,6 +14,7 @@ import { CategoryNav } from '@/modules/products/ui/CategoryNav'
 import { ProductGrid } from '@/modules/products/ui/ProductGrid'
 import { CatalogSkeleton } from './CatalogSkeleton'
 import styles from './page.module.css'
+import { toCartProduct } from './to-cart-product'
 
 export async function generateMetadata({
   searchParams,
@@ -48,7 +50,10 @@ async function Catalog({ searchParams }: { searchParams: Promise<RawSearchParams
       </div>
       <CatalogResultsRegion>
         {products.length > 0 ? (
-          <ProductGrid products={products} />
+          <ProductGrid
+            products={products}
+            renderAction={(product) => <QuickAddButton product={toCartProduct(product)} />}
+          />
         ) : (
           <CatalogEmptyState query={query} category={activeCategory} />
         )}
