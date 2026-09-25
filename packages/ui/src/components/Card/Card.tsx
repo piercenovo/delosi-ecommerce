@@ -2,8 +2,23 @@ import type { ComponentPropsWithRef, ElementType, ReactNode } from 'react'
 import { cx } from '../../utils/cx'
 import styles from './Card.module.css'
 
-function CardRoot({ className, ...props }: ComponentPropsWithRef<'article'>) {
-  return <article className={cx(styles.card, className)} {...props} />
+export type CardVariant = 'outlined' | 'plain'
+
+export interface CardProps extends ComponentPropsWithRef<'article'> {
+  /**
+   * `outlined` (default): a bordered surface. `plain`: no border or fill; the rounded media
+   * carries the shape, so a dense grid reads as products instead of boxes.
+   */
+  variant?: CardVariant | undefined
+}
+
+function CardRoot({ variant = 'outlined', className, ...props }: CardProps) {
+  return (
+    <article
+      className={cx(styles.card, variant === 'plain' && styles.plain, className)}
+      {...props}
+    />
+  )
 }
 
 export type CardMediaRatio = 'square' | 'portrait' | 'landscape'

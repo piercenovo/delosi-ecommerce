@@ -48,8 +48,8 @@ async function Catalog({ searchParams }: { searchParams: Promise<RawSearchParams
     <>
       <CatalogHeading category={activeCategory} count={products.length} search={query.q} />
       <div className={styles.toolbar}>
-        <CategoryNav categories={categories} query={query} />
         <CatalogControls query={query} />
+        <CategoryNav categories={categories} query={query} />
       </div>
       <CatalogResultsRegion>
         {products.length > 0 ? (

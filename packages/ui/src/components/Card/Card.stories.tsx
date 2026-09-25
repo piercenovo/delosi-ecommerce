@@ -18,12 +18,13 @@ interface ProductCardProps {
   title: string
   price: string
   image: string
+  variant?: 'outlined' | 'plain'
   onAddToCart?: () => void
 }
 
-function ProductCard({ title, price, image, onAddToCart }: ProductCardProps) {
+function ProductCard({ title, price, image, variant, onAddToCart }: ProductCardProps) {
   return (
-    <Card className="sb-card">
+    <Card variant={variant} className="sb-card">
       <Card.Media>
         <img src={image} alt="" />
       </Card.Media>
@@ -113,4 +114,36 @@ export const LandscapeMedia: Story = {
       </Card.Body>
     </Card>
   ),
+}
+
+/** No border or fill: the rounded media carries the shape. For dense product grids. */
+export const Plain: Story = {
+  render: () => (
+    <div className="sb-row">
+      <ProductCard
+        variant="plain"
+        title="WD 2TB Elements Portable External Hard Drive - USB 3.0"
+        price="US$ 64.00"
+        image={portraitImage}
+      />
+      <ProductCard
+        variant="plain"
+        title="Solid Gold Petite Micropave"
+        price="US$ 168.00"
+        image={landscapeImage}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const [card] = within(canvasElement).getAllByRole('article')
+    const style = getComputedStyle(card!)
+
+    await expect(style.borderTopColor).toBe('rgba(0, 0, 0, 0)')
+    await expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)')
+    await expect(
+      within(card!).getByRole('link', {
+        name: 'WD 2TB Elements Portable External Hard Drive - USB 3.0',
+      }),
+    ).toBeVisible()
+  },
 }

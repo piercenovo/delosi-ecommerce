@@ -21,7 +21,7 @@ export function QuickAddButton({ product }: { product: CartProduct }) {
       aria-label={`Agregar «${product.title}» al carrito`}
       disabled={unavailable}
       onClick={addToCart}
-      className={cx(justAdded && styles.added)}
+      className={cx(styles.quick, justAdded && styles.added)}
     >
       {justAdded ? <CheckIcon /> : <CartPlusIcon />}
     </IconButton>

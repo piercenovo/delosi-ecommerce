@@ -97,6 +97,39 @@
   box-shadow: var(--focus-ring);
 }
 
+/*
+ * Plain variant. After the base rules on purpose: `.plain:has(.link:hover)` ties with
+ * `.card:has(.link:hover)` in specificity and wins by order.
+ */
+.plain {
+  overflow: visible;
+  border-color: transparent;
+  background: transparent;
+}
+
+.plain:has(.link:hover) {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.plain .media {
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.plain .body {
+  padding: var(--space-3) 0 0;
+}
+
+/* The hover answer moves to the photo: a slight zoom (none with reduced motion). */
+.plain .frame > img {
+  transition: transform var(--duration-base) var(--easing-standard);
+}
+
+.plain:has(.link:hover) .frame > img {
+  transform: scale(1.04);
+}
+
 .footer {
   position: relative;
   z-index: 1;

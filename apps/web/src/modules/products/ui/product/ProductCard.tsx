@@ -30,7 +30,7 @@ export function ProductCard({
   action,
 }: ProductCardProps) {
   return (
-    <Card className={styles.card}>
+    <Card variant="plain" className={styles.card}>
       <Card.Media>
         <Image
           src={product.image}

@@ -5,7 +5,9 @@ export {
   type CardLinkProps,
   type CardMediaProps,
   type CardMediaRatio,
+  type CardProps,
   type CardTitleProps,
+  type CardVariant,
 } from './components/Card'
 export { Chip, type ChipProps } from './components/Chip'
 export { EmptyState, type EmptyStateProps } from './components/EmptyState'

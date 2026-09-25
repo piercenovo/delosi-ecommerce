@@ -3,6 +3,14 @@
   height: 100%;
 }
 
+/*
+ * Hierarchy inside the card: the photo and the price lead; the title supports them at medium
+ * weight. `.card .title` outranks the design system's `.title` without relying on order.
+ */
+.card .title {
+  font-weight: var(--weight-medium);
+}
+
 .title {
   /* Two lines at most, and always two lines tall so prices align across a row. */
   display: -webkit-box;
