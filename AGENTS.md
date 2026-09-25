@@ -33,6 +33,8 @@ In non-interactive shells, load nvm first: `source ~/.nvm/nvm.sh && nvm use`.
 - `application/` depends only on `domain/`. `infrastructure/` implements the ports declared in `domain/`.
 - `ui/` never imports from `infrastructure/`. Pages obtain repositories from `src/composition-root.ts`.
 - Modules do not import each other's internals; they share domain types only.
+- Next.js caching (`'use cache'`, `cacheTag`) lives in `src/composition-root.ts`, as module-level functions that decorate the repository (see ADR 0005).
+- These rules are enforced by ESLint (`import/no-restricted-paths`, `no-restricted-imports`) and verified by `src/test/architecture.test.ts`. Do not disable them; change them only with an ADR.
 - Validate every external input (API responses, search params, environment variables) with Zod at the boundary.
 - Server-only modules import `server-only` (e.g. `src/shared/config/server-env.ts`).
 - Prefer Server Components. Add `'use client'` only for interactivity, as deep in the tree as possible.
@@ -47,7 +49,7 @@ In non-interactive shells, load nvm first: `source ~/.nvm/nvm.sh && nvm use`.
 - pnpm settings live in `pnpm-workspace.yaml` (pnpm 11+ ignores `.npmrc` except for auth). New install scripts must be reviewed and listed in `allowBuilds`.
 - Version ceilings (see ADR 0009): TypeScript 6.0.x (typescript-eslint requires `<6.1.0`) and ESLint 9.x (`eslint-config-next` plugins crash on ESLint 10).
 - Node 24 (`.nvmrc`, `engines >=24.15.0`) and pnpm only.
-- Next.js 16 APIs (caching, metadata) change often: check the official docs for the installed version before using them.
+- Next.js 16 APIs (caching, metadata) change often: read the docs bundled with the installed version in `node_modules/next/dist/docs/` before using them.
 
 ## Testing
 
@@ -55,6 +57,8 @@ In non-interactive shells, load nvm first: `source ~/.nvm/nvm.sh && nvm use`.
 - Unit and integration tests use Vitest + Testing Library, colocated as `*.test.ts(x)`.
 - Mock HTTP with MSW, never by mocking `fetch` directly.
 - Query elements by role and accessible name, not by class names or test ids.
+- Reuse the fakes in `src/test/` (`inMemoryProductRepository`, `makeProduct`, `setupMswServer`).
+- `pnpm test` runs with coverage; thresholds: 80% global, 95% for `domain/`. Routes and the composition root are covered by E2E tests.
 
 ## Definition of done
 
