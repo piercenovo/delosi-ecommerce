@@ -9,3 +9,4 @@ test-results
 .lighthouseci
 next-env.d.ts
 .planning
+apps/web/src/modules/products/infrastructure/snapshot/fakestore-snapshot.json

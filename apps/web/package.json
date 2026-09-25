@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "snapshot": "node scripts/snapshot-fakestore.ts"
   },
   "dependencies": {
     "next": "16.3.6",
@@ -31,6 +32,7 @@
     "eslint": "9.39.5",
     "eslint-config-next": "16.3.6",
     "jsdom": "30.1.1",
+    "msw": "2.15.0",
     "typescript": "6.0.3",
     "vite": "8.3.0",
     "vitest": "5.0.1"
