@@ -70,6 +70,16 @@ describe('WebVitalsReporter', () => {
     )
   })
 
+  it('skips metrics the app does not track, such as the deprecated FID', () => {
+    sendBeacon.mockReturnValue(true)
+    render(<WebVitalsReporter />)
+
+    hook.callback?.({ ...metric, name: 'FID' })
+
+    expect(sendBeacon).not.toHaveBeenCalled()
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
   it('renders nothing', () => {
     const { container } = render(<WebVitalsReporter />)
 
