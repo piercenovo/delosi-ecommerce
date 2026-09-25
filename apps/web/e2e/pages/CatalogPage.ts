@@ -22,16 +22,14 @@ export class CatalogPage {
     this.clearFilters = page.getByRole('link', { name: 'Quitar filtros' })
   }
 
-  async goto(search = ''): Promise<void> {
-    await this.page.goto(`/products${search}`)
-  }
-
   category(name: string): Locator {
     return this.categories.getByRole('link', { name, exact: true })
   }
 
-  productLink(title: string | RegExp): Locator {
-    return this.page.getByRole('list', { name: 'Productos' }).getByRole('link', { name: title })
+  productLink(title: string): Locator {
+    return this.page
+      .getByRole('list', { name: 'Productos' })
+      .getByRole('link', { name: title, exact: true })
   }
 
   quickAdd(title: string): Locator {

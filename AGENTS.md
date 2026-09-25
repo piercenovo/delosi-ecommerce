@@ -64,7 +64,7 @@ In non-interactive shells, load nvm first: `source ~/.nvm/nvm.sh && nvm use`.
 - `pnpm test` runs with coverage; thresholds: 80% global, 95% for `domain/`. Routes and the composition root are covered by E2E tests.
 - In `packages/ui` every story is a test (`src/test/stories.test.tsx`): it runs in Chromium (Vitest browser mode), executes its `play` function and must pass axe (WCAG 2.2 AA) in light and dark themes. Add a story for each relevant state. Install Chromium once with `pnpm --filter @delosi/ui exec playwright install chromium`.
 - APIs that prevent accessibility mistakes get type tests with `@ts-expect-error`.
-- E2E (`apps/web/e2e/`, Playwright): the production build against the FakeStore mock, in Chromium, mobile and WebKit. Use the Page Objects in `e2e/pages/` and the fixtures in `e2e/fixtures.ts` (`makeAxeBuilder` for WCAG 2.2 AA). Locate by role and accessible name, wait for state (never `waitForTimeout`), and use `DOWN_APP_URL` for API-failure scenarios instead of toggling shared state.
+- E2E (`apps/web/e2e/`, Playwright + playwright-bdd): scenarios are Gherkin in Spanish (`e2e/features/*.feature`, `# language: es`); `bddgen` generates the tests into `.features-gen/` (ignored). Keep steps thin (`e2e/steps/`), reuse them before adding new ones, and put the "how" in the Page Objects. They run the production build against the FakeStore mock, in Chromium, mobile and WebKit; `@teclado` scenarios run on desktop Chromium only. Use the Page Objects in `e2e/pages/` and the fixtures in `e2e/fixtures.ts` (`makeAxeBuilder` for WCAG 2.2 AA). Locate by role and accessible name, wait for state (never `waitForTimeout`), and use `DOWN_APP_URL` for API-failure scenarios instead of toggling shared state.
 
 ## Definition of done
 

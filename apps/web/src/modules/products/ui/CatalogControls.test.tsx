@@ -1,4 +1,6 @@
 import { act, render, screen } from '@testing-library/react'
+import { hydrateRoot } from 'react-dom/client'
+import { renderToString } from 'react-dom/server'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { routerMock } from '@/test/next-router-mock'
@@ -103,5 +105,33 @@ describe('CatalogControls', () => {
 
     expect(searchBox()).toHaveValue('')
     expect(sortSelect()).toHaveValue('')
+  })
+
+  it('searches what was typed before hydration (slow devices)', async () => {
+    const tree = (
+      <CatalogNavigationProvider>
+        <CatalogControls query={{ category: 'jewelery' }} />
+      </CatalogNavigationProvider>
+    )
+    const container = document.createElement('div')
+    container.innerHTML = renderToString(tree)
+    document.body.append(container)
+    // The person types into the server-rendered input before React takes over.
+    const input = container.querySelector<HTMLInputElement>('input[name="q"]')
+    if (input) input.value = 'gold'
+
+    await act(async () => {
+      hydrateRoot(container, tree, { onRecoverableError: () => {} })
+    })
+    await act(() => vi.advanceTimersByTimeAsync(SEARCH_DEBOUNCE_MS))
+
+    expect(routerMock.replace).toHaveBeenCalledExactlyOnceWith(
+      '/products?category=jewelery&q=gold',
+      {
+        scroll: false,
+      },
+    )
+    expect(input).toHaveValue('gold')
+    container.remove()
   })
 })
