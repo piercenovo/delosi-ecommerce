@@ -1,50 +1,26 @@
 // @vitest-environment node
 import { describe, expect, it, vi } from 'vitest'
+import {
+  failingProductRepository,
+  inMemoryProductRepository,
+} from '@/test/in-memory-product-repository'
+import { makeProduct } from '@/test/product-fixtures'
 import { CatalogUnavailableError } from '../domain/errors'
-import type { Category, Product } from '../domain/product'
-import type { ProductRepository } from '../domain/product-repository'
+import type { Category } from '../domain/product'
 import { FallbackProductRepository } from './fallback-product-repository'
 
-function makeProduct(id: number, title: string): Product {
-  return {
-    id,
-    title,
-    price: 10,
-    description: '',
-    categorySlug: 'electronics',
-    image: `/images/products/${id}.png`,
-    rating: { rate: 4, count: 1 },
-  }
-}
-
 const category: Category = { slug: 'electronics', name: 'Electrónica' }
-
-function inMemoryRepository(products: Product[]): ProductRepository {
-  return {
-    findAll: async () => products,
-    findById: async (id) => products.find((product) => product.id === id) ?? null,
-    findCategories: async () => [category],
-  }
-}
-
 const unavailable = new CatalogUnavailableError('FakeStore request failed')
-const failingRepository: ProductRepository = {
-  findAll: () => Promise.reject(unavailable),
-  findById: () => Promise.reject(unavailable),
-  findCategories: () => Promise.reject(unavailable),
-}
+const liveProduct = makeProduct({ id: 1, title: 'Live product' })
+const snapshotProduct = makeProduct({ id: 1, title: 'Snapshot product' })
 
-const liveProduct = makeProduct(1, 'Live product')
-const snapshotProduct = makeProduct(1, 'Snapshot product')
+const live = inMemoryProductRepository({ products: [liveProduct], categories: [category] })
+const snapshot = inMemoryProductRepository({ products: [snapshotProduct], categories: [category] })
 
 describe('FallbackProductRepository', () => {
   it('uses the primary source when it responds', async () => {
     const onFallback = vi.fn()
-    const repository = new FallbackProductRepository(
-      inMemoryRepository([liveProduct]),
-      inMemoryRepository([snapshotProduct]),
-      onFallback,
-    )
+    const repository = new FallbackProductRepository(live, snapshot, onFallback)
 
     await expect(repository.findAll()).resolves.toEqual([liveProduct])
     expect(onFallback).not.toHaveBeenCalled()
@@ -53,8 +29,8 @@ describe('FallbackProductRepository', () => {
   it('falls back and reports the failure when the primary source fails', async () => {
     const onFallback = vi.fn()
     const repository = new FallbackProductRepository(
-      failingRepository,
-      inMemoryRepository([snapshotProduct]),
+      failingProductRepository(unavailable),
+      snapshot,
       onFallback,
     )
 
@@ -66,16 +42,14 @@ describe('FallbackProductRepository', () => {
   })
 
   it('keeps "not found" from the primary source instead of falling back', async () => {
-    const repository = new FallbackProductRepository(
-      inMemoryRepository([]),
-      inMemoryRepository([snapshotProduct]),
-    )
+    const repository = new FallbackProductRepository(inMemoryProductRepository({}), snapshot)
 
     await expect(repository.findById(1)).resolves.toBeNull()
   })
 
   it('propagates the error when both sources fail', async () => {
-    const repository = new FallbackProductRepository(failingRepository, failingRepository)
+    const failing = failingProductRepository(unavailable)
+    const repository = new FallbackProductRepository(failing, failing)
 
     await expect(repository.findAll()).rejects.toBe(unavailable)
   })
