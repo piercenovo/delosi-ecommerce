@@ -36,14 +36,20 @@
 }
 
 /*
- * The image is taken out of the flow so it can never size its box (a tall image would
- * otherwise grow an aspect-ratio box). Any shape fits without cropping, like next/image `fill`.
+ * The frame is taken out of the flow so the image can never size its box (a tall image would
+ * otherwise grow an aspect-ratio box). Any shape fits without cropping.
  */
-.media > img {
+.frame {
   position: absolute;
   inset: var(--space-4);
-  width: calc(100% - 2 * var(--space-4));
-  height: calc(100% - 2 * var(--space-4));
+}
+
+/* Same geometry as next/image `fill`, so plain images and next/image render alike. */
+.frame > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 

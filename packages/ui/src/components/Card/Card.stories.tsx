@@ -87,6 +87,17 @@ export const MixedImageRatios: Story = {
     await expect(media).toHaveLength(2)
     await expect(first?.height).toBeCloseTo(first?.width ?? 0, 0)
     await expect(second?.height).toBeCloseTo(first?.height ?? 0, 0)
+
+    // Each image fills the inner frame, inset from the media box on every side.
+    for (const box of media) {
+      const outer = box.getBoundingClientRect()
+      const image = box.querySelector('img')?.getBoundingClientRect()
+
+      await expect(image?.width).toBeLessThan(outer.width)
+      await expect(image?.height).toBeCloseTo(image?.width ?? 0, 0)
+      await expect(image?.top).toBeGreaterThan(outer.top)
+      await expect(image?.bottom).toBeLessThan(outer.bottom)
+    }
   },
 }
 
