@@ -71,3 +71,21 @@ jobs:
             apps/web/playwright-report/
             apps/web/test-results/
           retention-days: 14
+
+  lighthouse:
+    name: Lighthouse budgets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/playwright
+      # Production build; the script starts the mock API and the app itself.
+      - run: pnpm --filter @delosi/web build
+      - run: pnpm --filter @delosi/web lighthouse
+      - name: Upload Lighthouse reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-reports
+          path: apps/web/lighthouse-reports/
+          retention-days: 14

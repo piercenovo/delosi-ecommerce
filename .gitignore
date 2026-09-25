@@ -24,6 +24,7 @@ blob-report/
 playwright/.cache/
 .features-gen/
 .lighthouseci/
+lighthouse-reports/
 
 # Environment variables (keep .env.example)
 .env

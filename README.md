@@ -39,6 +39,8 @@ La app queda disponible en http://localhost:3000.
 
 Los E2E están escritos como **escenarios BDD en español** (`apps/web/e2e/features/*.feature`, Gherkin con `playwright-bdd`): catálogo, detalle, carrito, errores y accesibilidad. Corren contra el build de producción con un **mock de FakeStore** (`apps/web/e2e/mock-server.ts`), así que no usan red y los datos son siempre los del snapshot. Playwright levanta el mock y dos instancias de la app: una con la API sana y otra con la API caída, para los escenarios de error. La primera vez hay que descargar los navegadores: `pnpm --filter @delosi/web exec playwright install chromium webkit`.
 
+**Lighthouse** (`apps/web/scripts/lighthouse.ts`, Lighthouse 13) mide `/products`, `/products/5` y `/cart` en mobile y desktop (mediana de 3 corridas) contra el build con el mock, y falla si no se cumplen los presupuestos: accesibilidad 100, buenas prácticas y SEO ≥ 95, CLS ≤ 0.02, y rendimiento ≥ 90 con LCP ≤ 2.5 s en desktop. En mobile, que simula 4G lento y una CPU 4 veces más lenta, los presupuestos son una guardia contra regresiones (rendimiento ≥ 85, LCP ≤ 4.5 s); el LCP real se mide con usuarios en `/api/vitals`. El SEO se mide en una pasada aparte con el user agent de PageSpeed Insights, que es la vista de un crawler ([ADR 0011](docs/adr/0011-metadata-del-catalogo.md)). En CI se publica una tabla en el resumen del job y los informes HTML como artefacto.
+
 ## Fuente de datos
 
 El catálogo viene de la FakeStore API. FakeStore está detrás de un desafío de Cloudflare que **bloquea las IPs de datacenter** (GitHub Actions, Vercel), por lo que la app usa un **snapshot versionado como respaldo** detrás del mismo puerto `ProductRepository` ([ADR 0010](docs/adr/0010-snapshot-de-respaldo.md)):
@@ -113,3 +115,4 @@ docs/adr          Registro de decisiones de arquitectura
 - [ADR 0008: Observabilidad con puertos y un adaptador de consola](docs/adr/0008-observabilidad-sin-proveedor.md)
 - [ADR 0009: Política de dependencias y entorno de ejecución](docs/adr/0009-politica-de-dependencias.md)
 - [ADR 0010: Snapshot versionado como respaldo de FakeStore](docs/adr/0010-snapshot-de-respaldo.md)
+- [ADR 0011: Metadata del catálogo en streaming y crawlers con `<head>` completo](docs/adr/0011-metadata-del-catalogo.md)
