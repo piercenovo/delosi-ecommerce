@@ -1,0 +1,113 @@
+.cart {
+  display: grid;
+  align-content: start;
+  gap: var(--space-6);
+  /*
+   * The saved cart is only known after hydration, so the placeholder and the final content
+   * differ in height. At least one viewport tall keeps the footer below the fold meanwhile:
+   * moving an off-screen element does not count as a layout shift.
+   */
+  min-height: 100dvh;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(var(--text-3xl), 1.25rem + 3vw, 3.25rem);
+  font-weight: var(--weight-bold);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+/* Focused programmatically after removals: no ring for a non-interactive heading. */
+.title:focus {
+  outline: none;
+}
+
+.layout {
+  display: grid;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    gap: var(--space-12);
+  }
+
+  .summary {
+    position: sticky;
+    top: calc(4rem + var(--space-6));
+  }
+}
+
+.lines {
+  margin: 0;
+  padding: 0;
+  border-top: var(--border-width) solid var(--color-border);
+  list-style: none;
+}
+
+.summary {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.summaryTitle {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+.totals {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.row dt {
+  color: var(--color-text-muted);
+}
+
+.row dd {
+  margin: 0;
+  font-weight: var(--weight-semibold);
+}
+
+.subtotal {
+  font-size: var(--text-xl);
+}
+
+.note {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.skeletonLine {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.skeletonMedia {
+  aspect-ratio: 1 / 1;
+  height: auto;
+}
+
+.skeletonSummary {
+  height: 14rem;
+  border-radius: var(--radius-md);
+}

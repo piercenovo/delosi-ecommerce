@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { formatPrice } from './format-price'
 
 // es-PE separates the currency code with a non-breaking space, so a price never wraps.
-const NBSP = ' '
+const NBSP = '\u00a0'
 
 describe('formatPrice', () => {
   it('formats US dollars with the Peruvian locale (currency code prefix)', () => {
