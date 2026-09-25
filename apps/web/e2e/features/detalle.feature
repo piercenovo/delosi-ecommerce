@@ -26,10 +26,16 @@ Característica: Detalle de producto
     Cuando abro la página "/products/5"
     Entonces veo 3 productos relacionados
 
-  Escenario: Un enlace mal escrito responde 404
-    Cuando abro la página "/products/abc"
+  Esquema del escenario: Un enlace mal escrito responde 404
+    Cuando abro la página "/products/<id>"
     Entonces la respuesta tiene el estado 404
     Y veo el mensaje "No encontramos esta página"
+
+    Ejemplos:
+      | id  |
+      | abc |
+      | 0   |
+      | 05  |
 
   Escenario: Un producto que no existe responde 404 y no se indexa
     Cuando abro la página "/products/999"

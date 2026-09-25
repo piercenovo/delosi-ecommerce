@@ -81,7 +81,7 @@ Se agrega desde el detalle ("Agregar al carrito") o desde cada tarjeta del catá
 
 ## Errores, SEO y observabilidad
 
-- **Errores:** `error.tsx` por segmento, con "Intentar de nuevo" (vuelve a pedir los datos) y un link al catálogo; `global-error.tsx` y una página 404 propia. Los productos inexistentes responden **404 real**: los ids mal formados (`/products/abc`) desde `proxy.ts`, sin renderizar, y los ids inexistentes (`/products/999`) desde la página, que llama a `notFound()` antes de transmitir nada.
+- **Errores:** `error.tsx` por segmento, con "Intentar de nuevo" (vuelve a pedir los datos) y un link al catálogo; `global-error.tsx` y una página 404 propia. Un producto inexistente o un id mal formado (`/products/999`, `/products/abc`) responde **404 real**: la página del producto no tiene límite de Suspense, así que llama a `notFound()` antes de enviar nada.
 - **SEO:** metadata por categoría y por producto (canonical, Open Graph, Twitter), JSON-LD de `Product` y `BreadcrumbList`, `sitemap.xml`, `robots.txt` y una imagen Open Graph generada para el catálogo.
 - **Observabilidad** ([ADR 0008](docs/adr/0008-observabilidad-sin-proveedor.md)): los errores del servidor (`onRequestError`) y de los error boundaries, y las Web Vitals del navegador (`/api/vitals`), se registran como JSON estructurado. El `digest` une el error que vio el usuario con el log del servidor.
 - **Todos los errores quedan en los logs:** los capturados en el navegador también se envían al servidor (`/api/errors`), así que en producción todos los errores quedan en los logs del proyecto en Vercel. En local se ven en la terminal donde corre la app.
