@@ -30,7 +30,7 @@ export function ProductCard({
   action,
 }: ProductCardProps) {
   return (
-    <Card variant="plain" className={styles.card}>
+    <Card className={styles.card}>
       <Card.Media>
         <Image
           src={product.image}
@@ -52,7 +52,7 @@ export function ProductCard({
         <ProductPrice price={product.price} className={styles.price} />
       </Card.Body>
       {/* After the title in the DOM (tab order: title, then action), shown over the image. */}
-      {action && <div className={styles.action}>{action}</div>}
+      {action && <Card.Action>{action}</Card.Action>}
     </Card>
   )
 }

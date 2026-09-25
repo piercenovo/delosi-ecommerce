@@ -10,7 +10,7 @@ export function ProductGridSkeleton({ count = 8 }: { count?: number }) {
       <span className={a11y.visuallyHidden}>Cargando productos…</span>
       <div aria-hidden="true" className={styles.grid}>
         {Array.from({ length: count }, (_, index) => (
-          <Card key={index} variant="plain" className={card.card}>
+          <Card key={index} className={card.card}>
             <Card.Media>
               <Skeleton variant="rect" />
             </Card.Media>
