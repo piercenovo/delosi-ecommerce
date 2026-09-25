@@ -48,3 +48,4 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
       - run: pnpm build
+      - run: pnpm build-storybook
