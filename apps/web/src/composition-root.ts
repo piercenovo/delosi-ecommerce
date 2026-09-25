@@ -18,27 +18,33 @@ function describeError(error: unknown): string {
   return error.cause instanceof Error ? `${error.message}: ${error.cause.message}` : error.message
 }
 
+const liveProductRepository: ProductRepository = new FakeStoreProductRepository(
+  createFakeStoreClient({ baseUrl: serverEnv.PRODUCTS_API_BASE_URL }),
+  snapshot.images,
+)
+
 /**
  * Live FakeStore first; the versioned snapshot when it is unreachable
  * (Cloudflare blocks datacenter IPs such as CI runners and Vercel).
+ * CATALOG_SNAPSHOT_FALLBACK=off exposes API failures, to test error.tsx.
  */
-const sourceProductRepository: ProductRepository = new FallbackProductRepository(
-  new FakeStoreProductRepository(
-    createFakeStoreClient({ baseUrl: serverEnv.PRODUCTS_API_BASE_URL }),
-    snapshot.images,
-  ),
-  new SnapshotProductRepository(snapshot),
-  (error, operation) => {
-    console.warn(
-      JSON.stringify({
-        level: 'warn',
-        event: 'catalog.fallback_to_snapshot',
-        operation,
-        reason: describeError(error),
-      }),
-    )
-  },
-)
+const sourceProductRepository: ProductRepository =
+  serverEnv.CATALOG_SNAPSHOT_FALLBACK === 'off'
+    ? liveProductRepository
+    : new FallbackProductRepository(
+        liveProductRepository,
+        new SnapshotProductRepository(snapshot),
+        (error, operation) => {
+          console.warn(
+            JSON.stringify({
+              level: 'warn',
+              event: 'catalog.fallback_to_snapshot',
+              operation,
+              reason: describeError(error),
+            }),
+          )
+        },
+      )
 
 // Next.js cache layer. `'use cache'` functions must live at module level: values captured
 // from a closure become part of the cache key and must be serializable (a class instance
