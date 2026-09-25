@@ -19,3 +19,11 @@ export interface Category {
   slug: string
   name: string
 }
+
+/** Parses a route segment into a product id: a positive base-10 integer without padding. */
+export function parseProductId(raw: string): ProductId | null {
+  if (!/^[1-9]\d*$/.test(raw)) return null
+
+  const id = Number(raw)
+  return Number.isSafeInteger(id) ? id : null
+}
