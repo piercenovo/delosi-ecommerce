@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { persist } from 'zustand/middleware'
 import { createStore } from 'zustand/vanilla'
+import { isAllowedProductImage } from '@/shared/config/product-images'
 import {
   EMPTY_CART,
   MAX_QUANTITY,
@@ -26,14 +27,14 @@ export type CartStoreState = CartState & CartActions
 export type CartStore = ReturnType<typeof createCartStore>
 
 // localStorage is user-editable input: validate it before it reaches the UI. Images must be
-// local paths, or next/image would reject an unknown host at render time.
+// ones next/image allows (local or FakeStore), or rendering would fail for an unknown host.
 const persistedCartSchema = z.object({
   items: z.array(
     z.object({
       productId: z.number().int().positive(),
       title: z.string().min(1).max(300),
       price: z.number().finite().nonnegative(),
-      image: z.string().regex(/^\/(?!\/)/),
+      image: z.string().refine(isAllowedProductImage),
       quantity: z.number().int().min(1).max(MAX_QUANTITY),
     }),
   ),

@@ -8,6 +8,10 @@ const serverEnvSchema = z.object({
   REVALIDATE_SECRET: z.string().min(16).optional(),
   // `off` only to test error handling (E2E): a failing API then reaches error.tsx.
   CATALOG_SNAPSHOT_FALLBACK: z.enum(['on', 'off']).default('on'),
+  // `remote`: product photos load from FakeStore through next/image (production).
+  // `local`: from the copies in public/images/products (default: dev, CI, E2E, Lighthouse,
+  // which run offline against the mock). Read at build time: prerendered pages keep it.
+  PRODUCT_IMAGES: z.enum(['remote', 'local']).default('local'),
 })
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>

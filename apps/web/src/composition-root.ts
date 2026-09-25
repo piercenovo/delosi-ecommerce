@@ -13,6 +13,10 @@ import { serverEnv } from '@/shared/config/server-env'
 
 const snapshot = fakeStoreSnapshotSchema.parse(snapshotJson)
 
+// Local copies replace FakeStore's image URLs unless PRODUCT_IMAGES=remote. With no entry,
+// the mapper keeps the API's URL, which next/image optimizes (see product-images.ts).
+const localImages = serverEnv.PRODUCT_IMAGES === 'local' ? snapshot.images : {}
+
 function describeError(error: unknown): string {
   if (!(error instanceof Error)) return String(error)
   return error.cause instanceof Error ? `${error.message}: ${error.cause.message}` : error.message
@@ -20,7 +24,7 @@ function describeError(error: unknown): string {
 
 const liveProductRepository: ProductRepository = new FakeStoreProductRepository(
   createFakeStoreClient({ baseUrl: serverEnv.PRODUCTS_API_BASE_URL }),
-  snapshot.images,
+  localImages,
 )
 
 /**
@@ -33,7 +37,7 @@ const sourceProductRepository: ProductRepository =
     ? liveProductRepository
     : new FallbackProductRepository(
         liveProductRepository,
-        new SnapshotProductRepository(snapshot),
+        new SnapshotProductRepository({ ...snapshot, images: localImages }),
         (error, operation) => {
           console.warn(
             JSON.stringify({

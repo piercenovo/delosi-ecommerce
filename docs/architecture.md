@@ -88,6 +88,7 @@ sequenceDiagram
 - **Una sola entrada de caché para cualquier combinación de filtros:** se cachea la lista completa y el filtrado corre en cada request, que con 20 productos cuesta microsegundos ([ADR 0005](adr/0005-cache-y-revalidacion.md)).
 - **Revalidación bajo demanda:** `POST /api/revalidate` con secreto invalida `products`, `categories` o `product:<id>`.
 - **Resiliencia:** Cloudflare bloquea a FakeStore desde IPs de datacenter, así que `FallbackProductRepository` usa el snapshot si la API falla, y lo registra (`catalog.fallback_to_snapshot`) ([ADR 0010](adr/0010-snapshot-de-respaldo.md)).
+- **Imágenes:** en producción, las fotos se cargan desde FakeStore y las optimiza `next/image` (`remotePatterns` acotado a `fakestoreapi.com/img/**`, AVIF/WebP, caché de 31 días). En CI y E2E se usa la copia local ([ADR 0012](adr/0012-imagenes-de-producto.md)). Solo las 4 primeras tarjetas cargan con prioridad; el resto es lazy.
 - **Metadata:** en el catálogo va en streaming para los navegadores y completa en el `<head>` para los crawlers ([ADR 0011](adr/0011-metadata-del-catalogo.md)).
 
 **El detalle (`/products/[id]`) no usa streaming, a propósito.** Todos los productos se prerenderizan en el build (`generateStaticParams`). Un id desconocido se renderiza bajo demanda y **bloqueando**, sin `loading.tsx` ni Suspense, para que `notFound()` corra antes de enviar el status: así se obtiene un **404 real** y los crawlers reciben el HTML completo. La página lo declara con `export const instant = false`.

@@ -8,6 +8,7 @@ describe('parseServerEnv', () => {
       PRODUCTS_API_BASE_URL: 'https://fakestoreapi.com',
       NEXT_PUBLIC_SITE_URL: 'http://localhost:3000',
       CATALOG_SNAPSHOT_FALLBACK: 'on',
+      PRODUCT_IMAGES: 'local',
     })
   })
 
@@ -44,5 +45,10 @@ describe('parseServerEnv', () => {
     expect(() => parseServerEnv({ CATALOG_SNAPSHOT_FALLBACK: 'false' })).toThrow(
       /CATALOG_SNAPSHOT_FALLBACK/,
     )
+  })
+
+  it('serves product images from FakeStore only when asked, and accepts nothing else', () => {
+    expect(parseServerEnv({ PRODUCT_IMAGES: 'remote' }).PRODUCT_IMAGES).toBe('remote')
+    expect(() => parseServerEnv({ PRODUCT_IMAGES: 'cdn' })).toThrow(/PRODUCT_IMAGES/)
   })
 })
