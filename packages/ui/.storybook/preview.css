@@ -4,3 +4,17 @@ body {
   color: var(--color-text);
   font-family: var(--font-sans);
 }
+
+/* Layout helpers for stories only (components never use them). */
+.sb-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.sb-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

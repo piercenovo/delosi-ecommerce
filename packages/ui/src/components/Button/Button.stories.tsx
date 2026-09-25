@@ -36,7 +36,7 @@ export const Ghost: Story = {
 
 export const Sizes: Story = {
   render: (args) => (
-    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+    <div className="sb-row">
       <Button {...args} size="sm">
         Pequeño
       </Button>
