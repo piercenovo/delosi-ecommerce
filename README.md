@@ -37,7 +37,7 @@ La app queda disponible en http://localhost:3000.
 | `pnpm test`                          | Tests unitarios y de integración, con cobertura              |
 | `pnpm format` / `pnpm format:check`  | Prettier                                                     |
 
-Los E2E corren contra el build de producción con un **mock de FakeStore** (`apps/web/e2e/mock-server.ts`), así que no usan red y los datos son siempre los del snapshot. Playwright levanta el mock y dos instancias de la app: una con la API sana y otra con la API caída, para los escenarios de error. La primera vez hay que descargar los navegadores: `pnpm --filter @delosi/web exec playwright install chromium webkit`.
+Los E2E están escritos como **escenarios BDD en español** (`apps/web/e2e/features/*.feature`, Gherkin con `playwright-bdd`): catálogo, detalle, carrito, errores y accesibilidad. Corren contra el build de producción con un **mock de FakeStore** (`apps/web/e2e/mock-server.ts`), así que no usan red y los datos son siempre los del snapshot. Playwright levanta el mock y dos instancias de la app: una con la API sana y otra con la API caída, para los escenarios de error. La primera vez hay que descargar los navegadores: `pnpm --filter @delosi/web exec playwright install chromium webkit`.
 
 ## Fuente de datos
 

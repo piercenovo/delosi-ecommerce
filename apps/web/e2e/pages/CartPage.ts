@@ -15,10 +15,6 @@ export class CartPage {
     this.emptyState = page.getByRole('heading', { name: 'Tu carrito está vacío' })
   }
 
-  async goto(): Promise<void> {
-    await this.page.goto('/cart')
-  }
-
   line(title: string): Locator {
     return this.lines.filter({ has: this.page.getByRole('link', { name: title }) })
   }

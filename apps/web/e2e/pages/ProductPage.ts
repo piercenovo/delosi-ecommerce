@@ -15,10 +15,6 @@ export class ProductPage {
     this.related = page.getByRole('region', { name: 'También te puede interesar' })
   }
 
-  async goto(id: number | string): Promise<void> {
-    await this.page.goto(`/products/${id}`)
-  }
-
   /** Structured data embedded in the page, parsed as a crawler would. */
   async jsonLd(): Promise<Record<string, unknown>[]> {
     const blocks = await this.page.locator('script[type="application/ld+json"]').allTextContents()

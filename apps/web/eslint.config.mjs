@@ -92,5 +92,5 @@ export default defineConfig([
   architectureRules,
   frameworkFreeLayers,
   e2eOverrides,
-  globalIgnores(['.next/**', 'out/**', 'coverage/**', 'next-env.d.ts']),
+  globalIgnores(['.next/**', 'out/**', 'coverage/**', '.features-gen/**', 'next-env.d.ts']),
 ])
