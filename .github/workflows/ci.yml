@@ -49,3 +49,25 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm build
       - run: pnpm build-storybook
+
+  e2e:
+    name: E2E (Playwright)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/playwright
+        with:
+          browsers: chromium webkit
+      # Production build; the suite starts the mock API and two app instances itself.
+      - run: pnpm --filter @delosi/web build
+      - run: pnpm --filter @delosi/web e2e
+      - name: Upload Playwright report
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            apps/web/playwright-report/
+            apps/web/test-results/
+          retention-days: 14
