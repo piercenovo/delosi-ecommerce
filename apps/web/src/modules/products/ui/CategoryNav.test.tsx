@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { categories } from '@/test/product-fixtures'
 import { routerMock } from '@/test/next-router-mock'
 import { CatalogNavigationProvider } from './catalog-navigation'
@@ -42,15 +42,63 @@ describe('CategoryNav', () => {
     expect(nav.getByRole('link', { name: 'Todo' })).not.toHaveAttribute('aria-current')
   })
 
-  it('scrolls the active category into view within the row', () => {
-    const scrollIntoView = vi.fn()
-    Element.prototype.scrollIntoView = scrollIntoView
+  describe('in the scrollable mobile row', () => {
+    // jsdom has no layout: give the row a 300px viewport over 900px of chips, and place each
+    // chip by its label.
+    const chipBoxes: Record<string, { left: number; right: number }> = {
+      Todo: { left: 16, right: 80 },
+      'Ropa de mujer': { left: 500, right: 620 },
+    }
 
-    renderNav({ category: 'womens-clothing' })
+    beforeEach(() => {
+      vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+        this: HTMLElement,
+      ) {
+        const box = this.tagName === 'NAV' ? { left: 0, right: 300 } : chipBoxes[this.textContent]
+        return DOMRect.fromRect({ x: box?.left ?? 0, width: (box?.right ?? 0) - (box?.left ?? 0) })
+      })
+      Object.defineProperty(HTMLElement.prototype, 'scrollWidth', {
+        configurable: true,
+        get(this: HTMLElement) {
+          return this.tagName === 'NAV' ? 900 : 0
+        },
+      })
+      Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
+        configurable: true,
+        get(this: HTMLElement) {
+          return this.tagName === 'NAV' ? 300 : 0
+        },
+      })
+    })
 
-    expect(scrollIntoView).toHaveBeenCalledExactlyOnceWith({ block: 'nearest', inline: 'nearest' })
-    expect(scrollIntoView.mock.contexts[0]).toHaveTextContent('Ropa de mujer')
-    Reflect.deleteProperty(Element.prototype, 'scrollIntoView')
+    afterEach(() => {
+      Reflect.deleteProperty(HTMLElement.prototype, 'scrollWidth')
+      Reflect.deleteProperty(HTMLElement.prototype, 'clientWidth')
+    })
+
+    it('scrolls the row, not the page, to show an active category out of view', () => {
+      renderNav({ category: 'womens-clothing' })
+
+      expect(screen.getByRole('navigation', { name: 'Categorías' }).scrollLeft).toBe(320)
+    })
+
+    it('leaves the row alone when the active category is already visible', () => {
+      renderNav({})
+
+      expect(screen.getByRole('navigation', { name: 'Categorías' }).scrollLeft).toBe(0)
+    })
+
+    // Chromium moves the Tab starting point to the element scrollIntoView scrolls: the first
+    // Tab after load skipped the skip link and the header and landed on the next category.
+    it('never uses scrollIntoView, so the focus order starts at the top of the page', () => {
+      const scrollIntoView = vi.fn()
+      Element.prototype.scrollIntoView = scrollIntoView
+
+      renderNav({ category: 'womens-clothing' })
+
+      expect(scrollIntoView).not.toHaveBeenCalled()
+      Reflect.deleteProperty(Element.prototype, 'scrollIntoView')
+    })
   })
 
   it('marks "Todo" as current without a category', () => {
