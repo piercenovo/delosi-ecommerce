@@ -1,6 +1,6 @@
 import { Skeleton } from '@delosi/ui'
-import { CatalogHeadingSkeleton } from '@/modules/products/ui/CatalogHeading'
-import { ProductGridSkeleton } from '@/modules/products/ui/ProductGridSkeleton'
+import { CatalogHeadingSkeleton } from '@/modules/products/ui/catalog/CatalogHeading'
+import { ProductGridSkeleton } from '@/modules/products/ui/product/ProductGridSkeleton'
 import styles from './CatalogSkeleton.module.css'
 import page from './page.module.css'
 

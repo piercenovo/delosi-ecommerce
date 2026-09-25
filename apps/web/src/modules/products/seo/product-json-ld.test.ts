@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { makeProduct } from '@/test/product-fixtures'
-import { buildBreadcrumbJsonLd, buildProductJsonLd, serializeJsonLd } from './product-json-ld'
+import { buildBreadcrumbJsonLd, buildProductJsonLd } from './product-json-ld'
 
 const SITE = 'https://delosi-shop.vercel.app'
 const product = makeProduct({
@@ -74,15 +74,5 @@ describe('buildBreadcrumbJsonLd', () => {
         { '@type': 'ListItem', position: 3, name: 'Naga Bracelet' },
       ],
     })
-  })
-})
-
-describe('serializeJsonLd', () => {
-  it('cannot close the script tag it is embedded in', () => {
-    const hostile = { name: 'Bracelet</script><script>alert(1)</script>' }
-    const serialized = serializeJsonLd(hostile)
-
-    expect(serialized).not.toContain('<')
-    expect(JSON.parse(serialized)).toEqual(hostile)
   })
 })

@@ -3,21 +3,18 @@ import { notFound } from 'next/navigation'
 import { productRepository } from '@/composition-root'
 import { getProductDetail } from '@/modules/products/application/get-product-detail'
 import { getRelatedProducts } from '@/modules/products/application/get-related-products'
-import { buildCatalogHref } from '@/modules/products/url/catalog-search-params'
 import { ProductNotFoundError } from '@/modules/products/domain/errors'
-import { parseProductId, type Category, type Product } from '@/modules/products/domain/product'
-import {
-  buildBreadcrumbJsonLd,
-  buildProductJsonLd,
-  serializeJsonLd,
-} from '@/modules/products/seo/product-json-ld'
+import { parseProductId, type Product } from '@/modules/products/domain/product'
+import { buildProductBreadcrumbs } from '@/modules/products/seo/product-breadcrumbs'
+import { buildBreadcrumbJsonLd, buildProductJsonLd } from '@/modules/products/seo/product-json-ld'
 import { buildProductMetadata } from '@/modules/products/seo/product-metadata'
-import { AddToCartButton } from '@/modules/cart/ui/AddToCartButton'
-import { QuickAddButton } from '@/modules/cart/ui/QuickAddButton'
-import { ProductDetail } from '@/modules/products/ui/ProductDetail'
-import { RelatedProducts } from '@/modules/products/ui/RelatedProducts'
+import { AddToCartButton } from '@/modules/cart/ui/add-to-cart/AddToCartButton'
+import { QuickAddButton } from '@/modules/cart/ui/add-to-cart/QuickAddButton'
+import { ProductDetail } from '@/modules/products/ui/detail/ProductDetail'
+import { RelatedProducts } from '@/modules/products/ui/detail/RelatedProducts'
 import { serverEnv } from '@/shared/config/server-env'
-import { Breadcrumbs, type BreadcrumbItem } from '@/shared/ui/Breadcrumbs'
+import { Breadcrumbs } from '@/shared/ui/Breadcrumbs'
+import { JsonLd } from '@/shared/ui/JsonLd'
 import { toCartProduct } from '../to-cart-product'
 
 // Blocking on purpose (ADR 0011): ids outside generateStaticParams render on demand with no
@@ -55,7 +52,7 @@ export default async function ProductPage({ params }: PageProps<'/products/[id]'
     productRepository.findCategories(),
   ])
   const category = categories.find(({ slug }) => slug === product.categorySlug) ?? null
-  const trail = breadcrumbTrail(product, category)
+  const trail = buildProductBreadcrumbs(product, category)
   // Same cached catalog read as the rest of the page: no separate Suspense boundary, so the
   // prerendered page ships complete (a fallback would only flash and shift the footer).
   const related = await getRelatedProducts(productRepository, product)
@@ -74,25 +71,5 @@ export default async function ProductPage({ params }: PageProps<'/products/[id]'
         renderAction={(item) => <QuickAddButton product={toCartProduct(item)} />}
       />
     </>
-  )
-}
-
-function breadcrumbTrail(product: Product, category: Category | null): BreadcrumbItem[] {
-  return [
-    { label: 'Catálogo', href: '/products' },
-    ...(category
-      ? [{ label: category.name, href: buildCatalogHref({ category: category.slug }) }]
-      : []),
-    { label: product.title },
-  ]
-}
-
-function JsonLd({ data }: { data: Record<string, unknown> }) {
-  // serializeJsonLd escapes `<`, so product data cannot close this tag.
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: serializeJsonLd(data) }}
-    />
   )
 }

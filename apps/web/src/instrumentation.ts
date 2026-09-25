@@ -1,5 +1,5 @@
 import type { Instrumentation } from 'next'
-import { errorReporter } from '@/shared/observability/reporters'
+import { errorReporter } from '@/shared/observability/server/reporters'
 
 /** Every server error (render, route handler, action, proxy) goes to the ErrorReporter. */
 export const onRequestError: Instrumentation.onRequestError = (error, request, context) => {

@@ -14,7 +14,7 @@ La oferta valora la observabilidad y el reto pide métricas de rendimiento. Un p
 - `ErrorReporter.capture(error, context)`, donde el contexto incluye `source` (`server`/`client`), `digest` y `route`.
 - `MetricsReporter.report(metric)` para Web Vitals (LCP, CLS, INP, FCP y TTFB).
 
-**Un adaptador**, `createConsoleReporter`, que escribe **un objeto JSON por línea** (`level`, `event`, `timestamp` y los campos del evento). En Vercel, esos logs se filtran en el panel del proyecto por `event`, `digest` o `route`. `reporters.ts` es el único lugar donde se elige el adaptador.
+**Un adaptador**, `createConsoleReporter`, que escribe **un objeto JSON por línea** (`level`, `event`, `timestamp` y los campos del evento). En Vercel, esos logs se filtran en el panel del proyecto por `event`, `digest` o `route`. `server/reporters.ts` (servidor) y `client/client-reporters.ts` (navegador) son los únicos lugares donde se elige el adaptador; los puertos y el adaptador de consola, compartidos, viven en la raíz de `shared/observability/`.
 
 **De dónde salen los datos:**
 
@@ -24,7 +24,7 @@ La oferta valora la observabilidad y el reto pide métricas de rendimiento. Un p
 | Errores que llegan a un error boundary                        | `error.tsx` / `global-error.tsx` → `ErrorView`                     | `ErrorReporter`   |
 | Web Vitals                                                    | `useReportWebVitals` → `navigator.sendBeacon('/api/vitals')` → Zod | `MetricsReporter` |
 
-- **Los errores del navegador llegan al servidor:** la consola del navegador solo la ve quien usa la página. Por eso el adaptador del cliente (`client-reporters.ts`) escribe en la consola local y además envía el reporte, con el mensaje y el stack truncados, a `/api/errors`, que lo registra con el mismo `ErrorReporter` del servidor. Así, errores de servidor y de cliente quedan juntos en los logs de Vercel.
+- **Los errores del navegador llegan al servidor:** la consola del navegador solo la ve quien usa la página. Por eso el adaptador del cliente (`client/client-reporters.ts`) escribe en la consola local y además envía el reporte, con el mensaje y el stack truncados, a `/api/errors`, que lo registra con el mismo `ErrorReporter` del servidor. Así, errores de servidor y de cliente quedan juntos en los logs de Vercel.
 - **Correlación:** en producción, un error de Server Components llega al cliente sin detalles, solo con un mensaje genérico y un `digest`. El reporte del cliente incluye ese `digest`, que es el mismo del log del servidor (verificado), así que desde lo que vio el usuario se llega a la causa.
 - **Privacidad:** las métricas llevan la ruta **sin query string**, para que los términos de búsqueda no terminen en los logs. `onRequestError` tampoco registra el path con query.
 - **Validación de `/api/vitals` y `/api/errors`:** son endpoints públicos, así que validan el esquema con Zod (campos conocidos y acotados, ruta sin `?`) y rechazan cuerpos grandes (2 KB y 4 KB) con 413, primero por `content-length` y luego por el tamaño real.
@@ -39,7 +39,7 @@ La oferta valora la observabilidad y el reto pide métricas de rendimiento. Un p
 
 ## Alternativas consideradas
 
-- **Sentry/Datadog ahora:** es la opción para producción real. Aquí agrega un SDK al cliente, secretos y una cuenta sin cambiar el diseño. Se integra escribiendo otro adaptador de los mismos puertos y cambiando `reporters.ts`; ni la app ni los tests cambian.
+- **Sentry/Datadog ahora:** es la opción para producción real. Aquí agrega un SDK al cliente, secretos y una cuenta sin cambiar el diseño. Se integra escribiendo otro adaptador de los mismos puertos y cambiando `server/reporters.ts` y `client/client-reporters.ts`; ni la app ni los tests cambian.
 - **Vercel Speed Insights / Analytics:** mide Web Vitals sin código propio, pero ata las métricas a la plataforma y no muestra el diseño por puertos. Es compatible con esta decisión.
 - **OpenTelemetry (`@vercel/otel`):** útil para trazas distribuidas entre servicios. Esta app tiene un solo upstream, así que las trazas no aportan frente a los logs estructurados.
 

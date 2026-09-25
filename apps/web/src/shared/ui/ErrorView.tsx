@@ -3,7 +3,7 @@
 import { Button, EmptyState } from '@delosi/ui'
 import Link from 'next/link'
 import { useEffect } from 'react'
-import { clientErrorReporter } from '@/shared/observability/client-reporters'
+import { clientErrorReporter } from '@/shared/observability/client/client-reporters'
 import styles from './ErrorView.module.css'
 
 export interface ErrorViewProps {
