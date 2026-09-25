@@ -71,12 +71,16 @@ Solo se aceptan las etiquetas anteriores. Sin secreto configurado, el endpoint r
 - **Errores:** `error.tsx` por segmento, con "Intentar de nuevo" (vuelve a pedir los datos) y un link al catálogo; `global-error.tsx` y una página 404 propia. Los ids de producto mal formados (`/products/abc`) devuelven un **404 real** desde `proxy.ts`; un id inexistente devuelve la página 404 con `noindex` (con Cache Components, la página ya empezó a transmitirse).
 - **SEO:** metadata por categoría y por producto (canonical, Open Graph, Twitter), JSON-LD de `Product` y `BreadcrumbList`, `sitemap.xml`, `robots.txt` y una imagen Open Graph generada para el catálogo.
 - **Observabilidad** ([ADR 0008](docs/adr/0008-observabilidad-sin-proveedor.md)): los errores del servidor (`onRequestError`) y de los error boundaries, y las Web Vitals del navegador (`/api/vitals`), se registran como JSON estructurado. El `digest` une el error que vio el usuario con el log del servidor.
+- **Todos los errores quedan en los logs:** los capturados en el navegador también se envían al servidor (`/api/errors`), así que en producción todos los errores quedan en los logs del proyecto en Vercel. En local se ven en la terminal donde corre la app.
 
-Para ver los estados de error en local, desactiva el respaldo y apunta la API a un servidor caído:
+**Ver la página de error en local:** compila la app y arráncala con el respaldo desactivado y la API apuntando a un puerto donde no hay nada escuchando (cualquier puerto libre), así cada request al catálogo falla:
 
 ```bash
-CATALOG_SNAPSHOT_FALLBACK=off PRODUCTS_API_BASE_URL=http://localhost:4010 pnpm --filter @delosi/web start
+pnpm --filter @delosi/web build
+CATALOG_SNAPSHOT_FALLBACK=off PRODUCTS_API_BASE_URL=http://localhost:4010 pnpm --filter @delosi/web start -p 3001
 ```
+
+En http://localhost:3001/products se muestra "No pudimos cargar los productos", con "Intentar de nuevo".
 
 ## Estructura
 

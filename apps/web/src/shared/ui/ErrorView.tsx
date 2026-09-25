@@ -3,7 +3,7 @@
 import { Button, EmptyState } from '@delosi/ui'
 import Link from 'next/link'
 import { useEffect } from 'react'
-import { errorReporter } from '@/shared/observability/reporters'
+import { clientErrorReporter } from '@/shared/observability/client-reporters'
 import styles from './ErrorView.module.css'
 
 export interface ErrorViewProps {
@@ -18,8 +18,9 @@ export interface ErrorViewProps {
 /** Shared body of the error boundaries: what failed, how to recover, and a way out. */
 export function ErrorView({ error, retry, title, description }: ErrorViewProps) {
   useEffect(() => {
-    // The digest links this report to the server log written by instrumentation.ts.
-    errorReporter.capture(error, {
+    // Sent to /api/errors, so it reaches the server logs. The digest links it to the log that
+    // instrumentation.ts wrote for the same failure.
+    clientErrorReporter.capture(error, {
       source: 'client',
       digest: error.digest,
       route: window.location.pathname,

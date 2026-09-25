@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { readJsonBody } from './json-body'
 import {
   WEB_VITAL_NAMES,
   WEB_VITAL_RATINGS,
@@ -27,21 +28,10 @@ export async function handleVitalsRequest(
   request: Request,
   reporter: MetricsReporter,
 ): Promise<Response> {
-  // Reject by the declared size before reading; re-check the actual size after.
-  const declared = Number(request.headers.get('content-length') ?? 0)
-  if (declared > MAX_BODY_BYTES) return new Response(null, { status: 413 })
+  const body = await readJsonBody(request, MAX_BODY_BYTES)
+  if (!body.ok) return new Response(null, { status: body.status })
 
-  const body = await request.text()
-  if (body.length > MAX_BODY_BYTES) return new Response(null, { status: 413 })
-
-  let json: unknown
-  try {
-    json = JSON.parse(body)
-  } catch {
-    return new Response(null, { status: 400 })
-  }
-
-  const result = webVitalSchema.safeParse(json)
+  const result = webVitalSchema.safeParse(body.json)
   if (!result.success) return new Response(null, { status: 400 })
 
   reporter.report(result.data)

@@ -1,10 +1,12 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { errorReporter } from '@/shared/observability/reporters'
+import { clientErrorReporter } from '@/shared/observability/client-reporters'
 import { ErrorView } from './ErrorView'
 
-vi.mock('@/shared/observability/reporters', () => ({ errorReporter: { capture: vi.fn() } }))
+vi.mock('@/shared/observability/client-reporters', () => ({
+  clientErrorReporter: { capture: vi.fn() },
+}))
 
 const error = Object.assign(new Error('An error occurred in the Server Components render.'), {
   digest: '2718281828',
@@ -58,7 +60,7 @@ describe('ErrorView', () => {
   it('reports the error once, with the digest that matches the server log', () => {
     renderView()
 
-    expect(errorReporter.capture).toHaveBeenCalledExactlyOnceWith(
+    expect(clientErrorReporter.capture).toHaveBeenCalledExactlyOnceWith(
       error,
       expect.objectContaining({ source: 'client', digest: '2718281828' }),
     )

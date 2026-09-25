@@ -24,9 +24,10 @@ La oferta valora la observabilidad y el reto pide métricas de rendimiento. Un p
 | Errores que llegan a un error boundary                        | `error.tsx` / `global-error.tsx` → `ErrorView`                     | `ErrorReporter`   |
 | Web Vitals                                                    | `useReportWebVitals` → `navigator.sendBeacon('/api/vitals')` → Zod | `MetricsReporter` |
 
+- **Los errores del navegador llegan al servidor:** la consola del navegador solo la ve quien usa la página. Por eso el adaptador del cliente (`client-reporters.ts`) escribe en la consola local y además envía el reporte, con el mensaje y el stack truncados, a `/api/errors`, que lo registra con el mismo `ErrorReporter` del servidor. Así, errores de servidor y de cliente quedan juntos en los logs de Vercel.
 - **Correlación:** en producción, un error de Server Components llega al cliente sin detalles, solo con un mensaje genérico y un `digest`. El reporte del cliente incluye ese `digest`, que es el mismo del log del servidor (verificado), así que desde lo que vio el usuario se llega a la causa.
 - **Privacidad:** las métricas llevan la ruta **sin query string**, para que los términos de búsqueda no terminen en los logs. `onRequestError` tampoco registra el path con query.
-- **Validación de `/api/vitals`:** es un endpoint público, así que valida el esquema con Zod (métrica conocida, valor finito y no negativo, ruta sin `?`) y rechaza cuerpos de más de 2 KB (413), primero por `content-length` y luego por el tamaño real.
+- **Validación de `/api/vitals` y `/api/errors`:** son endpoints públicos, así que validan el esquema con Zod (campos conocidos y acotados, ruta sin `?`) y rechazan cuerpos grandes (2 KB y 4 KB) con 413, primero por `content-length` y luego por el tamaño real.
 
 **Errores visibles para el usuario:**
 
@@ -46,5 +47,5 @@ La oferta valora la observabilidad y el reto pide métricas de rendimiento. Un p
 
 - Cero dependencias nuevas; los reportes son JSON consultable en cualquier plataforma de logs.
 - Los logs de consola no agrupan errores, no alertan y tienen retención limitada. Con tráfico real, el siguiente paso es un adaptador hacia un proveedor.
-- `/api/vitals` puede recibir tráfico abusivo. La validación limita el daño, pero no hay rate limiting en la app; en producción se delegaría al firewall de la plataforma.
+- `/api/vitals` y `/api/errors` pueden recibir tráfico abusivo. La validación limita el daño, pero no hay rate limiting en la app; en producción se delegaría al firewall de la plataforma.
 - La métrica se envía con la ruta en la que se reporta, que en navegaciones del lado del cliente puede no ser la ruta en la que ocurrió (por ejemplo, el CLS acumulado).
