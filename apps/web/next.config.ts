@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next'
+import { REMOTE_PRODUCT_IMAGES } from './src/shared/config/product-images'
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
@@ -12,7 +13,10 @@ const nextConfig: NextConfig = {
   images: {
     // AVIF first (smaller at the same quality), WebP for browsers without AVIF support.
     formats: ['image/avif', 'image/webp'],
-    remotePatterns: [{ protocol: 'https', hostname: 'fakestoreapi.com', pathname: '/img/**' }],
+    remotePatterns: [REMOTE_PRODUCT_IMAGES],
+    // Product photos never change at the same URL: keep optimized copies for 31 days, so
+    // FakeStore (behind Cloudflare's bot protection) is rarely asked for them.
+    minimumCacheTTL: 2_678_400,
   },
   async redirects() {
     return [{ source: '/', destination: '/products', permanent: true }]

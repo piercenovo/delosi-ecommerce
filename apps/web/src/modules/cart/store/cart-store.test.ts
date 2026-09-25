@@ -88,6 +88,15 @@ describe('createCartStore', () => {
     expect(store.persist.hasHydrated()).toBe(true)
   })
 
+  it('restores a line whose image comes from FakeStore', async () => {
+    const remote = { ...line, image: 'https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png' }
+    const store = createCartStore({ storage: memory(stored([remote])).storage })
+
+    await store.persist.rehydrate()
+
+    expect(store.getState().items).toEqual([remote])
+  })
+
   it.each([
     ['corrupt JSON', '{"state": oops'],
     ['items that are not a list', stored('nope' as unknown as unknown[])],

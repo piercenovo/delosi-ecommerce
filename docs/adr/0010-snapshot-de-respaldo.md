@@ -9,7 +9,7 @@ El primer build en GitHub Actions y el primer deploy en Vercel fallaron: FakeSto
 
 - FakeStore está detrás de Cloudflare con _managed challenge_ (`server: cloudflare`, `cf-mitigated: challenge`).
 - Desde una IP residencial un `GET` responde 200; desde IPs de datacenter (runners de GitHub, Vercel) responde 403. El `User-Agent` no influye (probado con `node`, Chrome y vacío).
-- Las imágenes (`/img/*.png`) están detrás del mismo desafío, por lo que el optimizador de `next/image` en Vercel tampoco podría descargarlas.
+- Se asumió que las imágenes (`/img/*.png`) estaban detrás del mismo desafío. **Corregido en el [ADR 0012](0012-imagenes-de-producto.md):** al verificarlo, el optimizador de `next/image` en Vercel sí las descarga.
 
 Evadir el desafío (proxies, rotación de IPs, simular un navegador) no es una opción: sería eludir un control anti-bots puesto por el dueño de la API, además de frágil.
 
@@ -22,7 +22,7 @@ Mantener FakeStore como fuente primaria y agregar un **snapshot versionado** com
 - `SnapshotProductRepository`: sirve el snapshot validado.
 - `FallbackProductRepository` (_Decorator_): lee del primario y, si falla, del respaldo, registrando el evento `catalog.fallback_to_snapshot`. Un `null` ("no existe") del primario es una respuesta válida y no activa el respaldo.
 - `composition-root.ts` compone los tres; la UI y los casos de uso solo conocen el puerto.
-- Las imágenes se sirven desde `public/images/products/` (también con datos en vivo), de modo que `next/image` las optimiza sin depender de Cloudflare.
+- Las imágenes se copian en `public/images/products/`. Desde el [ADR 0012](0012-imagenes-de-producto.md), producción usa las URLs de FakeStore (`PRODUCT_IMAGES=remote`) y la copia local queda para el desarrollo, CI, E2E y Lighthouse.
 - `/api/health` informa `servedFrom: "live" | "snapshot"` y responde 200 en ambos casos, porque la tienda sigue operativa.
 
 ## Alternativas consideradas

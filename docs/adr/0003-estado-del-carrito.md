@@ -42,7 +42,7 @@ El carrito no importa el módulo `products` (regla de ESLint): la página le pas
 5. **Persistencia robusta.**
    - Clave `delosi-cart`, con `version: 1` + `migrate`; una versión desconocida se descarta en vez de adivinarse. `partialize` guarda solo `items`.
    - Si leer el storage falla, `persist` nunca marca el store como hidratado y la UI quedaría esperando para siempre (lo verificamos en el código de Zustand 5.0.15). Por eso el storage propio **nunca lanza**: un JSON corrupto, `localStorage` bloqueado (modo privado) o la cuota excedida se tratan como "sin carrito guardado", y el carrito sigue funcionando en memoria.
-   - **`localStorage` es entrada del usuario:** `merge` la valida con Zod (ids, precios, cantidades 1–99 e imágenes con ruta local, porque `next/image` rechazaría un host desconocido). Si no valida, se descarta.
+   - **`localStorage` es entrada del usuario:** `merge` la valida con Zod (ids, precios, cantidades 1–99 e imágenes locales o de FakeStore, con la misma regla que `remotePatterns`, porque `next/image` rechazaría un host desconocido; ver el [ADR 0012](0012-imagenes-de-producto.md)). Si no valida, se descarta.
 6. **Sincronización entre pestañas:** el evento `storage` de la clave `delosi-cart` dispara `rehydrate()`, así que el contador se actualiza en todas las pestañas abiertas.
 7. **Dos puntos de entrada, una sola lógica:** "Agregar al carrito" en la PDP y el botón rápido de cada tarjeta del catálogo usan el mismo hook `useAddToCart` (agregar, anunciar y feedback breve).
    - `products` no importa `cart`: la tarjeta expone un slot `action` y la página compone el botón. `toCartProduct` es el único punto donde un `Product` se convierte en `CartProduct`.

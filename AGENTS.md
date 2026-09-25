@@ -41,6 +41,7 @@ Architecture overview: `docs/architecture.md`; testing strategy: `docs/testing-s
 - Next.js caching (`'use cache'`, `cacheTag`) lives in `src/composition-root.ts`, as module-level functions that decorate the repository (see ADR 0005).
 - These rules are enforced by ESLint (`import/no-restricted-paths`, `no-restricted-imports`) and verified by `src/test/architecture.test.ts`. Do not disable them; change them only with an ADR.
 - Validate every external input (API responses, search params, environment variables, `localStorage`) with Zod at the boundary.
+- Product images are local paths or FakeStore URLs: `src/shared/config/product-images.ts` is the single rule, used by `next.config.ts` (`remotePatterns`) and by validation (`isAllowedProductImage`). Production sets `PRODUCT_IMAGES=remote`; everything else uses the local copies (ADR 0012).
 - Server-only modules import `server-only` (e.g. `src/shared/config/server-env.ts`).
 - Prefer Server Components. Add `'use client'` only for interactivity, as deep in the tree as possible.
 

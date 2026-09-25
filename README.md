@@ -22,12 +22,12 @@ Tienda e-commerce construida con **Next.js 16 (App Router)** sobre la [FakeStore
 
 ### Criterios de evaluación
 
-| Criterio                         | Cómo se resolvió                                                                                                                                                                     | Evidencia                                                                                                                                                               |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Performance                      | PPR con Cache Components, imágenes AVIF/WebP con `next/image`, fuente self-hosted, sin CLS. Lighthouse desktop: 100 en todas las categorías; mobile (4G lento): 88–97 de rendimiento | [`lighthouse.ts`](apps/web/scripts/lighthouse.ts), job "Lighthouse budgets" en CI                                                                                       |
-| Arquitectura                     | Módulos por dominio con capas hexagonales, reglas de dependencias en ESLint verificadas por un test, raíz de composición única                                                       | [`docs/architecture.md`](docs/architecture.md), [ADR 0002](docs/adr/0002-arquitectura-por-modulos.md), [`architecture.test.ts`](apps/web/src/test/architecture.test.ts) |
-| Estrategia de estado del carrito | Zustand + selectores (predictibilidad y re-renders mínimos), un store por Provider (seguro en SSR), `localStorage` validado con Zod; alternativas comparadas                         | [ADR 0003](docs/adr/0003-estado-del-carrito.md)                                                                                                                         |
-| Testing                          | 384 tests unitarios y de integración (~98 % de cobertura en la app, 95 % mínimo en dominio), stories como tests con axe, 26 escenarios BDD en español en 3 navegadores               | [`docs/testing-strategy.md`](docs/testing-strategy.md), [ADR 0007](docs/adr/0007-estrategia-de-testing.md)                                                              |
+| Criterio                         | Cómo se resolvió                                                                                                                                                                                                                                                                              | Evidencia                                                                                                                                                               |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Performance                      | PPR con Cache Components, imágenes externas de FakeStore optimizadas con `next/image` (AVIF/WebP, `remotePatterns` acotado, lazy loading salvo las 4 candidatas a LCP), fuente self-hosted, sin CLS. Lighthouse desktop: 100 en todas las categorías; mobile (4G lento): 88–97 de rendimiento | [`lighthouse.ts`](apps/web/scripts/lighthouse.ts), job "Lighthouse budgets" en CI                                                                                       |
+| Arquitectura                     | Módulos por dominio con capas hexagonales, reglas de dependencias en ESLint verificadas por un test, raíz de composición única                                                                                                                                                                | [`docs/architecture.md`](docs/architecture.md), [ADR 0002](docs/adr/0002-arquitectura-por-modulos.md), [`architecture.test.ts`](apps/web/src/test/architecture.test.ts) |
+| Estrategia de estado del carrito | Zustand + selectores (predictibilidad y re-renders mínimos), un store por Provider (seguro en SSR), `localStorage` validado con Zod; alternativas comparadas                                                                                                                                  | [ADR 0003](docs/adr/0003-estado-del-carrito.md)                                                                                                                         |
+| Testing                          | 384 tests unitarios y de integración (~98 % de cobertura en la app, 95 % mínimo en dominio), stories como tests con axe, 26 escenarios BDD en español en 3 navegadores                                                                                                                        | [`docs/testing-strategy.md`](docs/testing-strategy.md), [ADR 0007](docs/adr/0007-estrategia-de-testing.md)                                                              |
 
 ### Extras sugeridos
 
@@ -109,7 +109,8 @@ FakeStore está detrás de un desafío de Cloudflare que **bloquea las IPs de da
 
 - En local se usan los datos en vivo; en CI y en Vercel, el snapshot.
 - `GET /api/health` indica la fuente actual (`servedFrom: "live" | "snapshot"`).
-- Las imágenes se sirven desde `apps/web/public/images/products/` y las optimiza `next/image`.
+- **Imágenes** ([ADR 0012](docs/adr/0012-imagenes-de-producto.md)): la API está bloqueada para Vercel, pero las fotos no. En producción (`PRODUCT_IMAGES=remote`) se cargan desde `fakestoreapi.com/img/` y las optimiza `next/image` (AVIF/WebP, tamaño según `sizes`, caché de 31 días). En el desarrollo, CI, E2E y Lighthouse se usa la copia de `apps/web/public/images/products/`, así corren sin red.
+- **Carga diferida:** solo las 4 primeras tarjetas (candidatas a LCP) se piden con prioridad; el resto de las imágenes es `lazy` y se carga al hacer scroll.
 
 Para regenerar el snapshot (desde una conexión residencial):
 
@@ -187,6 +188,7 @@ La arquitectura completa, con diagramas, está en [`docs/architecture.md`](docs/
 - [ADR 0009: Política de dependencias y entorno de ejecución](docs/adr/0009-politica-de-dependencias.md)
 - [ADR 0010: Snapshot versionado como respaldo de FakeStore](docs/adr/0010-snapshot-de-respaldo.md)
 - [ADR 0011: Metadata del catálogo en streaming y crawlers con `<head>` completo](docs/adr/0011-metadata-del-catalogo.md)
+- [ADR 0012: Imágenes de producto remotas en producción y copia local sin red](docs/adr/0012-imagenes-de-producto.md)
 
 ## Uso de IA
 
