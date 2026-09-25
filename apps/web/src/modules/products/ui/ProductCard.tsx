@@ -13,9 +13,15 @@ interface ProductCardProps {
   product: Product
   /** Above-the-fold card: loads its image eagerly with high fetch priority (LCP candidate). */
   highPriority?: boolean
+  /** `h2` in the catalog; `h3` under a section heading (related products). */
+  headingLevel?: 'h2' | 'h3'
 }
 
-export function ProductCard({ product, highPriority = false }: ProductCardProps) {
+export function ProductCard({
+  product,
+  highPriority = false,
+  headingLevel = 'h2',
+}: ProductCardProps) {
   return (
     <Card className={styles.card}>
       <Card.Media>
@@ -28,7 +34,7 @@ export function ProductCard({ product, highPriority = false }: ProductCardProps)
         />
       </Card.Media>
       <Card.Body>
-        <Card.Title as="h2" className={styles.title}>
+        <Card.Title as={headingLevel} className={styles.title}>
           <Card.Link as={Link} href={`/products/${product.id}`}>
             {product.title}
           </Card.Link>

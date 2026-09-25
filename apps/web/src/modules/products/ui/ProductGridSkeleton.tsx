@@ -3,15 +3,13 @@ import a11y from '@/shared/ui/a11y.module.css'
 import card from './ProductCard.module.css'
 import styles from './product-grid.module.css'
 
-const PLACEHOLDER_COUNT = 8
-
 /** Same grid, card box and line heights as ProductGrid: no layout shift when data arrives. */
-export function ProductGridSkeleton() {
+export function ProductGridSkeleton({ count = 8 }: { count?: number }) {
   return (
     <div role="status">
       <span className={a11y.visuallyHidden}>Cargando productos…</span>
       <div aria-hidden="true" className={styles.grid}>
-        {Array.from({ length: PLACEHOLDER_COUNT }, (_, index) => (
+        {Array.from({ length: count }, (_, index) => (
           <Card key={index} className={card.card}>
             <Card.Media>
               <Skeleton variant="rect" />
