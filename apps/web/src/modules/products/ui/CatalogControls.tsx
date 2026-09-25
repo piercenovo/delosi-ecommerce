@@ -46,6 +46,20 @@ export function CatalogControls({ query }: { query: CatalogQuery }) {
 
   useEffect(() => () => clearTimeout(debounceRef.current), [])
 
+  // Text typed (or an order chosen) before hydration is in the DOM but never reached React:
+  // on a slow device the search would be ignored until the next keystroke. Pick it up once.
+  useEffect(() => {
+    const form = formRef.current
+    if (!form || hrefFromForm() === currentHref) return
+
+    const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement | null
+    setSearch(field('q')?.value ?? '')
+    setSort(field('sort')?.value ?? '')
+    debounceRef.current = setTimeout(() => go({ replace: true }), SEARCH_DEBOUNCE_MS)
+    // Runs once, right after hydration.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   /** Same normalization as a no-JS submit: the form is read exactly as the server would. */
   function hrefFromForm(): string | null {
     if (!formRef.current) return null
