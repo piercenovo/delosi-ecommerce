@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   reactStrictMode: true,
   poweredByHeader: false,
+  // @delosi/ui ships TypeScript and CSS Modules sources (internal package, no build step).
+  transpilePackages: ['@delosi/ui'],
   images: {
     remotePatterns: [{ protocol: 'https', hostname: 'fakestoreapi.com', pathname: '/img/**' }],
   },
