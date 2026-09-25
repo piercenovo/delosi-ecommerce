@@ -1,0 +1,22 @@
+.wrapper {
+  position: relative;
+}
+
+.select {
+  appearance: none;
+  padding-inline-end: var(--space-10);
+  cursor: pointer;
+}
+
+.chevron {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: var(--space-4);
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-block: auto;
+  border-right: 2px solid var(--color-text-muted);
+  border-bottom: 2px solid var(--color-text-muted);
+  transform: rotate(45deg) translate(-25%, -25%);
+  pointer-events: none;
+}
