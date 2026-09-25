@@ -1,0 +1,54 @@
+.skeleton {
+  display: block;
+  background: linear-gradient(
+      90deg,
+      var(--color-skeleton) 25%,
+      var(--color-skeleton-shine) 50%,
+      var(--color-skeleton) 75%
+    )
+    0 0 / 200% 100%;
+  animation: shimmer var(--duration-shimmer) ease-in-out infinite;
+}
+
+.text {
+  width: 100%;
+  height: 1em;
+  border-radius: var(--radius-sm);
+}
+
+.text + .text {
+  margin-top: var(--space-2);
+}
+
+/* A shorter last line reads as a paragraph. */
+.text + .text:last-child {
+  width: 60%;
+}
+
+.rect {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-sm);
+}
+
+.circle {
+  width: var(--space-10);
+  height: var(--space-10);
+  border-radius: var(--radius-pill);
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
