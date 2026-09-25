@@ -31,10 +31,17 @@ export function ProductDetail({ product, actions }: ProductDetailProps) {
         </div>
       </div>
       <div className={styles.info}>
-        <h1 className={styles.title}>{product.title}</h1>
-        <ProductRating rating={product.rating} />
-        <ProductPrice price={product.price} size="lg" className={styles.price} />
-        <div className={styles.actions}>{actions}</div>
+        <div className={styles.heading}>
+          <h1 className={styles.title}>{product.title}</h1>
+          <ProductRating rating={product.rating} />
+        </div>
+        {/* The purchase decision reads as one unit: price, then the action. */}
+        <div className={styles.buy}>
+          <ProductPrice price={product.price} size="lg" />
+          <div className={styles.actions}>
+            <div className={styles.actionsBar}>{actions}</div>
+          </div>
+        </div>
         <section aria-labelledby="product-description" className={styles.description}>
           <h2 id="product-description" className={styles.descriptionTitle}>
             Descripción
