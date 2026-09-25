@@ -57,3 +57,16 @@ export const Small: Story = {
     await expect(Math.min(width, height)).toBeGreaterThanOrEqual(44)
   },
 }
+
+/** At a limit (e.g. quantity 1): announced as unavailable, still focusable, dimmed. */
+export const Unavailable: Story = {
+  args: { 'aria-disabled': true, 'aria-label': 'Disminuir cantidad' },
+  play: async ({ canvasElement }) => {
+    const button = within(canvasElement).getByRole('button', { name: 'Disminuir cantidad' })
+
+    await userEvent.tab()
+    await expect(button).toHaveFocus()
+    await expect(button).toHaveAttribute('aria-disabled', 'true')
+    await expect(Number(getComputedStyle(button).opacity)).toBeLessThan(1)
+  },
+}

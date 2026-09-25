@@ -19,12 +19,17 @@
   box-shadow: var(--focus-ring);
 }
 
-.iconButton:disabled {
+/*
+ * aria-disabled: unavailable but still focusable (a stepper at its limit keeps the keyboard
+ * focus instead of dropping it to <body>). The consumer ignores the click.
+ */
+.iconButton:disabled,
+.iconButton[aria-disabled='true'] {
   cursor: not-allowed;
   opacity: 0.55;
 }
 
-.ghost:hover:not(:disabled) {
+.ghost:hover:not(:disabled, [aria-disabled='true']) {
   background: var(--color-surface-muted);
 }
 
@@ -33,7 +38,7 @@
   background: var(--color-surface);
 }
 
-.secondary:hover:not(:disabled) {
+.secondary:hover:not(:disabled, [aria-disabled='true']) {
   border-color: var(--color-primary);
   color: var(--color-primary);
 }
