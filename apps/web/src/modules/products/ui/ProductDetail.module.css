@@ -1,4 +1,4 @@
-/* Shared with ProductDetailSkeleton: both measure the same. */
+/* Product detail: image and information side by side from 768px. */
 .detail {
   display: grid;
   gap: var(--space-8);

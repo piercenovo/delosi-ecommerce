@@ -4,16 +4,10 @@
   border-top: var(--border-width) solid var(--color-border);
 }
 
-.title,
-.titlePlaceholder {
+.title {
   margin: 0 0 var(--space-6);
   font-size: var(--text-2xl);
   font-weight: var(--weight-bold);
   line-height: var(--leading-tight);
   letter-spacing: -0.02em;
-}
-
-.titlePlaceholder {
-  width: 14ch;
-  height: calc(1em * var(--leading-tight));
 }

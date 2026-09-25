@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
 import { productRepository } from '@/composition-root'
 import { getProductDetail } from '@/modules/products/application/get-product-detail'
 import { getRelatedProducts } from '@/modules/products/application/get-related-products'
@@ -16,7 +15,7 @@ import { buildProductMetadata } from '@/modules/products/seo/product-metadata'
 import { AddToCartButton } from '@/modules/cart/ui/AddToCartButton'
 import { QuickAddButton } from '@/modules/cart/ui/QuickAddButton'
 import { ProductDetail } from '@/modules/products/ui/ProductDetail'
-import { RelatedProducts, RelatedProductsSkeleton } from '@/modules/products/ui/RelatedProducts'
+import { RelatedProducts } from '@/modules/products/ui/RelatedProducts'
 import { serverEnv } from '@/shared/config/server-env'
 import { Breadcrumbs, type BreadcrumbItem } from '@/shared/ui/Breadcrumbs'
 import { toCartProduct } from '../to-cart-product'
@@ -52,6 +51,9 @@ export default async function ProductPage({ params }: PageProps<'/products/[id]'
   ])
   const category = categories.find(({ slug }) => slug === product.categorySlug) ?? null
   const trail = breadcrumbTrail(product, category)
+  // Same cached catalog read as the rest of the page: no separate Suspense boundary, so the
+  // prerendered page ships complete (a fallback would only flash and shift the footer).
+  const related = await getRelatedProducts(productRepository, product)
 
   return (
     <>
@@ -60,20 +62,12 @@ export default async function ProductPage({ params }: PageProps<'/products/[id]'
       <Breadcrumbs items={trail} />
       <ProductDetail
         product={product}
-        actions={
-          <AddToCartButton
-            product={{
-              id: product.id,
-              title: product.title,
-              price: product.price,
-              image: product.image,
-            }}
-          />
-        }
+        actions={<AddToCartButton product={toCartProduct(product)} />}
       />
-      <Suspense fallback={<RelatedProductsSkeleton />}>
-        <Related product={product} />
-      </Suspense>
+      <RelatedProducts
+        products={related}
+        renderAction={(item) => <QuickAddButton product={toCartProduct(item)} />}
+      />
     </>
   )
 }
@@ -86,15 +80,6 @@ function breadcrumbTrail(product: Product, category: Category | null): Breadcrum
       : []),
     { label: product.title },
   ]
-}
-
-async function Related({ product }: { product: Product }) {
-  return (
-    <RelatedProducts
-      products={await getRelatedProducts(productRepository, product)}
-      renderAction={(related) => <QuickAddButton product={toCartProduct(related)} />}
-    />
-  )
 }
 
 function JsonLd({ data }: { data: Record<string, unknown> }) {

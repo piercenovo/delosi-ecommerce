@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { makeProduct } from '@/test/product-fixtures'
-import { RelatedProducts, RelatedProductsSkeleton } from './RelatedProducts'
+import { RelatedProducts } from './RelatedProducts'
 
 describe('RelatedProducts', () => {
   it('is a section named by its heading, with the related products', () => {
@@ -15,12 +15,5 @@ describe('RelatedProducts', () => {
     const { container } = render(<RelatedProducts products={[]} />)
 
     expect(container).toBeEmptyDOMElement()
-  })
-
-  it('has a skeleton that announces loading once', () => {
-    render(<RelatedProductsSkeleton />)
-
-    expect(screen.getByRole('status')).toHaveTextContent('Cargando productos')
-    expect(screen.queryByRole('heading')).not.toBeInTheDocument()
   })
 })

@@ -13,6 +13,8 @@ export const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'
 export interface Site {
   origin: string
   lastResponse: Response | null
+  /** Raw HTML of the last request made as a crawler (before any JavaScript runs). */
+  crawledHtml: string
   /** Navigates within the current app instance and remembers the response (status codes). */
   open(path: string): Promise<void>
 }
@@ -33,6 +35,7 @@ export const test = base.extend<Fixtures>({
     const site: Site = {
       origin: APP_URL,
       lastResponse: null,
+      crawledHtml: '',
       async open(path) {
         site.lastResponse = await page.goto(`${site.origin}${path}`)
       },
