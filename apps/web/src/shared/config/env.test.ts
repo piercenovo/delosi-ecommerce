@@ -7,6 +7,7 @@ describe('parseServerEnv', () => {
     expect(parseServerEnv({})).toEqual({
       PRODUCTS_API_BASE_URL: 'https://fakestoreapi.com',
       NEXT_PUBLIC_SITE_URL: 'http://localhost:3000',
+      CATALOG_SNAPSHOT_FALLBACK: 'on',
     })
   })
 
@@ -34,5 +35,14 @@ describe('parseServerEnv', () => {
     const env = parseServerEnv({ REVALIDATE_SECRET: 'a-very-long-secret-value' })
 
     expect(env.REVALIDATE_SECRET).toBe('a-very-long-secret-value')
+  })
+
+  it('lets tests turn the snapshot fallback off, and nothing else', () => {
+    expect(parseServerEnv({ CATALOG_SNAPSHOT_FALLBACK: 'off' }).CATALOG_SNAPSHOT_FALLBACK).toBe(
+      'off',
+    )
+    expect(() => parseServerEnv({ CATALOG_SNAPSHOT_FALLBACK: 'false' })).toThrow(
+      /CATALOG_SNAPSHOT_FALLBACK/,
+    )
   })
 })
