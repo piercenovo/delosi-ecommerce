@@ -8,6 +8,16 @@
   min-width: 14rem;
 }
 
+/*
+ * "Added" is a moment of value: maracuyá for two seconds. Doubled and :hover selectors outrank
+ * the design system's `.primary:hover:not(:disabled)`, so the state holds under the pointer.
+ */
+.button.added,
+.button.added:hover:not(:disabled) {
+  background: var(--color-highlight);
+  color: var(--color-on-highlight);
+}
+
 .labels {
   display: inline-grid;
 }

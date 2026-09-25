@@ -2,7 +2,9 @@
  * Delosi Store design tokens.
  * Components use only these custom properties: no hard-coded colors or spacing.
  * Palette: cool neutrals, one accent ("chicha morada" purple) and a "maracuyá"
- * yellow reserved for the cart count.
+ * yellow for moments of value (the cart count, "added" confirmations).
+ * The brand purple owns one region (the site header); everything else stays neutral so the
+ * product photos lead.
  */
 :root {
   /* Color: light theme (default) */
@@ -16,6 +18,13 @@
   --color-primary: #5b2a86;
   --color-primary-hover: #48206c;
   --color-on-primary: #ffffff;
+  /* Brand region (header): same purple in both themes, deeper in dark. */
+  --color-brand: #5b2a86;
+  --color-brand-hover: #6e3a9e;
+  --color-on-brand: #ffffff;
+  --color-on-brand-muted: #e4d8f0;
+  /* Behind product photos: a lavender tint of the brand, so the photos read as ours. */
+  --color-media: #f1eaf8;
   --color-highlight: #f5c84c;
   --color-on-highlight: #1d1b22;
   --color-danger: #b42318;
@@ -84,6 +93,9 @@
     --color-primary: #c9a2ea;
     --color-primary-hover: #dcc1f2;
     --color-on-primary: #1d1b22;
+    --color-brand: #3a1f57;
+    --color-brand-hover: #4b2b6e;
+    --color-media: #2b2338;
     --color-danger: #f97066;
     --color-success: #5fd39a;
     --color-focus: #c9a2ea;
@@ -105,6 +117,9 @@
   --color-primary: #c9a2ea;
   --color-primary-hover: #dcc1f2;
   --color-on-primary: #1d1b22;
+  --color-brand: #3a1f57;
+  --color-brand-hover: #4b2b6e;
+  --color-media: #2b2338;
   --color-danger: #f97066;
   --color-success: #5fd39a;
   --color-focus: #c9a2ea;

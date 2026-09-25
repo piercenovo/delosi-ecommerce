@@ -1,8 +1,9 @@
 'use client'
 
-import { IconButton } from '@delosi/ui'
+import { cx, IconButton } from '@delosi/ui'
 import type { CartProduct } from '../../domain/cart'
 import { CartPlusIcon, CheckIcon } from '../icons'
+import styles from './QuickAddButton.module.css'
 import { useAddToCart } from './use-add-to-cart'
 
 /**
@@ -20,6 +21,7 @@ export function QuickAddButton({ product }: { product: CartProduct }) {
       aria-label={`Agregar «${product.title}» al carrito`}
       disabled={unavailable}
       onClick={addToCart}
+      className={cx(justAdded && styles.added)}
     >
       {justAdded ? <CheckIcon /> : <CartPlusIcon />}
     </IconButton>

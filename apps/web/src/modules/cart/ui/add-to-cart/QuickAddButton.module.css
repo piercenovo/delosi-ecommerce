@@ -1,0 +1,11 @@
+/*
+ * Same maracuyá confirmation as the product page button (see AddToCartButton.module.css).
+ * The doubled class outranks the design system's `.secondary:hover:not(...)` (0,3,0) without
+ * depending on stylesheet order.
+ */
+.added.added,
+.added.added:hover:not(:disabled) {
+  border-color: var(--color-highlight);
+  background: var(--color-highlight);
+  color: var(--color-on-highlight);
+}
