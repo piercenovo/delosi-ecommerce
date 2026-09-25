@@ -2,7 +2,7 @@
 
 Tienda e-commerce construida con **Next.js 16 (App Router)** sobre la [FakeStore API](https://fakestoreapi.com), como solución al reto técnico Frontend Senior de Delosi.
 
-**Demo:** https://delosi-shop.vercel.app · **Estado de la fuente de datos:** [`/api/health`](https://delosi-shop.vercel.app/api/health)
+**Demo:** https://delosi-shop.vercel.app · **Design System (Storybook):** https://delosi-ui.vercel.app · **Estado de la fuente de datos:** [`/api/health`](https://delosi-shop.vercel.app/api/health)
 
 > 🚧 En construcción. Este README se completa al cerrar cada fase.
 

@@ -2,7 +2,7 @@
 
 Design System de Delosi Store: tokens de diseño y los componentes que usa la tienda, con CSS Modules y documentados en Storybook.
 
-- **Storybook:** se publica en Vercel (ver el README raíz).
+- **Storybook:** https://delosi-ui.vercel.app
 - **Decisiones:** [ADR 0006](../../docs/adr/0006-design-system-css-modules.md).
 
 ## Uso
