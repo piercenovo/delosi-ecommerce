@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { categories } from '@/test/product-fixtures'
-import { buildCatalogMetadata } from './catalog-metadata'
+import { buildCatalogMetadata, SITE_OG_IMAGE } from './catalog-metadata'
 
 describe('buildCatalogMetadata', () => {
   it('describes the whole catalog without filters', () => {
@@ -42,5 +42,15 @@ describe('buildCatalogMetadata', () => {
 
     expect(metadata.title).toBe('Catálogo')
     expect(metadata.alternates?.canonical).toBe('/products')
+  })
+
+  it('shares the brand card on Open Graph and Twitter', () => {
+    const metadata = buildCatalogMetadata({}, categories)
+
+    expect(metadata.openGraph).toMatchObject({ images: [SITE_OG_IMAGE] })
+    expect(metadata.twitter).toMatchObject({
+      card: 'summary_large_image',
+      images: ['/opengraph-image'],
+    })
   })
 })
