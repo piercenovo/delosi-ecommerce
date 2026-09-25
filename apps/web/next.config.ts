@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
   // @delosi/ui ships TypeScript and CSS Modules sources (internal package, no build step).
   transpilePackages: ['@delosi/ui'],
   images: {
+    // AVIF first (smaller at the same quality), WebP for browsers without AVIF support.
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [{ protocol: 'https', hostname: 'fakestoreapi.com', pathname: '/img/**' }],
   },
   async redirects() {
