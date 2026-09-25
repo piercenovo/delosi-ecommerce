@@ -23,7 +23,7 @@ describe('ProductDetail', () => {
   it('shows price, rating and description', () => {
     render(<ProductDetail product={product} />)
 
-    expect(screen.getByText('USD 695.00', { normalizer: (text) => text })).toBeVisible()
+    expect(screen.getByText('USD\u00a0695.00', { normalizer: (text) => text })).toBeVisible()
     expect(screen.getByRole('img', { name: 'Valoración 4.6 de 5, 400 reseñas' })).toBeVisible()
     expect(screen.getByRole('region', { name: 'Descripción' })).toHaveTextContent(
       'From our Legends Collection.',

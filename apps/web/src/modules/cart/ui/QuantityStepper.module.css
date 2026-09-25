@@ -1,0 +1,13 @@
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.value {
+  min-width: 2.5ch;
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-semibold);
+  text-align: center;
+}
