@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   reactStrictMode: true,
   poweredByHeader: false,
+  // next dev writes AGENTS.md + CLAUDE.md into apps/web when an AI agent runs it. The repo
+  // keeps a single root AGENTS.md (see AGENTS.md), so the generated files stay off.
+  agentRules: false,
   // @delosi/ui ships TypeScript and CSS Modules sources (internal package, no build step).
   transpilePackages: ['@delosi/ui'],
   images: {

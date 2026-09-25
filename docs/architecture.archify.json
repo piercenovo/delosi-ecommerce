@@ -1,0 +1,339 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Delosi Store: arquitectura",
+    "output": "architecture.html",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "catalogo",
+        "label": "Catálogo en el servidor",
+        "focus": [
+          "navegador",
+          "paginas",
+          "composicion",
+          "respaldo",
+          "fakestore",
+          "snapshot"
+        ],
+        "note": "Una request al catálogo: páginas RSC, lecturas cacheadas y respaldo al snapshot si FakeStore falla."
+      },
+      {
+        "id": "carrito",
+        "label": "Carrito en el cliente",
+        "focus": [
+          "navegador",
+          "carrito",
+          "storage"
+        ],
+        "note": "Estado global con Zustand, persistido y validado con Zod; el servidor nunca lo conoce."
+      },
+      {
+        "id": "observabilidad",
+        "label": "Errores y métricas",
+        "focus": [
+          "navegador",
+          "paginas",
+          "observabilidad",
+          "logs"
+        ],
+        "note": "Errores del servidor y del navegador, y Web Vitals, en JSON estructurado; el digest los une."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "navegador",
+      "type": "external",
+      "label": "Navegador",
+      "sublabel": "usuario o crawler",
+      "pos": [
+        40,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "carrito",
+      "type": "frontend",
+      "label": "Carrito",
+      "sublabel": "Zustand + reducer puro",
+      "pos": [
+        40,
+        420
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "storage",
+      "type": "database",
+      "label": "localStorage",
+      "sublabel": "delosi-cart v1",
+      "pos": [
+        40,
+        570
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "observabilidad",
+      "type": "backend",
+      "label": "Observabilidad",
+      "sublabel": "/api/errors · /api/vitals",
+      "pos": [
+        290,
+        110
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "logs",
+      "type": "cloud",
+      "label": "Logs de Vercel",
+      "sublabel": "JSON por línea",
+      "pos": [
+        560,
+        110
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "paginas",
+      "type": "frontend",
+      "label": "Páginas (app/)",
+      "sublabel": "RSC + PPR",
+      "pos": [
+        290,
+        270
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "ds",
+      "type": "frontend",
+      "label": "@delosi/ui",
+      "sublabel": "Design System",
+      "pos": [
+        290,
+        420
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "composicion",
+      "type": "backend",
+      "label": "composition-root",
+      "sublabel": "'use cache' + cacheTag",
+      "pos": [
+        560,
+        270
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "respaldo",
+      "type": "backend",
+      "label": "FallbackRepository",
+      "sublabel": "vivo → snapshot",
+      "pos": [
+        830,
+        270
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "snapshot",
+      "type": "database",
+      "label": "Snapshot",
+      "sublabel": "JSON versionado",
+      "pos": [
+        830,
+        420
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "fakestore",
+      "type": "external",
+      "label": "FakeStore API",
+      "sublabel": "HTTPS",
+      "pos": [
+        1100,
+        270
+      ],
+      "size": [
+        150,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Cliente",
+      "wraps": [
+        "navegador",
+        "carrito",
+        "storage"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Vercel (Next.js 16, Node 24)",
+      "wraps": [
+        "observabilidad",
+        "logs",
+        "paginas",
+        "ds",
+        "composicion",
+        "respaldo",
+        "snapshot"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "request",
+      "from": "navegador",
+      "to": "paginas",
+      "label": "HTML + RSC",
+      "variant": "emphasis"
+    },
+    {
+      "id": "lecturas",
+      "from": "paginas",
+      "to": "composicion",
+      "label": "ProductRepository"
+    },
+    {
+      "id": "miss",
+      "from": "composicion",
+      "to": "respaldo",
+      "label": "cache miss"
+    },
+    {
+      "id": "vivo",
+      "from": "respaldo",
+      "to": "fakestore",
+      "label": "fetch + Zod"
+    },
+    {
+      "id": "fallback",
+      "from": "respaldo",
+      "to": "snapshot",
+      "label": "si falla",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 24
+    },
+    {
+      "id": "componentes",
+      "from": "ds",
+      "to": "paginas",
+      "label": "componentes",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "estado",
+      "from": "navegador",
+      "to": "carrito",
+      "label": "selectores",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 24
+    },
+    {
+      "id": "persist",
+      "from": "carrito",
+      "to": "storage",
+      "label": "persist + Zod",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 24
+    },
+    {
+      "id": "beacon",
+      "from": "navegador",
+      "to": "observabilidad",
+      "label": "sendBeacon",
+      "fromSide": "top",
+      "toSide": "left"
+    },
+    {
+      "id": "server-errors",
+      "from": "paginas",
+      "to": "observabilidad",
+      "label": "onRequestError",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "json",
+      "from": "observabilidad",
+      "to": "logs",
+      "label": "JSON"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Catálogo",
+      "items": [
+        "Filtros, búsqueda y orden en la URL, resueltos en el servidor",
+        "Lecturas cacheadas con etiquetas y revalidación bajo demanda",
+        "Snapshot versionado si FakeStore no responde"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Carrito",
+      "items": [
+        "Un store por Provider, nunca compartido entre requests",
+        "Placeholder del mismo tamaño hasta leer el storage: sin CLS",
+        "Sincronizado entre pestañas"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Observabilidad",
+      "items": [
+        "Puertos ErrorReporter y MetricsReporter con adaptador de consola",
+        "El digest une el error del usuario con el log del servidor"
+      ]
+    }
+  ]
+}

@@ -29,7 +29,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="es" className={brandFont.variable}>
-      <body className={styles.body}>
+      {/* Browser extensions (ColorZilla, Grammarly) add attributes to <body> before React
+          hydrates. This silences the mismatch for this element's own attributes only;
+          its children are still checked. */}
+      <body className={styles.body} suppressHydrationWarning>
         <SkipLink />
         {/* Client provider; the pages inside it stay Server Components. */}
         <CartProvider>
