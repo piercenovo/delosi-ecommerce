@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Input, Select, type SelectOption } from '@delosi/ui'
+import { Input, Select, type SelectOption } from '@delosi/ui'
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import a11y from '@/shared/ui/a11y.module.css'
 import { buildCatalogHref, parseCatalogQuery, type RawSearchParams } from '../catalog-search-params'
@@ -19,8 +19,8 @@ const SORT_OPTIONS = [
 ] as const satisfies readonly (SelectOption & { value: SortKey | '' })[]
 
 /**
- * Search and sort. It is a native GET form (it submits before hydration too), so the URL stays
- * the source of truth. Once hydrated, sorting navigates on change and searching after a short
+ * Search and sort. It is a native GET form: Enter submits it even before hydration (implicit
+ * submission, so no submit button is needed), and the URL stays the source of truth. Once hydrated, sorting navigates on change and searching after a short
  * pause. The current query arrives as a prop (no `useSearchParams`, no extra Suspense).
  */
 export function CatalogControls({ query }: { query: CatalogQuery }) {
@@ -102,7 +102,6 @@ export function CatalogControls({ query }: { query: CatalogQuery }) {
         maxLength={100}
         value={search}
         onChange={handleSearchChange}
-        className={styles.search}
       />
       <Select
         name="sort"
@@ -111,11 +110,7 @@ export function CatalogControls({ query }: { query: CatalogQuery }) {
         options={SORT_OPTIONS}
         value={sort}
         onChange={handleSortChange}
-        className={styles.sort}
       />
-      <Button type="submit" variant="secondary">
-        Buscar
-      </Button>
       <p role="status" className={a11y.visuallyHidden}>
         {isPending ? 'Actualizando resultados…' : ''}
       </p>

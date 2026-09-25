@@ -1,8 +1,7 @@
-import { EmptyState } from '@delosi/ui'
+import { Button, EmptyState } from '@delosi/ui'
 import Link from 'next/link'
 import type { CatalogQuery } from '../domain/catalog-query'
 import type { Category } from '../domain/product'
-import styles from './CatalogEmptyState.module.css'
 
 interface CatalogEmptyStateProps {
   query: CatalogQuery
@@ -21,9 +20,9 @@ export function CatalogEmptyState({ query, category }: CatalogEmptyStateProps) {
       title="No encontramos productos"
       description={description}
       action={
-        <Link href="/products" className={styles.action}>
+        <Button as={Link} href="/products">
           Quitar filtros
-        </Link>
+        </Button>
       }
     />
   )

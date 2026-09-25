@@ -20,7 +20,6 @@ export function CatalogSkeleton() {
         <div className={styles.controls}>
           <Skeleton variant="rect" className={styles.search} />
           <Skeleton variant="rect" className={styles.sort} />
-          <Skeleton variant="rect" className={styles.button} />
         </div>
       </div>
       <ProductGridSkeleton />

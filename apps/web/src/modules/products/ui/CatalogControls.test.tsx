@@ -47,6 +47,8 @@ describe('CatalogControls', () => {
     expect(sortSelect()).toHaveAttribute('name', 'sort')
     expect(sortSelect()).toHaveValue('price-asc')
     expect(form.querySelector('input[type=hidden][name=category]')).toHaveValue('jewelery')
+    // Enter submits implicitly (one text field); searching already happens while typing.
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
   })
 
   it('searches once, after the person stops typing, keeping the other filters', async () => {
