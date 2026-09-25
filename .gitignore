@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+storybook-static/
+*.tsbuildinfo
+next-env.d.ts
+
+# Turborepo / Vercel
+.turbo/
+.vercel/
+
+# Testing & quality reports
+coverage/
+playwright-report/
+test-results/
+blob-report/
+playwright/.cache/
+.features-gen/
+.lighthouseci/
+
+# Environment variables (keep .env.example)
+.env
+.env*.local
+
+# Local working documents (spec, plans): never versioned
+.planning/
+
+# Local AI tooling settings
+.claude/settings.local.json
+
+# OS / editors
+.DS_Store
+*.log
+npm-debug.log*
+pnpm-debug.log*
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json

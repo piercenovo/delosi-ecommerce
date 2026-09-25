@@ -1,0 +1,11 @@
+pnpm-lock.yaml
+.next
+.turbo
+coverage
+storybook-static
+playwright-report
+test-results
+.features-gen
+.lighthouseci
+next-env.d.ts
+.planning

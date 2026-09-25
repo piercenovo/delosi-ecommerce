@@ -1,0 +1,15 @@
+packages:
+  - apps/*
+  - packages/*
+
+# Pin exact versions on `pnpm add` and fail on an unsupported Node version.
+saveExact: true
+engineStrict: true
+
+# Supply-chain protection: never install versions published less than 24 h ago
+# (pnpm default since v11, declared explicitly to document the decision).
+minimumReleaseAge: 1440
+
+# Install scripts are blocked unless a package is explicitly allowed here.
+# strictDepBuilds (default true) makes `pnpm install` fail on unreviewed scripts.
+allowBuilds: {}
