@@ -59,3 +59,8 @@ Característica: Catálogo de productos
     Y vuelvo atrás
     Entonces el título de la página es "Joyería"
     Y veo 4 productos
+
+  Escenario: Un buscador recibe los metadatos de la categoría en el head
+    Cuando un buscador pide la página "/products?category=jewelery"
+    Entonces el head incluye la URL canónica "/products?category=jewelery"
+    Y el head incluye la descripción "Joyería en Delosi Store"
