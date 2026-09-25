@@ -16,7 +16,9 @@ El código de negocio vive en `apps/web/src/modules/<dominio>/`, dividido en cap
 | `domain/`         | Tipos, reglas puras (filtro, búsqueda, orden), errores y puertos (`ProductRepository`)                     | Nada más del proyecto; sin React ni Next |
 | `application/`    | Casos de uso (`getCatalog`, `getProductDetail`, `getRelatedProducts`) que reciben el puerto como parámetro | `domain/`                                |
 | `infrastructure/` | Adaptadores: FakeStore, snapshot, fallback, tags de caché, revalidación                                    | `domain/`                                |
-| `ui/`             | Componentes del módulo                                                                                     | `domain/` (tipos), `@delosi/ui`          |
+| `ui/`             | Componentes del módulo                                                                                     | `domain/` (tipos), `url/`, `@delosi/ui`  |
+| `url/`            | Adaptador de entrada: search params ↔ `CatalogQuery` (`parseCatalogQuery`, `buildCatalogHref`), con Zod    | `domain/`; sin React ni Next             |
+| `seo/`            | Metadata, JSON-LD y sitemap a partir de datos de dominio que la página ya obtuvo                           | `domain/`, `url/`, tipos de `next`       |
 
 Además:
 
@@ -29,8 +31,10 @@ Además:
 **Cumplimiento automático:** las reglas no dependen de la disciplina de cada persona.
 
 - `import/no-restricted-paths` prohíbe las dependencias entre capas en la dirección incorrecta y que un módulo importe rutas o el composition root.
-- `no-restricted-imports` impide usar `react`, `react-dom` y `next` en `domain/` y `application/`.
+- `no-restricted-imports` impide usar `react`, `react-dom`, `next` y `zustand` en `domain/`, `application/` y `url/`.
 - `src/test/architecture.test.ts` lintea fragmentos de código en cada capa y verifica el mensaje exacto de cada regla. Si alguien desactiva o rompe una regla, el CI falla.
+
+**Actualización (2026-09-25):** `seo/` y los search params (entonces `catalog-search-params.ts`, en la raíz del módulo) habían quedado fuera de las zonas de ESLint: nada impedía, por ejemplo, que `seo/` importara `infrastructure/`. No había violaciones, pero la garantía no los cubría. Se declararon como capas (`seo/` y `url/`), con sus reglas y casos en `architecture.test.ts`. El módulo del carrito suma la capa `store/` (ver el [ADR 0003](0003-estado-del-carrito.md)).
 
 **Cobertura:** umbral global del 80 % y del 95 % en `domain/`, verificado en CI. Las rutas (`src/app/**`) y el composition root se excluyen de la cobertura unitaria: son cableado de Next y se validan con los tests E2E.
 

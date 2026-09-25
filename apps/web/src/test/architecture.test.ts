@@ -95,6 +95,42 @@ describe('architecture rules', { timeout: 30_000 }, () => {
       "import { cache } from 'react'\nexport const x = cache\n",
       /framework-free/,
     ],
+    [
+      'url → ui',
+      `${PRODUCTS}/url/example.ts`,
+      "import { ProductGrid } from '../ui/ProductGrid'\nexport const x = ProductGrid\n",
+      /url\/ maps the URL to the domain/,
+    ],
+    [
+      'url → next',
+      `${PRODUCTS}/url/example.ts`,
+      "import { redirect } from 'next/navigation'\nexport const x = redirect\n",
+      /framework-free/,
+    ],
+    [
+      'seo → infrastructure',
+      `${PRODUCTS}/seo/example.ts`,
+      "import { CATALOG_CACHE_TAGS } from '../infrastructure/cache-tags'\nexport const x = CATALOG_CACHE_TAGS\n",
+      /seo\/ builds metadata from domain data/,
+    ],
+    [
+      'seo → application',
+      `${PRODUCTS}/seo/example.ts`,
+      "import { getCatalog } from '../application/get-catalog'\nexport const x = getCatalog\n",
+      /seo\/ builds metadata from domain data/,
+    ],
+    [
+      'domain → url',
+      `${PRODUCTS}/domain/example.ts`,
+      "import { buildCatalogHref } from '../url/catalog-search-params'\nexport const x = buildCatalogHref\n",
+      /domain\/ is pure/,
+    ],
+    [
+      'application → seo',
+      `${PRODUCTS}/application/example.ts`,
+      "import { buildSitemap } from '../seo/sitemap'\nexport const x = buildSitemap\n",
+      /application\/ depends only on domain/,
+    ],
   ])('forbids %s', async (_case, filePath, code, expectedMessage) => {
     const errors = await restrictedImportErrors(filePath, code)
 
@@ -127,6 +163,21 @@ describe('architecture rules', { timeout: 30_000 }, () => {
       'app → composition root',
       'src/app/example/page.tsx',
       "import { productRepository } from '@/composition-root'\nexport const x = productRepository\n",
+    ],
+    [
+      'url → domain (and zod)',
+      `${PRODUCTS}/url/example.ts`,
+      "import { z } from 'zod'\nimport { SORT_KEYS } from '../domain/catalog-query'\nexport const x = [z, SORT_KEYS]\n",
+    ],
+    [
+      'seo → url and domain',
+      `${PRODUCTS}/seo/example.ts`,
+      "import { buildCatalogHref } from '../url/catalog-search-params'\nimport { sortProducts } from '../domain/sort-strategies'\nexport const x = [buildCatalogHref, sortProducts]\n",
+    ],
+    [
+      'ui → url',
+      `${PRODUCTS}/ui/example.tsx`,
+      "import { parseCatalogQuery } from '../url/catalog-search-params'\nexport const x = parseCatalogQuery\n",
     ],
   ])('allows %s', async (_case, filePath, code) => {
     await expect(restrictedImportErrors(filePath, code)).resolves.toEqual([])

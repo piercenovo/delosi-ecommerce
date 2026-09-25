@@ -34,6 +34,7 @@ Architecture overview: `docs/architecture.md`; testing strategy: `docs/testing-s
 
 - `src/app/` only composes: routing, layouts, metadata. No business logic there.
 - Feature code lives in `src/modules/<domain>/`, split into `domain/`, `application/`, `infrastructure/` and `ui/`. Client state gets a `store/` layer (the cart: Zustand + persist, ADR 0003): it may use `domain/`, and only `ui/` uses it.
+- `url/` maps search params to the domain query and back (`parseCatalogQuery`, `buildCatalogHref`): it uses only `domain/` and stays framework-free. `seo/` builds metadata, JSON-LD and the sitemap from domain data the page already loaded: it uses only `domain/` and `url/` (plus `next` types). Every file in a module belongs to a layer folder, so the rules below cover it.
 - `domain/` is pure TypeScript: no React, Next.js, `fetch` or browser APIs.
 - `application/` depends only on `domain/`. `infrastructure/` implements the ports declared in `domain/`.
 - `ui/` never imports from `infrastructure/`. Pages obtain repositories from `src/composition-root.ts`.

@@ -3,7 +3,10 @@ import { Suspense } from 'react'
 import { productRepository } from '@/composition-root'
 import { QuickAddButton } from '@/modules/cart/ui/QuickAddButton'
 import { getCatalog } from '@/modules/products/application/get-catalog'
-import { parseCatalogQuery, type RawSearchParams } from '@/modules/products/catalog-search-params'
+import {
+  parseCatalogQuery,
+  type RawSearchParams,
+} from '@/modules/products/url/catalog-search-params'
 import { buildCatalogMetadata } from '@/modules/products/seo/catalog-metadata'
 import { CatalogControls } from '@/modules/products/ui/CatalogControls'
 import { CatalogEmptyState } from '@/modules/products/ui/CatalogEmptyState'

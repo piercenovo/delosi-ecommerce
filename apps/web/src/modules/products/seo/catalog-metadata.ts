@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { buildCatalogHref } from '../catalog-search-params'
+import { buildCatalogHref } from '../url/catalog-search-params'
 import type { CatalogQuery } from '../domain/catalog-query'
 import type { Category } from '../domain/product'
 
