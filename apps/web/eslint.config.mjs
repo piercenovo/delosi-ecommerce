@@ -17,18 +17,28 @@ const architectureRules = {
         zones: [
           {
             target: layer('domain'),
-            from: [layer('application'), layer('infrastructure'), layer('ui')],
+            from: [layer('application'), layer('infrastructure'), layer('store'), layer('ui')],
             message: 'domain/ is pure: it must not depend on other layers.',
           },
           {
             target: layer('application'),
-            from: [layer('infrastructure'), layer('ui')],
+            from: [layer('infrastructure'), layer('store'), layer('ui')],
             message: 'application/ depends only on domain/ (receive adapters as parameters).',
           },
           {
             target: layer('ui'),
             from: [layer('infrastructure')],
             message: 'ui/ must not use infrastructure/ directly; pages inject what it needs.',
+          },
+          {
+            target: layer('store'),
+            from: [layer('ui')],
+            message: 'store/ holds client state; it must not depend on ui/.',
+          },
+          {
+            target: './src/modules/cart/**',
+            from: ['./src/modules/products/**'],
+            message: 'cart/ must not import the products module; the page passes product data in.',
           },
           // The plugin does not allow mixing glob and literal paths in one zone.
           {
@@ -54,13 +64,13 @@ const frameworkFreeLayers = {
     'no-restricted-imports': [
       'error',
       {
-        paths: ['react', 'react-dom', 'next'].map((name) => ({
+        paths: ['react', 'react-dom', 'next', 'zustand'].map((name) => ({
           name,
           message: 'domain/ and application/ must stay framework-free.',
         })),
         patterns: [
           {
-            group: ['next/*', 'react-dom/*'],
+            group: ['next/*', 'react-dom/*', 'zustand/*'],
             message: 'domain/ and application/ must stay framework-free.',
           },
         ],

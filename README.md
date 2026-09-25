@@ -95,6 +95,7 @@ docs/adr          Registro de decisiones de arquitectura
 
 - [ADR 0001: Monorepo con pnpm workspaces y Turborepo](docs/adr/0001-monorepo-turborepo.md)
 - [ADR 0002: Arquitectura por módulos de dominio y capas](docs/adr/0002-arquitectura-por-modulos.md)
+- [ADR 0003: Estado del carrito con Zustand, un reducer puro y persistencia](docs/adr/0003-estado-del-carrito.md)
 - [ADR 0004: Estado del catálogo en la URL con APIs nativas](docs/adr/0004-estado-en-url.md)
 - [ADR 0005: Caché del catálogo y revalidación bajo demanda](docs/adr/0005-cache-y-revalidacion.md)
 - [ADR 0006: Design System acotado con CSS Modules y tokens](docs/adr/0006-design-system-css-modules.md)
