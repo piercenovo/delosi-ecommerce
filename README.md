@@ -48,6 +48,21 @@ Para regenerar el snapshot (desde una conexión residencial):
 pnpm --filter @delosi/web snapshot
 ```
 
+## Caché y revalidación bajo demanda
+
+Las lecturas del catálogo se cachean con Cache Components de Next.js (`'use cache'`) y se etiquetan con `products`, `categories` y `product:<id>`. El filtrado, la búsqueda y el orden se aplican en cada request sobre esos datos cacheados, así una sola entrada de caché sirve cualquier combinación de filtros.
+
+Para invalidar una etiqueta (por ejemplo, tras un cambio de precios en una campaña), con `REVALIDATE_SECRET` configurado:
+
+```bash
+curl -X POST https://delosi-shop.vercel.app/api/revalidate \
+  -H "content-type: application/json" \
+  -H "x-revalidate-secret: $REVALIDATE_SECRET" \
+  -d '{"tag":"products"}'
+```
+
+Solo se aceptan las etiquetas anteriores. Sin secreto configurado, el endpoint responde `503` (deshabilitado).
+
 ## Estructura
 
 ```

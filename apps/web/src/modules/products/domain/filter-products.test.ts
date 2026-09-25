@@ -68,6 +68,21 @@ describe('searchProducts', () => {
     expect(searchProducts(products, 'cotton gold')).toEqual([])
   })
 
+  it('matches terms at the start of a word, not inside it', () => {
+    const womensShirt = makeProduct({
+      id: 18,
+      title: 'Womens T Shirt Casual Cotton Short',
+      categorySlug: 'womens-clothing',
+    })
+
+    expect(searchProducts([jacket, womensShirt], 'mens')).toEqual([jacket])
+    expect(searchProducts([jacket, womensShirt], 'cott')).toEqual([jacket, womensShirt])
+  })
+
+  it('treats punctuation as a word separator', () => {
+    expect(searchProducts(products, 'autumn')).toEqual([jacket])
+  })
+
   it('returns an empty list when nothing matches', () => {
     expect(searchProducts(products, 'laptop')).toEqual([])
   })
