@@ -31,7 +31,8 @@
   margin-top: var(--space-2);
 }
 
-.action a {
+/* Zero specificity: a plain link gets these defaults, a styled one (Button as link) keeps its own. */
+:where(.action) a {
   color: var(--color-primary);
   font-weight: var(--weight-semibold);
 }

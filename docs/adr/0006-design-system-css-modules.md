@@ -23,7 +23,8 @@ La tienda necesita componentes consistentes, accesibles y reutilizables, y la of
 **APIs que previenen errores:**
 
 - `IconButton` exige `aria-label` por tipo; `Input` y `Select` exigen `label`.
-- `Chip` y `Card.Link` son polimórficos con genéricos (`as={Link}`): las props se infieren del elemento que se renderiza.
+- `Button`, `Chip` y `Card.Link` son polimórficos con genéricos (`as={Link}`): las props se infieren del elemento que se renderiza. Un link con apariencia de botón es un `Button as={Link}`, no CSS suelto en la app.
+- Los estilos que un componente aplica a hijos que no controla (p. ej. links en `EmptyState`) usan `:where()`: especificidad cero, así nunca le ganan a la clase de otro componente.
 - `Card.Media` saca la imagen del flujo dentro de una caja de proporción fija, para que ninguna imagen cambie el tamaño de la tarjeta (sin CLS).
 - Los tests de tipos (`@ts-expect-error`) garantizan que el compilador siga rechazando los usos incorrectos.
 

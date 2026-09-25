@@ -28,6 +28,25 @@ export const NoResults: Story = {
   },
 }
 
+/** Navigation styled as a button: the slot's link styles must not override the button's. */
+export const LinkAction: Story = {
+  args: {
+    description: 'Nada coincide con «zapatillas» en Joyería.',
+    action: (
+      <Button as="a" href="#catalogo">
+        Quitar filtros
+      </Button>
+    ),
+  },
+  play: async ({ canvasElement }) => {
+    const link = within(canvasElement).getByRole('link', { name: 'Quitar filtros' })
+    const label = link.firstElementChild ?? link
+
+    await expect(getComputedStyle(label).color).toBe(getComputedStyle(link).color)
+    await expect(getComputedStyle(link).color).not.toBe(getComputedStyle(link).backgroundColor)
+  },
+}
+
 export const EmptyCart: Story = {
   args: {
     title: 'Tu carrito está vacío',
