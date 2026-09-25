@@ -9,6 +9,7 @@ import { beforeAll, describe, expect, it } from 'vitest'
 
 const WEB_DIR = path.resolve(import.meta.dirname, '../..')
 const PRODUCTS = 'src/modules/products'
+const CART = 'src/modules/cart'
 
 let eslint: ESLint
 
@@ -64,6 +65,31 @@ describe('architecture rules', { timeout: 30_000 }, () => {
       /framework-free/,
     ],
     [
+      'domain → store',
+      `${CART}/domain/example.ts`,
+      "import { createCartStore } from '../store/cart-store'\nexport const x = createCartStore\n",
+      /domain\/ is pure/,
+    ],
+    [
+      'store → ui',
+      // The rule is generic (modules/*/store); the imported file must exist to be resolved.
+      `${PRODUCTS}/store/example.ts`,
+      "import { ProductGrid } from '../ui/ProductGrid'\nexport const x = ProductGrid\n",
+      /store\/ holds client state/,
+    ],
+    [
+      'cart → products module',
+      `${CART}/ui/example.tsx`,
+      "import type { Product } from '@/modules/products/domain/product'\nexport type X = Product\n",
+      /cart\/ must not import the products module/,
+    ],
+    [
+      'domain → zustand',
+      `${CART}/domain/example.ts`,
+      "import { createStore } from 'zustand/vanilla'\nexport const x = createStore\n",
+      /framework-free/,
+    ],
+    [
       'application → react',
       `${PRODUCTS}/application/example.ts`,
       "import { cache } from 'react'\nexport const x = cache\n",
@@ -86,6 +112,16 @@ describe('architecture rules', { timeout: 30_000 }, () => {
       'infrastructure → domain',
       `${PRODUCTS}/infrastructure/example.ts`,
       "import { CatalogUnavailableError } from '@/modules/products/domain/errors'\nexport const x = CatalogUnavailableError\n",
+    ],
+    [
+      'store → domain (and zustand)',
+      `${CART}/store/example.ts`,
+      "import { createStore } from 'zustand/vanilla'\nimport { cartReducer } from '../domain/cart-reducer'\nexport const x = [createStore, cartReducer]\n",
+    ],
+    [
+      'ui → store',
+      `${CART}/ui/example.tsx`,
+      "import { useCartStore } from '@/modules/cart/store/hooks'\nexport const x = useCartStore\n",
     ],
     [
       'app → composition root',

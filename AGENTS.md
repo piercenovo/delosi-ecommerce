@@ -29,14 +29,14 @@ In non-interactive shells, load nvm first: `source ~/.nvm/nvm.sh && nvm use`.
 ## Architecture rules
 
 - `src/app/` only composes: routing, layouts, metadata. No business logic there.
-- Feature code lives in `src/modules/<domain>/`, split into `domain/`, `application/`, `infrastructure/` and `ui/`.
+- Feature code lives in `src/modules/<domain>/`, split into `domain/`, `application/`, `infrastructure/` and `ui/`. Client state gets a `store/` layer (the cart: Zustand + persist, ADR 0003): it may use `domain/`, and only `ui/` uses it.
 - `domain/` is pure TypeScript: no React, Next.js, `fetch` or browser APIs.
 - `application/` depends only on `domain/`. `infrastructure/` implements the ports declared in `domain/`.
 - `ui/` never imports from `infrastructure/`. Pages obtain repositories from `src/composition-root.ts`.
-- Modules do not import each other's internals; they share domain types only.
+- Modules do not import each other's internals. The cart does not import `products` at all: pages pass product data as props (`CartProduct`).
 - Next.js caching (`'use cache'`, `cacheTag`) lives in `src/composition-root.ts`, as module-level functions that decorate the repository (see ADR 0005).
 - These rules are enforced by ESLint (`import/no-restricted-paths`, `no-restricted-imports`) and verified by `src/test/architecture.test.ts`. Do not disable them; change them only with an ADR.
-- Validate every external input (API responses, search params, environment variables) with Zod at the boundary.
+- Validate every external input (API responses, search params, environment variables, `localStorage`) with Zod at the boundary.
 - Server-only modules import `server-only` (e.g. `src/shared/config/server-env.ts`).
 - Prefer Server Components. Add `'use client'` only for interactivity, as deep in the tree as possible.
 
