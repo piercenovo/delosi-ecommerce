@@ -13,6 +13,7 @@ import {
   serializeJsonLd,
 } from '@/modules/products/seo/product-json-ld'
 import { buildProductMetadata } from '@/modules/products/seo/product-metadata'
+import { AddToCartButton } from '@/modules/cart/ui/AddToCartButton'
 import { ProductDetail } from '@/modules/products/ui/ProductDetail'
 import { RelatedProducts, RelatedProductsSkeleton } from '@/modules/products/ui/RelatedProducts'
 import { serverEnv } from '@/shared/config/server-env'
@@ -55,7 +56,19 @@ export default async function ProductPage({ params }: PageProps<'/products/[id]'
       <JsonLd data={buildProductJsonLd(product, category, serverEnv.NEXT_PUBLIC_SITE_URL)} />
       <JsonLd data={buildBreadcrumbJsonLd(trail, serverEnv.NEXT_PUBLIC_SITE_URL)} />
       <Breadcrumbs items={trail} />
-      <ProductDetail product={product} />
+      <ProductDetail
+        product={product}
+        actions={
+          <AddToCartButton
+            product={{
+              id: product.id,
+              title: product.title,
+              price: product.price,
+              image: product.image,
+            }}
+          />
+        }
+      />
       <Suspense fallback={<RelatedProductsSkeleton />}>
         <Related product={product} />
       </Suspense>

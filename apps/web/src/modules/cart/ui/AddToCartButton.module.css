@@ -1,0 +1,51 @@
+.addToCart {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+}
+
+.button {
+  min-width: 14rem;
+}
+
+.labels {
+  display: inline-grid;
+}
+
+.label {
+  display: inline-flex;
+  grid-area: 1 / 1;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+/* visibility (not display): keeps the width and removes it from the accessible name. */
+.hidden {
+  visibility: hidden;
+}
+
+.check {
+  width: 1.25em;
+  height: 1.25em;
+}
+
+/* Always one line tall, empty or not: the description below never moves. */
+.helper {
+  min-height: calc(var(--text-sm) * var(--leading-normal));
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.helper a {
+  color: var(--color-primary);
+  font-weight: var(--weight-semibold);
+  text-underline-offset: 0.2em;
+}
+
+.helper a:focus-visible {
+  border-radius: var(--radius-sm);
+  outline: none;
+  box-shadow: var(--focus-ring);
+}

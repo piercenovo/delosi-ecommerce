@@ -3,6 +3,8 @@ import { Schibsted_Grotesk } from 'next/font/google'
 import type { ReactNode } from 'react'
 import '@delosi/ui/tokens.css'
 import './globals.css'
+import { CartStoreProvider } from '@/modules/cart/store/CartStoreProvider'
+import { CartBadge } from '@/modules/cart/ui/CartBadge'
 import { serverEnv } from '@/shared/config/server-env'
 import { WebVitalsReporter } from '@/shared/observability/WebVitalsReporter'
 import { SiteFooter } from '@/shared/ui/SiteFooter'
@@ -29,10 +31,13 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     <html lang="es" className={brandFont.variable}>
       <body className={styles.body}>
         <SkipLink />
-        <SiteHeader />
-        <main id={MAIN_CONTENT_ID} className={styles.main}>
-          {children}
-        </main>
+        {/* Client provider; the pages inside it stay Server Components. */}
+        <CartStoreProvider>
+          <SiteHeader actions={<CartBadge />} />
+          <main id={MAIN_CONTENT_ID} className={styles.main}>
+            {children}
+          </main>
+        </CartStoreProvider>
         <SiteFooter />
         <WebVitalsReporter />
       </body>

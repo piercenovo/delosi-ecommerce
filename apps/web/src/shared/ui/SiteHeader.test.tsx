@@ -11,4 +11,12 @@ describe('SiteHeader', () => {
     )
     expect(screen.getByRole('link')).toHaveAttribute('href', '/products')
   })
+
+  it('renders its actions slot inside the banner', () => {
+    render(<SiteHeader actions={<a href="/cart">Carrito</a>} />)
+
+    expect(screen.getByRole('banner')).toContainElement(
+      screen.getByRole('link', { name: 'Carrito' }),
+    )
+  })
 })
