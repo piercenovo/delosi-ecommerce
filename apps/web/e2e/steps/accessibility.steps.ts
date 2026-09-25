@@ -6,7 +6,11 @@ Before({ tags: '@teclado' }, async ({ $test, browserName, isMobile }) => {
   $test.skip(browserName === 'webkit' || isMobile, 'Keyboard scenarios run on desktop Chromium')
 })
 
-When('presiono Tab', async ({ page }) => {
+// A keyboard user presses Tab on a loaded page. Wait until it is interactive: the cart link
+// only gets its final name after hydration, and no request (the catalog stream) is pending.
+When('presiono Tab', async ({ page, header }) => {
+  await expect(header.cartLink).toHaveAccessibleName('Carrito vacío')
+  await page.waitForLoadState('networkidle')
   await page.keyboard.press('Tab')
 })
 
