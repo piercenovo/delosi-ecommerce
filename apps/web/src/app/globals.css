@@ -1,3 +1,15 @@
+/* App-level layout tokens (the design system's tokens come from @delosi/ui/tokens.css). */
+:root {
+  --layout-max: 80rem;
+  --layout-gutter: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --layout-gutter: var(--space-8);
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -10,4 +22,5 @@ body {
   color: var(--color-text);
   font-family: var(--font-sans);
   line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
 }

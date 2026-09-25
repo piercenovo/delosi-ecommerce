@@ -1,0 +1,30 @@
+.heading {
+  display: flex;
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-4);
+}
+
+/* The one bold typographic moment of the catalog: it changes with the active category. */
+.title {
+  margin: 0;
+  font-size: clamp(var(--text-3xl), 1.25rem + 3vw, 3.25rem);
+  font-weight: var(--weight-bold);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.count {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  font-variant-numeric: tabular-nums;
+}
+
+.titlePlaceholder {
+  width: 10ch;
+  height: 1.05em;
+}
