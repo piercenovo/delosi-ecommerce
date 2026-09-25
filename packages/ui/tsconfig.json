@@ -1,0 +1,7 @@
+{
+  "extends": "@delosi/config/tsconfig/react-library.json",
+  "compilerOptions": {
+    "types": ["vite/client", "@vitest/browser-playwright"]
+  },
+  "include": ["src", ".storybook", "vitest.config.ts", "vitest.setup.ts"]
+}

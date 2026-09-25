@@ -1,3 +1,4 @@
+import { Badge } from '@delosi/ui'
 import { Suspense } from 'react'
 import { productRepository } from '@/composition-root'
 import { getCatalog } from '@/modules/products/application/get-catalog'
@@ -21,8 +22,8 @@ async function ProductList({ searchParams }: { searchParams: Promise<RawSearchPa
   return (
     <section aria-label="Productos">
       <p>
-        {catalog.activeCategory ? `${catalog.activeCategory.name}: ` : ''}
-        {catalog.products.length} productos
+        {catalog.activeCategory ? `${catalog.activeCategory.name} ` : ''}
+        <Badge tone="primary">{catalog.products.length} productos</Badge>
       </p>
       <ul>
         {catalog.products.map((product) => (

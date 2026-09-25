@@ -5,7 +5,10 @@
     "build": {
       "dependsOn": ["^build"],
       "env": ["NEXT_PUBLIC_SITE_URL", "PRODUCTS_API_BASE_URL", "REVALIDATE_SECRET"],
-      "outputs": [".next/**", "!.next/cache/**", "storybook-static/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "build-storybook": {
+      "outputs": ["storybook-static/**"]
     },
     "dev": {
       "cache": false,
