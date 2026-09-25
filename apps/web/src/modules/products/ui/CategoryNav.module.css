@@ -1,0 +1,30 @@
+/* One scrollable row on small screens (bleeding to the edges), wrapped rows on larger ones. */
+.nav {
+  margin-inline: calc(-1 * var(--layout-gutter));
+  overflow-x: auto;
+  scrollbar-width: none;
+  /* The active chip is scrolled into view keeping the page gutter. */
+  scroll-padding-inline: var(--layout-gutter);
+}
+
+.list {
+  display: flex;
+  gap: var(--space-2);
+  width: max-content;
+  margin: 0;
+  padding: var(--space-1) var(--layout-gutter);
+  list-style: none;
+}
+
+@media (min-width: 768px) {
+  .nav {
+    margin-inline: 0;
+    overflow: visible;
+  }
+
+  .list {
+    flex-wrap: wrap;
+    width: auto;
+    padding-inline: 0;
+  }
+}

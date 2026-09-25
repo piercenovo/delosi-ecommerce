@@ -1,30 +1,58 @@
+import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { productRepository } from '@/composition-root'
 import { getCatalog } from '@/modules/products/application/get-catalog'
-import type { CatalogQuery } from '@/modules/products/domain/catalog-query'
-import { buildCatalogHref, parseCatalogQuery } from '@/modules/products/catalog-search-params'
+import { parseCatalogQuery, type RawSearchParams } from '@/modules/products/catalog-search-params'
+import { buildCatalogMetadata } from '@/modules/products/seo/catalog-metadata'
+import { CatalogControls } from '@/modules/products/ui/CatalogControls'
+import { CatalogEmptyState } from '@/modules/products/ui/CatalogEmptyState'
 import { CatalogHeading } from '@/modules/products/ui/CatalogHeading'
+import { CatalogNavigationProvider } from '@/modules/products/ui/catalog-navigation'
+import { CatalogResultsRegion } from '@/modules/products/ui/CatalogResultsRegion'
+import { CategoryNav } from '@/modules/products/ui/CategoryNav'
 import { ProductGrid } from '@/modules/products/ui/ProductGrid'
 import { CatalogSkeleton } from './CatalogSkeleton'
+import styles from './page.module.css'
 
-export default async function ProductsPage({ searchParams }: PageProps<'/products'>) {
+export async function generateMetadata({
+  searchParams,
+}: PageProps<'/products'>): Promise<Metadata> {
   const query = parseCatalogQuery(await searchParams)
+  return buildCatalogMetadata(query, await productRepository.findCategories())
+}
 
-  // A new key per query shows the skeleton again while the next result streams in.
+// The Suspense boundary has no key on purpose: on a filter change the transition keeps the
+// current results (dimmed) until the next ones arrive, and the search box keeps its focus.
+export default function ProductsPage({ searchParams }: PageProps<'/products'>) {
   return (
-    <Suspense key={buildCatalogHref(query)} fallback={<CatalogSkeleton />}>
-      <Catalog query={query} />
-    </Suspense>
+    <CatalogNavigationProvider>
+      <Suspense fallback={<CatalogSkeleton />}>
+        <Catalog searchParams={searchParams} />
+      </Suspense>
+    </CatalogNavigationProvider>
   )
 }
 
-async function Catalog({ query }: { query: CatalogQuery }) {
-  const catalog = await getCatalog(productRepository, query)
+async function Catalog({ searchParams }: { searchParams: Promise<RawSearchParams> }) {
+  const { products, categories, activeCategory, query } = await getCatalog(
+    productRepository,
+    parseCatalogQuery(await searchParams),
+  )
 
   return (
     <>
-      <CatalogHeading category={catalog.activeCategory} count={catalog.products.length} />
-      <ProductGrid products={catalog.products} />
+      <CatalogHeading category={activeCategory} count={products.length} search={query.q} />
+      <div className={styles.toolbar}>
+        <CategoryNav categories={categories} query={query} />
+        <CatalogControls query={query} />
+      </div>
+      <CatalogResultsRegion>
+        {products.length > 0 ? (
+          <ProductGrid products={products} />
+        ) : (
+          <CatalogEmptyState query={query} category={activeCategory} />
+        )}
+      </CatalogResultsRegion>
     </>
   )
 }

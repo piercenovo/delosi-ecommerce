@@ -1,0 +1,47 @@
+/* Mirrors CategoryNav (chips row) and CatalogControls (form grid) box by box. */
+.chips {
+  display: flex;
+  gap: var(--space-2);
+  padding-block: var(--space-1);
+  overflow: hidden;
+}
+
+.chip {
+  flex: none;
+  height: 2.5rem;
+  border-radius: var(--radius-pill);
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-2);
+}
+
+.search,
+.sort,
+.button {
+  height: var(--target-min);
+}
+
+.search {
+  grid-column: 1 / -1;
+}
+
+.sort {
+  width: 12rem;
+}
+
+.button {
+  width: 5.5rem;
+}
+
+@media (min-width: 640px) {
+  .controls {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .search {
+    grid-column: auto;
+  }
+}
