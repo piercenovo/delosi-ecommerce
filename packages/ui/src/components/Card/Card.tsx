@@ -13,8 +13,16 @@ export interface CardMediaProps extends ComponentPropsWithRef<'div'> {
   ratio?: CardMediaRatio
 }
 
-function CardMedia({ ratio = 'square', className, ...props }: CardMediaProps) {
-  return <div data-card-media className={cx(styles.media, styles[ratio], className)} {...props} />
+/**
+ * The image goes inside an absolutely positioned frame, so it never sizes the box. The frame
+ * also works with `next/image` `fill`, whose inline `inset: 0` would otherwise ignore padding.
+ */
+function CardMedia({ ratio = 'square', className, children, ...props }: CardMediaProps) {
+  return (
+    <div data-card-media className={cx(styles.media, styles[ratio], className)} {...props}>
+      <div className={styles.frame}>{children}</div>
+    </div>
+  )
 }
 
 function CardBody({ className, ...props }: ComponentPropsWithRef<'div'>) {

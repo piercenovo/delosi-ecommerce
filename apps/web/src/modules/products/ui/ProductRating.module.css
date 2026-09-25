@@ -1,0 +1,21 @@
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.star {
+  width: 1em;
+  height: 1em;
+  fill: var(--color-primary);
+}
+
+.rate {
+  font-weight: var(--weight-semibold);
+}
+
+.count {
+  color: var(--color-text-muted);
+}

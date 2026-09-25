@@ -1,0 +1,23 @@
+.footer {
+  margin-top: var(--space-12);
+  border-top: var(--border-width) solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.inner {
+  max-width: var(--layout-max);
+  margin: 0 auto;
+  padding: var(--space-8) var(--layout-gutter);
+}
+
+.link {
+  color: inherit;
+  text-underline-offset: 0.2em;
+}
+
+.link:focus-visible {
+  border-radius: var(--radius-sm);
+  outline: none;
+  box-shadow: var(--focus-ring);
+}

@@ -1,37 +1,30 @@
-import { Badge } from '@delosi/ui'
 import { Suspense } from 'react'
 import { productRepository } from '@/composition-root'
 import { getCatalog } from '@/modules/products/application/get-catalog'
-import { parseCatalogQuery, type RawSearchParams } from '@/modules/products/catalog-search-params'
+import type { CatalogQuery } from '@/modules/products/domain/catalog-query'
+import { buildCatalogHref, parseCatalogQuery } from '@/modules/products/catalog-search-params'
+import { CatalogHeading } from '@/modules/products/ui/CatalogHeading'
+import { ProductGrid } from '@/modules/products/ui/ProductGrid'
+import { CatalogSkeleton } from './CatalogSkeleton'
 
-// Provisional catalog view: the final UI (filters, grid, skeletons) arrives in Plan 4.
-export default function ProductsPage({ searchParams }: PageProps<'/products'>) {
+export default async function ProductsPage({ searchParams }: PageProps<'/products'>) {
+  const query = parseCatalogQuery(await searchParams)
+
+  // A new key per query shows the skeleton again while the next result streams in.
   return (
-    <main>
-      <h1>Catálogo</h1>
-      <Suspense fallback={<p>Cargando productos…</p>}>
-        <ProductList searchParams={searchParams} />
-      </Suspense>
-    </main>
+    <Suspense key={buildCatalogHref(query)} fallback={<CatalogSkeleton />}>
+      <Catalog query={query} />
+    </Suspense>
   )
 }
 
-async function ProductList({ searchParams }: { searchParams: Promise<RawSearchParams> }) {
-  const catalog = await getCatalog(productRepository, parseCatalogQuery(await searchParams))
+async function Catalog({ query }: { query: CatalogQuery }) {
+  const catalog = await getCatalog(productRepository, query)
 
   return (
-    <section aria-label="Productos">
-      <p>
-        {catalog.activeCategory ? `${catalog.activeCategory.name} ` : ''}
-        <Badge tone="primary">{catalog.products.length} productos</Badge>
-      </p>
-      <ul>
-        {catalog.products.map((product) => (
-          <li key={product.id}>
-            {product.title} · ${product.price}
-          </li>
-        ))}
-      </ul>
-    </section>
+    <>
+      <CatalogHeading category={catalog.activeCategory} count={catalog.products.length} />
+      <ProductGrid products={catalog.products} />
+    </>
   )
 }

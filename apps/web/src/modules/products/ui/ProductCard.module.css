@@ -1,0 +1,37 @@
+/* Shared with ProductGridSkeleton: both measure the same, so swapping them causes no shift. */
+.card {
+  height: 100%;
+}
+
+.title {
+  /* Two lines at most, and always two lines tall so prices align across a row. */
+  display: -webkit-box;
+  min-height: calc(2em * var(--leading-snug));
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--text-sm) * var(--leading-normal));
+  font-size: var(--text-sm);
+}
+
+.price {
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--text-lg) * var(--leading-tight));
+  margin-top: auto;
+  font-size: var(--text-lg);
+}
+
+.ratingPlaceholder {
+  width: 5em;
+}
+
+.pricePlaceholder {
+  width: 6em;
+}
