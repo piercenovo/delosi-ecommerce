@@ -1,0 +1,33 @@
+.link {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: var(--target-min);
+  height: var(--target-min);
+  border-radius: var(--radius-pill);
+  color: var(--color-text);
+  transition: background-color var(--duration-fast) var(--easing-standard);
+}
+
+.link:hover {
+  background: var(--color-surface-muted);
+}
+
+.link:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Over the icon's corner, out of the flow: it never changes the header's layout. */
+.count {
+  position: absolute;
+  top: 0;
+  right: -0.125rem;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 0 0 2px var(--color-bg);
+}

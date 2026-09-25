@@ -40,7 +40,7 @@ function CardTitle({ as: Heading = 'h3', className, ...props }: CardTitleProps) 
 interface CardLinkOwnProps<E extends ElementType> {
   /** `'a'` by default; pass a router link such as `next/link`. */
   as?: E
-  className?: string
+  className?: string | undefined
   children: ReactNode
 }
 

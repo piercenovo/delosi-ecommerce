@@ -13,7 +13,7 @@ interface ButtonOwnProps<E extends ElementType> {
   fullWidth?: boolean
   /** Disables the button and shows a spinner while keeping its width and accessible name. */
   loading?: boolean
-  className?: string
+  className?: string | undefined
   children: ReactNode
 }
 

@@ -7,7 +7,7 @@ interface ChipOwnProps<E extends ElementType> {
   as?: E
   /** Pressed state for a button, "current page" for a link. */
   selected?: boolean
-  className?: string
+  className?: string | undefined
   children: ReactNode
 }
 

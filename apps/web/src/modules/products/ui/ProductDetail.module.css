@@ -54,10 +54,13 @@
   margin-top: var(--space-2);
 }
 
-/* Room for the add-to-cart button (Plan 5), so it does not push the description down. */
+/*
+ * Room for the purchase actions (large button + one helper line), also used by the loading
+ * skeleton, so the description below never moves.
+ */
 .actions {
   display: flex;
-  min-height: 3.25rem;
+  min-height: calc(3.25rem + var(--space-2) + var(--text-sm) * var(--leading-normal));
   gap: var(--space-3);
 }
 
