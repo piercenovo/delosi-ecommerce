@@ -16,17 +16,17 @@ Es un **paquete interno sin paso de build**: exporta el código fuente (`.tsx` y
 
 ## Componentes
 
-| Componente   | Para qué                                                                                               |
-| ------------ | ------------------------------------------------------------------------------------------------------ |
-| `Button`     | Acciones (`primary`, `secondary`, `ghost`), con estado `loading`                                       |
-| `IconButton` | Acción solo con ícono; `aria-label` obligatorio por tipo                                               |
-| `Badge`      | Etiquetas y contadores; `label` para dar contexto a lectores de pantalla                               |
-| `Chip`       | Filtros; polimórfico (`as={Link}`), con `aria-pressed` o `aria-current`                                |
-| `Input`      | Campo de texto con `label` obligatorio, descripción y error accesibles                                 |
-| `Select`     | `<select>` nativo con estilos del sistema                                                              |
-| `Card`       | Tarjeta compuesta (`Media`, `Body`, `Title`, `Link`, `Footer`) con caja de imagen fija y link estirado |
-| `Skeleton`   | Placeholders de carga (`text`, `rect`, `circle`)                                                       |
-| `EmptyState` | Estados vacíos con acción siguiente                                                                    |
+| Componente   | Para qué                                                                                                 |
+| ------------ | -------------------------------------------------------------------------------------------------------- |
+| `Button`     | Acciones (`primary`, `secondary`, `ghost`), con estado `loading`; polimórfico (`as={Link}`) para navegar |
+| `IconButton` | Acción solo con ícono; `aria-label` obligatorio por tipo                                                 |
+| `Badge`      | Etiquetas y contadores; `label` para dar contexto a lectores de pantalla                                 |
+| `Chip`       | Filtros; polimórfico (`as={Link}`), con `aria-pressed` o `aria-current`                                  |
+| `Input`      | Campo de texto con `label` obligatorio, descripción y error accesibles                                   |
+| `Select`     | `<select>` nativo con estilos del sistema                                                                |
+| `Card`       | Tarjeta compuesta (`Media`, `Body`, `Title`, `Link`, `Footer`) con caja de imagen fija y link estirado   |
+| `Skeleton`   | Placeholders de carga (`text`, `rect`, `circle`)                                                         |
+| `EmptyState` | Estados vacíos con acción siguiente                                                                      |
 
 ## Comandos
 

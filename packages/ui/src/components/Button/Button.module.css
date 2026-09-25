@@ -12,6 +12,7 @@
   font-size: var(--text-base);
   font-weight: var(--weight-semibold);
   line-height: var(--leading-tight);
+  text-decoration: none;
   cursor: pointer;
   transition:
     background-color var(--duration-fast) var(--easing-standard),

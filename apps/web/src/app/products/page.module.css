@@ -1,0 +1,12 @@
+.toolbar {
+  display: grid;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+@media (min-width: 1024px) {
+  .toolbar {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 34rem);
+    align-items: center;
+  }
+}

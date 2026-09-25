@@ -1,0 +1,9 @@
+.region {
+  transition: opacity var(--duration-base) var(--easing-standard);
+}
+
+/* Delayed, so fast (cached) navigations never flicker. */
+.region[data-pending] {
+  opacity: 0.55;
+  transition-delay: 150ms;
+}

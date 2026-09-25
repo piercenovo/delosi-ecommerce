@@ -23,6 +23,12 @@ describe('CatalogHeading', () => {
     expect(screen.getByRole('status')).toHaveTextContent('1 producto')
   })
 
+  it('includes the search in the same status message', () => {
+    render(<CatalogHeading category={null} count={3} search="gold" />)
+
+    expect(screen.getByRole('status')).toHaveTextContent('3 productos para «gold»')
+  })
+
   it('has a placeholder hidden from assistive technology', () => {
     const { container } = render(<CatalogHeadingSkeleton />)
 
