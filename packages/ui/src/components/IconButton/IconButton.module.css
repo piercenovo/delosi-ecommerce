@@ -43,6 +43,29 @@
   color: var(--color-primary);
 }
 
+.floating {
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.floating:hover:not(:disabled, [aria-disabled='true']) {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.highlight {
+  background: var(--color-highlight);
+  color: var(--color-on-highlight);
+}
+
+.highlight:hover:not(:disabled, [aria-disabled='true']) {
+  background: var(--color-highlight-hover);
+}
+
+.circle {
+  border-radius: var(--radius-pill);
+}
+
 .icon {
   display: inline-flex;
 }

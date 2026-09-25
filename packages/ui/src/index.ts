@@ -14,6 +14,7 @@ export { EmptyState, type EmptyStateProps } from './components/EmptyState'
 export {
   IconButton,
   type IconButtonProps,
+  type IconButtonShape,
   type IconButtonSize,
   type IconButtonVariant,
 } from './components/IconButton'

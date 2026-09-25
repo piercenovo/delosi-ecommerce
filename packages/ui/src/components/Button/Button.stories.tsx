@@ -7,7 +7,7 @@ const meta = {
   component: Button,
   args: { children: 'Agregar al carrito', onClick: fn() },
   argTypes: {
-    variant: { control: 'inline-radio', options: ['primary', 'secondary', 'ghost'] },
+    variant: { control: 'inline-radio', options: ['primary', 'secondary', 'ghost', 'highlight'] },
     size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
   },
 } satisfies Meta<typeof Button>
@@ -32,6 +32,11 @@ export const Secondary: Story = {
 
 export const Ghost: Story = {
   args: { variant: 'ghost', children: 'Limpiar filtros' },
+}
+
+/** Maracuyá for a moment of value: the store shows it for two seconds after adding. */
+export const Highlight: Story = {
+  args: { variant: 'highlight', children: 'Agregado' },
 }
 
 export const Sizes: Story = {

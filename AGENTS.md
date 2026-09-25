@@ -51,6 +51,7 @@ Architecture overview: `docs/architecture.md`; testing strategy: `docs/testing-s
 
 - TypeScript strict mode (plus `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`). `any` is forbidden; use `unknown` and narrow.
 - Styling: CSS Modules and design tokens (CSS custom properties from `@delosi/ui/tokens.css`). No inline styles and no hard-coded colors or spacing.
+- The app never overrides a design system component's styles (no doubled classes or specificity tricks): a new look is a variant in `@delosi/ui`, with a story. That keeps Storybook identical to the store.
 - Design system components: only what the store uses; props extend the native element props (`ComponentPropsWithRef<'button'>`) and merge `className` with `cx`. See `packages/ui/README.md` for the checklist to add one.
 - Code, identifiers and commit messages in English. UI copy, README, ADRs and Gherkin features in Spanish.
 - Conventional Commits (enforced by commitlint). Do not add `Co-Authored-By` trailers.

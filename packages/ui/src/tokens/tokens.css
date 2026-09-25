@@ -26,6 +26,7 @@
   /* Behind product photos: a lavender tint of the brand, so the photos read as ours. */
   --color-media: #f1eaf8;
   --color-highlight: #f5c84c;
+  --color-highlight-hover: #ebb82f;
   --color-on-highlight: #1d1b22;
   --color-danger: #b42318;
   --color-success: #1f7a4d;

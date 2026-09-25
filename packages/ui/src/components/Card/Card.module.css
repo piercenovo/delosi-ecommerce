@@ -121,6 +121,10 @@
   padding: var(--space-3) 0 0;
 }
 
+.plain .footer {
+  padding: var(--space-3) 0 0;
+}
+
 /* The hover answer moves to the photo: a slight zoom (none with reduced motion). */
 .plain .frame > img {
   transition: transform var(--duration-base) var(--easing-standard);

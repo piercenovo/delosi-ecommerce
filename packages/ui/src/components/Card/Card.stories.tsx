@@ -139,6 +139,10 @@ export const Plain: Story = {
     const style = getComputedStyle(card!)
 
     await expect(style.borderTopColor).toBe('rgba(0, 0, 0, 0)')
+    // Without the outlined padding, the footer action lines up with the text above it.
+    const title = within(card!).getByRole('heading').getBoundingClientRect()
+    const action = within(card!).getByRole('button').getBoundingClientRect()
+    await expect(action.left).toBe(title.left)
     await expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)')
     await expect(
       within(card!).getByRole('link', {

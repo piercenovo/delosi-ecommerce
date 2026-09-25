@@ -1,4 +1,6 @@
 import type { Preview } from '@storybook/react-vite'
+// The store's brand face, self-hosted (the app loads the same family with next/font).
+import '@fontsource-variable/schibsted-grotesk'
 import '../src/tokens/tokens.css'
 import './preview.css'
 

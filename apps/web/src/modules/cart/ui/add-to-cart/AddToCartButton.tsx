@@ -17,10 +17,11 @@ export function AddToCartButton({ product }: { product: CartProduct }) {
   return (
     <div className={styles.addToCart}>
       <Button
+        variant={justAdded ? 'highlight' : 'primary'}
         size="lg"
         onClick={addToCart}
         disabled={unavailable}
-        className={cx(styles.button, justAdded && styles.added)}
+        className={styles.button}
       >
         {/* Both labels share one grid cell: the button keeps the width of the longer one.
             aria-hidden keeps the accessible name right without relying on CSS. */}
