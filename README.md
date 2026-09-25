@@ -25,14 +25,14 @@ La app queda disponible en http://localhost:3000.
 
 ## Scripts
 
-| Comando                             | Descripción                               |
-| ----------------------------------- | ----------------------------------------- |
-| `pnpm dev`                          | Servidor de desarrollo                    |
-| `pnpm build`                        | Build de producción de todos los paquetes |
-| `pnpm lint`                         | ESLint                                    |
-| `pnpm typecheck`                    | Verificación de tipos                     |
-| `pnpm test`                         | Tests unitarios y de integración          |
-| `pnpm format` / `pnpm format:check` | Prettier                                  |
+| Comando                             | Descripción                                     |
+| ----------------------------------- | ----------------------------------------------- |
+| `pnpm dev`                          | Servidor de desarrollo                          |
+| `pnpm build`                        | Build de producción de todos los paquetes       |
+| `pnpm lint`                         | ESLint                                          |
+| `pnpm typecheck`                    | Verificación de tipos                           |
+| `pnpm test`                         | Tests unitarios y de integración, con cobertura |
+| `pnpm format` / `pnpm format:check` | Prettier                                        |
 
 ## Fuente de datos
 
@@ -74,5 +74,8 @@ docs/adr          Registro de decisiones de arquitectura
 ## Decisiones de arquitectura
 
 - [ADR 0001: Monorepo con pnpm workspaces y Turborepo](docs/adr/0001-monorepo-turborepo.md)
+- [ADR 0002: Arquitectura por módulos de dominio y capas](docs/adr/0002-arquitectura-por-modulos.md)
+- [ADR 0004: Estado del catálogo en la URL con APIs nativas](docs/adr/0004-estado-en-url.md)
+- [ADR 0005: Caché del catálogo y revalidación bajo demanda](docs/adr/0005-cache-y-revalidacion.md)
 - [ADR 0009: Política de dependencias y entorno de ejecución](docs/adr/0009-politica-de-dependencias.md)
 - [ADR 0010: Snapshot versionado como respaldo de FakeStore](docs/adr/0010-snapshot-de-respaldo.md)
