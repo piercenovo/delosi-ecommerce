@@ -17,18 +17,48 @@ const architectureRules = {
         zones: [
           {
             target: layer('domain'),
-            from: [layer('application'), layer('infrastructure'), layer('store'), layer('ui')],
+            from: [
+              layer('application'),
+              layer('infrastructure'),
+              layer('store'),
+              layer('ui'),
+              layer('seo'),
+              layer('url'),
+            ],
             message: 'domain/ is pure: it must not depend on other layers.',
           },
           {
             target: layer('application'),
-            from: [layer('infrastructure'), layer('store'), layer('ui')],
+            from: [
+              layer('infrastructure'),
+              layer('store'),
+              layer('ui'),
+              layer('seo'),
+              layer('url'),
+            ],
             message: 'application/ depends only on domain/ (receive adapters as parameters).',
           },
           {
             target: layer('ui'),
             from: [layer('infrastructure')],
             message: 'ui/ must not use infrastructure/ directly; pages inject what it needs.',
+          },
+          {
+            target: layer('url'),
+            from: [
+              layer('application'),
+              layer('infrastructure'),
+              layer('store'),
+              layer('ui'),
+              layer('seo'),
+            ],
+            message: 'url/ maps the URL to the domain query: it depends only on domain/.',
+          },
+          {
+            target: layer('seo'),
+            from: [layer('application'), layer('infrastructure'), layer('store'), layer('ui')],
+            message:
+              'seo/ builds metadata from domain data the page already loaded: domain/ and url/ only.',
           },
           {
             target: layer('store'),
@@ -58,7 +88,11 @@ const architectureRules = {
 }
 
 const frameworkFreeLayers = {
-  files: ['src/modules/*/domain/**/*.{ts,tsx}', 'src/modules/*/application/**/*.{ts,tsx}'],
+  files: [
+    'src/modules/*/domain/**/*.{ts,tsx}',
+    'src/modules/*/application/**/*.{ts,tsx}',
+    'src/modules/*/url/**/*.{ts,tsx}',
+  ],
   ignores: ['**/*.test.{ts,tsx}'],
   rules: {
     'no-restricted-imports': [
@@ -66,12 +100,12 @@ const frameworkFreeLayers = {
       {
         paths: ['react', 'react-dom', 'next', 'zustand'].map((name) => ({
           name,
-          message: 'domain/ and application/ must stay framework-free.',
+          message: 'domain/, application/ and url/ must stay framework-free.',
         })),
         patterns: [
           {
             group: ['next/*', 'react-dom/*', 'zustand/*'],
-            message: 'domain/ and application/ must stay framework-free.',
+            message: 'domain/, application/ and url/ must stay framework-free.',
           },
         ],
       },

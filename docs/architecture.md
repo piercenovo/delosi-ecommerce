@@ -23,33 +23,56 @@ Cada dominio vive en `src/modules/<dominio>/` con capas hexagonales. `src/app/` 
 
 ```mermaid
 flowchart TB
-  subgraph app["src/app (rutas)"]
+  subgraph app["src/app (rutas): solo compone"]
     pages["page.tsx / layout.tsx"]
   end
   root["composition-root.ts<br/>adaptadores + 'use cache'"]
   subgraph products["modules/products"]
-    pui["ui/"] --> papp["application/"] --> pdom["domain/"]
-    pinf["infrastructure/"] --> pdom
+    direction TB
+    subgraph pin["adaptadores de entrada"]
+      pui["ui/"]
+      purl["url/<br/>search params"]
+      pseo["seo/<br/>metadata, JSON-LD"]
+    end
+    subgraph pcore["núcleo"]
+      papp["application/<br/>casos de uso"] --> pdom["domain/<br/>reglas y puertos"]
+    end
+    subgraph pout["adaptador de salida"]
+      pinf["infrastructure/<br/>FakeStore, snapshot"]
+    end
+    pui --> purl
+    pseo --> purl
+    purl --> pdom
+    pui --> pdom
+    pseo --> pdom
+    pinf -. implementa el puerto .-> pdom
   end
   subgraph cart["modules/cart"]
+    direction TB
     cui["ui/"] --> cstore["store/<br/>Zustand"] --> cdom["domain/<br/>reducer puro"]
   end
-  pages --> root --> pinf
   pages --> pui
   pages --> papp
+  pages --> pseo
+  pages --> purl
   pages --> cui
+  pages --> root --> pinf
 ```
+
+Las carpetas de un módulo son hermanas, pero las capas no son equivalentes: `domain/` y `application/` forman el **núcleo**; `ui/`, `url/` y `seo/` son **adaptadores de entrada** (traducen el navegador, la URL y los crawlers hacia el núcleo); `infrastructure/` es el **adaptador de salida** (implementa el puerto `ProductRepository`). Las dependencias solo apuntan hacia el núcleo.
 
 Las reglas las hace cumplir ESLint (`import/no-restricted-paths` y `no-restricted-imports`) y las verifica [`architecture.test.ts`](../apps/web/src/test/architecture.test.ts): si alguien apaga una regla, ese test falla.
 
-| Regla                                                                    | Por qué                                                                              |
-| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| `domain/` no importa ninguna otra capa, ni React, Next o Zustand         | La lógica de negocio se testea sin framework y sobrevive a un cambio de framework    |
-| `application/` solo usa `domain/` y recibe los adaptadores por parámetro | Los casos de uso se testean con un repositorio en memoria                            |
-| `ui/` no usa `infrastructure/`                                           | Los componentes no saben de dónde vienen los datos                                   |
-| `store/` no usa `ui/`                                                    | El estado del cliente no depende de cómo se muestra                                  |
-| `cart` no importa `products`                                             | El carrito recibe `CartProduct` por props; la página compone ambos módulos con slots |
-| Los módulos no importan `src/app` ni `composition-root.ts`               | Solo la raíz de composición conoce las implementaciones concretas                    |
+| Regla                                                                    | Por qué                                                                                |
+| ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| `domain/` no importa ninguna otra capa, ni React, Next o Zustand         | La lógica de negocio se testea sin framework y sobrevive a un cambio de framework      |
+| `application/` solo usa `domain/` y recibe los adaptadores por parámetro | Los casos de uso se testean con un repositorio en memoria                              |
+| `ui/` no usa `infrastructure/`                                           | Los componentes no saben de dónde vienen los datos                                     |
+| `url/` solo usa `domain/`, sin framework                                 | La conversión URL ↔ consulta se testea sola y la comparten `ui/`, `seo/` y las páginas |
+| `seo/` solo usa `domain/` y `url/`                                       | La metadata se arma con datos que la página ya tiene: no pide datos ni renderiza       |
+| `store/` no usa `ui/`                                                    | El estado del cliente no depende de cómo se muestra                                    |
+| `cart` no importa `products`                                             | El carrito recibe `CartProduct` por props; la página compone ambos módulos con slots   |
+| Los módulos no importan `src/app` ni `composition-root.ts`               | Solo la raíz de composición conoce las implementaciones concretas                      |
 
 **Composición por slots:** `ProductCard` y `ProductDetail` exponen `action`/`actions` y `ProductGrid` expone `renderAction`. La página inserta ahí los botones del carrito y convierte el producto con `toCartProduct`, el único punto donde los dos módulos se tocan.
 

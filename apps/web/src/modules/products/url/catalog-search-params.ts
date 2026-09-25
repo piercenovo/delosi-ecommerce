@@ -3,7 +3,7 @@
  * Shared by server and client code: no Next.js dependencies.
  */
 import { z } from 'zod'
-import { SORT_KEYS, type CatalogQuery } from './domain/catalog-query'
+import { SORT_KEYS, type CatalogQuery } from '../domain/catalog-query'
 
 const MAX_SEARCH_LENGTH = 100
 const CATALOG_PATH = '/products'

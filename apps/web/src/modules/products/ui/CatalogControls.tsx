@@ -3,7 +3,11 @@
 import { Input, Select, type SelectOption } from '@delosi/ui'
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import a11y from '@/shared/ui/a11y.module.css'
-import { buildCatalogHref, parseCatalogQuery, type RawSearchParams } from '../catalog-search-params'
+import {
+  buildCatalogHref,
+  parseCatalogQuery,
+  type RawSearchParams,
+} from '../url/catalog-search-params'
 import type { CatalogQuery, SortKey } from '../domain/catalog-query'
 import styles from './CatalogControls.module.css'
 import { useCatalogNavigation } from './catalog-navigation'

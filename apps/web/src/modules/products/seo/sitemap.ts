@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { buildCatalogHref } from '../catalog-search-params'
+import { buildCatalogHref } from '../url/catalog-search-params'
 import type { Category, Product } from '../domain/product'
 
 /**

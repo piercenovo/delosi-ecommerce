@@ -11,7 +11,7 @@ El reto exige que los filtros persistan en la URL (search params), que el estado
 
 Manejar el estado en la URL sin librerías, con las APIs de la plataforma y Zod:
 
-- `modules/products/catalog-search-params.ts`, compartido entre servidor y cliente y sin dependencias de Next:
+- `modules/products/url/catalog-search-params.ts`, compartido entre servidor y cliente y sin dependencias de Next:
   - `parseCatalogQuery` valida con Zod y descarta cada parámetro inválido por separado. Nunca lanza un error, así que una URL rota no rompe la página.
   - `buildCatalogHref` arma los links con `URLSearchParams`, con un orden estable (`category`, `q`, `sort`) para no generar URLs duplicadas del mismo estado.
 - Una categoría inexistente se ignora en el caso de uso.

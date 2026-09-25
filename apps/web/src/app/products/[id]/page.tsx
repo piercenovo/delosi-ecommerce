@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { productRepository } from '@/composition-root'
 import { getProductDetail } from '@/modules/products/application/get-product-detail'
 import { getRelatedProducts } from '@/modules/products/application/get-related-products'
-import { buildCatalogHref } from '@/modules/products/catalog-search-params'
+import { buildCatalogHref } from '@/modules/products/url/catalog-search-params'
 import { ProductNotFoundError } from '@/modules/products/domain/errors'
 import { parseProductId, type Category, type Product } from '@/modules/products/domain/product'
 import {
