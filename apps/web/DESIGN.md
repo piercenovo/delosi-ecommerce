@@ -261,6 +261,7 @@ Firmes y amables: color sólido, esquinas suaves y un objetivo táctil de 44px c
 - **Shadow Strategy:** ninguna (ver Elevation & Depth).
 - **Border:** ninguno.
 - **Interacción:** todo el cuadro es el enlace (enlace estirado). En hover la foto hace un zoom leve (1.04) que se desactiva con movimiento reducido. El agregado rápido va en la esquina superior derecha de la foto.
+- **Entre páginas:** al abrir un producto, su foto viaja de la tarjeta al lugar que ocupa en el detalle (350ms, `--duration-slow`). Es lo único que se mueve: el resto de la página cambia al instante y el header se queda quieto. Con movimiento reducido no hay animación.
 
 ### Inputs / Fields
 

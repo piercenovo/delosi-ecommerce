@@ -75,6 +75,8 @@
   --target-min: 2.75rem;
   --duration-fast: 120ms;
   --duration-base: 200ms;
+  /* Movement across the page (the product photo morphing between pages). */
+  --duration-slow: 350ms;
   --duration-shimmer: 1.4s;
   --easing-standard: cubic-bezier(0.2, 0, 0, 1);
 
@@ -133,6 +135,7 @@
   :root {
     --duration-fast: 0ms;
     --duration-base: 0ms;
+    --duration-slow: 0ms;
     --duration-shimmer: 0ms;
   }
 }
