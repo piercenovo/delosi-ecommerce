@@ -3,8 +3,9 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderWithCart, saveCart } from '@/test/render-with-cart'
 import { MAX_QUANTITY, type CartProduct } from '../domain/cart'
-import { ADDED_FEEDBACK_MS, AddToCartButton } from './AddToCartButton'
+import { AddToCartButton } from './AddToCartButton'
 import { CartBadge } from './CartBadge'
+import { ADDED_FEEDBACK_MS } from './use-add-to-cart'
 
 const product: CartProduct = {
   id: 5,
