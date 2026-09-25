@@ -1,0 +1,52 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    ignore:
+      # Not supported yet by typescript-eslint (requires typescript <6.1.0)
+      - dependency-name: typescript
+        versions: ['>=6.1.0']
+      # eslint-plugin-react (via eslint-config-next) crashes on ESLint 10
+      - dependency-name: eslint
+        versions: ['>=10.0.0']
+    groups:
+      next-react:
+        patterns:
+          ['next', 'react', 'react-dom', '@types/react', '@types/react-dom', 'eslint-config-next']
+      testing:
+        patterns:
+          [
+            'vitest',
+            'vite',
+            '@vitest/*',
+            '@vitejs/*',
+            '@testing-library/*',
+            'jsdom',
+            'msw',
+            '@playwright/test',
+            'playwright-bdd',
+            '@axe-core/*',
+            '@lhci/*',
+          ]
+      storybook:
+        patterns: ['storybook', '@storybook/*']
+      lint-format:
+        patterns:
+          [
+            'eslint',
+            '@eslint/*',
+            'typescript-eslint',
+            'eslint-*',
+            'prettier',
+            '@commitlint/*',
+            'husky',
+            'lint-staged',
+          ]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

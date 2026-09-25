@@ -1,0 +1,9 @@
+name: Setup
+description: Install pnpm (from packageManager), Node.js (from .nvmrc) and dependencies with a frozen lockfile.
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/setup@v3
+      with:
+        cache: true
+        require-lockfile: true
