@@ -79,11 +79,18 @@ const frameworkFreeLayers = {
   },
 }
 
+// Playwright fixtures receive a callback named `use`; it is not React's `use` hook.
+const e2eOverrides = {
+  files: ['e2e/**/*.ts'],
+  rules: { 'react-hooks/rules-of-hooks': 'off' },
+}
+
 export default defineConfig([
   ...nextVitals,
   ...nextTs,
   ...delosiBase,
   architectureRules,
   frameworkFreeLayers,
+  e2eOverrides,
   globalIgnores(['.next/**', 'out/**', 'coverage/**', 'next-env.d.ts']),
 ])

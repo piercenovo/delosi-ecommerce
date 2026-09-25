@@ -37,6 +37,8 @@ La app queda disponible en http://localhost:3000.
 | `pnpm test`                          | Tests unitarios y de integración, con cobertura              |
 | `pnpm format` / `pnpm format:check`  | Prettier                                                     |
 
+Los E2E corren contra el build de producción con un **mock de FakeStore** (`apps/web/e2e/mock-server.ts`), así que no usan red y los datos son siempre los del snapshot. Playwright levanta el mock y dos instancias de la app: una con la API sana y otra con la API caída, para los escenarios de error. La primera vez hay que descargar los navegadores: `pnpm --filter @delosi/web exec playwright install chromium webkit`.
+
 ## Fuente de datos
 
 El catálogo viene de la FakeStore API. FakeStore está detrás de un desafío de Cloudflare que **bloquea las IPs de datacenter** (GitHub Actions, Vercel), por lo que la app usa un **snapshot versionado como respaldo** detrás del mismo puerto `ProductRepository` ([ADR 0010](docs/adr/0010-snapshot-de-respaldo.md)):

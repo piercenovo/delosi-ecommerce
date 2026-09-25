@@ -1,5 +1,10 @@
 name: Playwright browsers
-description: Install Chromium for Playwright (browser tests), cached by Playwright version.
+description: Install Playwright browsers and their system dependencies, cached by Playwright version and browser list.
+inputs:
+  browsers:
+    description: Space-separated browsers to install (e.g. "chromium webkit").
+    required: false
+    default: chromium
 runs:
   using: composite
   steps:
@@ -12,12 +17,12 @@ runs:
       uses: actions/cache@v6
       with:
         path: ~/.cache/ms-playwright
-        key: playwright-${{ runner.os }}-${{ steps.version.outputs.version }}
-    - name: Install Chromium and system dependencies
+        key: playwright-${{ runner.os }}-${{ steps.version.outputs.version }}-${{ inputs.browsers }}
+    - name: Install browsers and system dependencies
       if: steps.cache.outputs.cache-hit != 'true'
       shell: bash
-      run: pnpm --filter @delosi/ui exec playwright install --with-deps chromium
+      run: pnpm --filter @delosi/ui exec playwright install --with-deps ${{ inputs.browsers }}
     - name: Install system dependencies only
       if: steps.cache.outputs.cache-hit == 'true'
       shell: bash
-      run: pnpm --filter @delosi/ui exec playwright install-deps chromium
+      run: pnpm --filter @delosi/ui exec playwright install-deps ${{ inputs.browsers }}
