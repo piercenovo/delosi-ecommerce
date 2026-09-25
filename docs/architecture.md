@@ -23,27 +23,43 @@ Cada dominio vive en `src/modules/<dominio>/` con capas hexagonales. `src/app/` 
 
 ```mermaid
 flowchart TB
-  subgraph app["src/app (rutas)"]
+  subgraph app["src/app (rutas): solo compone"]
     pages["page.tsx / layout.tsx"]
   end
   root["composition-root.ts<br/>adaptadores + 'use cache'"]
   subgraph products["modules/products"]
-    pui["ui/"] --> papp["application/"] --> pdom["domain/"]
-    pinf["infrastructure/"] --> pdom
-    purl["url/<br/>search params"] --> pdom
-    pseo["seo/<br/>metadata, JSON-LD"] --> purl
-    pseo --> pdom
+    direction TB
+    subgraph pin["adaptadores de entrada"]
+      pui["ui/"]
+      purl["url/<br/>search params"]
+      pseo["seo/<br/>metadata, JSON-LD"]
+    end
+    subgraph pcore["núcleo"]
+      papp["application/<br/>casos de uso"] --> pdom["domain/<br/>reglas y puertos"]
+    end
+    subgraph pout["adaptador de salida"]
+      pinf["infrastructure/<br/>FakeStore, snapshot"]
+    end
     pui --> purl
+    pseo --> purl
+    purl --> pdom
+    pui --> pdom
+    pseo --> pdom
+    pinf -. implementa el puerto .-> pdom
   end
   subgraph cart["modules/cart"]
+    direction TB
     cui["ui/"] --> cstore["store/<br/>Zustand"] --> cdom["domain/<br/>reducer puro"]
   end
-  pages --> root --> pinf
   pages --> pui
   pages --> papp
   pages --> pseo
+  pages --> purl
   pages --> cui
+  pages --> root --> pinf
 ```
+
+Las carpetas de un módulo son hermanas, pero las capas no son equivalentes: `domain/` y `application/` forman el **núcleo**; `ui/`, `url/` y `seo/` son **adaptadores de entrada** (traducen el navegador, la URL y los crawlers hacia el núcleo); `infrastructure/` es el **adaptador de salida** (implementa el puerto `ProductRepository`). Las dependencias solo apuntan hacia el núcleo.
 
 Las reglas las hace cumplir ESLint (`import/no-restricted-paths` y `no-restricted-imports`) y las verifica [`architecture.test.ts`](../apps/web/src/test/architecture.test.ts): si alguien apaga una regla, ese test falla.
 

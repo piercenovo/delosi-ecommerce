@@ -9,16 +9,26 @@ El reto evalúa una estructura orientada al dominio que permita que varias perso
 
 ## Decisión
 
-El código de negocio vive en `apps/web/src/modules/<dominio>/`, dividido en capas (arquitectura hexagonal, puertos y adaptadores):
+El código de negocio vive en `apps/web/src/modules/<dominio>/`, dividido en capas (arquitectura hexagonal, puertos y adaptadores). Las carpetas son hermanas, pero **las capas no son equivalentes**: se ordenan en anillos, y las dependencias solo apuntan hacia el núcleo.
 
-| Capa              | Contenido                                                                                                  | Puede depender de                        |
-| ----------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| `domain/`         | Tipos, reglas puras (filtro, búsqueda, orden), errores y puertos (`ProductRepository`)                     | Nada más del proyecto; sin React ni Next |
-| `application/`    | Casos de uso (`getCatalog`, `getProductDetail`, `getRelatedProducts`) que reciben el puerto como parámetro | `domain/`                                |
-| `infrastructure/` | Adaptadores: FakeStore, snapshot, fallback, tags de caché, revalidación                                    | `domain/`                                |
-| `ui/`             | Componentes del módulo                                                                                     | `domain/` (tipos), `url/`, `@delosi/ui`  |
-| `url/`            | Adaptador de entrada: search params ↔ `CatalogQuery` (`parseCatalogQuery`, `buildCatalogHref`), con Zod    | `domain/`; sin React ni Next             |
-| `seo/`            | Metadata, JSON-LD y sitemap a partir de datos de dominio que la página ya obtuvo                           | `domain/`, `url/`, tipos de `next`       |
+```
+entrada   ui/   url/   seo/   ──────────────► domain/   (y ui/ → url/, seo/ → url/)
+núcleo    application/ ─────────────────────► domain/   reglas y puertos
+salida    infrastructure/ ── implementa ────► domain/   ProductRepository
+carrito   ui/ ──► store/ ───────────────────► domain/   reducer puro
+```
+
+| Anillo                  | Capa               | Contenido                                                                                                  | Puede depender de                                           |
+| ----------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| Núcleo                  | `domain/`          | Tipos, reglas puras (filtro, búsqueda, orden), errores y puertos (`ProductRepository`)                     | Nada más del proyecto; sin React ni Next                    |
+| Núcleo                  | `application/`     | Casos de uso (`getCatalog`, `getProductDetail`, `getRelatedProducts`) que reciben el puerto como parámetro | `domain/`                                                   |
+| Entrada                 | `ui/`              | Componentes del módulo                                                                                     | `domain/` (tipos), `url/`, `store/` (carrito), `@delosi/ui` |
+| Entrada                 | `url/`             | Search params ↔ `CatalogQuery` (`parseCatalogQuery`, `buildCatalogHref`), con Zod                          | `domain/`; sin React ni Next                                |
+| Entrada                 | `seo/`             | Metadata, JSON-LD y sitemap a partir de datos de dominio que la página ya obtuvo                           | `domain/`, `url/`, tipos de `next`                          |
+| Entre el núcleo y `ui/` | `store/` (carrito) | Estado del cliente: Zustand + persist sobre el reducer puro ([ADR 0003](0003-estado-del-carrito.md))       | `domain/`                                                   |
+| Salida                  | `infrastructure/`  | Adaptadores: FakeStore, snapshot, fallback, tags de caché, revalidación                                    | `domain/`                                                   |
+
+Los adaptadores de entrada traducen del mundo exterior (el navegador, la URL, los crawlers) hacia el núcleo; el de salida implementa los puertos que declara el núcleo. Lo que define el anillo no es la carpeta sino la dirección de las dependencias, y esa la hacen cumplir las reglas de ESLint de abajo.
 
 Además:
 
