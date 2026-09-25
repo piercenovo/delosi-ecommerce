@@ -1,0 +1,70 @@
+.breadcrumbs {
+  margin-bottom: var(--space-6);
+  font-size: var(--text-sm);
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The separator is decoration: CSS content with empty alt text, never read aloud. */
+.item {
+  display: flex;
+  align-items: center;
+  /* Lets the last (long) item shrink and ellipsize instead of overflowing the page. */
+  min-width: 0;
+  max-width: 100%;
+}
+
+.item + .item::before {
+  content: '/' / '';
+  margin-inline: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  text-underline-offset: 0.2em;
+}
+
+.link:hover {
+  color: var(--color-text);
+}
+
+.link:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.current {
+  max-width: 40ch;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*
+ * On small screens the current page (already the h1 right below) is hidden visually, so the
+ * trail stays on one line and matches the loading skeleton. Screen readers still read it.
+ */
+@media (max-width: 767px) {
+  .item:last-child:not(:first-child) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}

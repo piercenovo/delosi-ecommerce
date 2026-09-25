@@ -24,4 +24,19 @@ describe('ProductGrid', () => {
     expect(PRIORITY_IMAGE_COUNT).toBe(4)
     expect(eager).toEqual(['Product 1', 'Product 2', 'Product 3', 'Product 4'])
   })
+
+  it('can skip priority images and nest card titles under a section heading', () => {
+    render(
+      <ProductGrid
+        products={products}
+        label="Productos relacionados"
+        priorityCount={0}
+        headingLevel="h3"
+      />,
+    )
+
+    expect(screen.getByRole('list', { name: 'Productos relacionados' })).toBeVisible()
+    expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(6)
+    expect(document.querySelector('img[fetchpriority="high"]')).toBeNull()
+  })
 })

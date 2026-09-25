@@ -1,0 +1,18 @@
+.breadcrumbs {
+  width: 16rem;
+  height: 1.5rem;
+}
+
+.title {
+  font-size: clamp(var(--text-2xl), 1rem + 2vw, 2.5rem);
+}
+
+.short {
+  width: 8rem;
+}
+
+.price {
+  width: 10rem;
+  height: var(--text-3xl);
+  margin-top: var(--space-2);
+}

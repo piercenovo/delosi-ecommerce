@@ -1,0 +1,80 @@
+/* Shared with ProductDetailSkeleton: both measure the same. */
+.detail {
+  display: grid;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+}
+
+/* After the base .media rule: same specificity, so the later declaration wins. */
+@media (min-width: 768px) {
+  .detail {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-12);
+  }
+
+  /* The image stays in view while a long description scrolls. */
+  .media {
+    position: sticky;
+    top: calc(4rem + var(--space-6));
+  }
+}
+
+.frame {
+  position: absolute;
+  inset: var(--space-8);
+}
+
+.image {
+  object-fit: contain;
+}
+
+.info {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(var(--text-2xl), 1rem + 2vw, 2.5rem);
+  font-weight: var(--weight-bold);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.price {
+  margin-top: var(--space-2);
+}
+
+/* Room for the add-to-cart button (Plan 5), so it does not push the description down. */
+.actions {
+  display: flex;
+  min-height: 3.25rem;
+  gap: var(--space-3);
+}
+
+.description {
+  padding-top: var(--space-6);
+  border-top: var(--border-width) solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.descriptionTitle {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+}
+
+.description p {
+  max-width: 65ch;
+  margin: 0;
+}
