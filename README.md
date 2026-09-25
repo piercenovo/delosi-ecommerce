@@ -27,7 +27,7 @@ Tienda e-commerce construida con **Next.js 16 (App Router)** sobre la [FakeStore
 | Performance                      | PPR con Cache Components, imágenes externas de FakeStore optimizadas con `next/image` (AVIF/WebP, `remotePatterns` acotado, lazy loading salvo las 4 candidatas a LCP), fuente self-hosted, sin CLS. Lighthouse desktop: 100 en todas las categorías; mobile (4G lento): 88–97 de rendimiento | [`lighthouse.ts`](apps/web/scripts/lighthouse.ts), job "Lighthouse budgets" en CI                                                                                       |
 | Arquitectura                     | Módulos por dominio con capas hexagonales, reglas de dependencias en ESLint verificadas por un test, raíz de composición única                                                                                                                                                                | [`docs/architecture.md`](docs/architecture.md), [ADR 0002](docs/adr/0002-arquitectura-por-modulos.md), [`architecture.test.ts`](apps/web/src/test/architecture.test.ts) |
 | Estrategia de estado del carrito | Zustand + selectores (predictibilidad y re-renders mínimos), un store por Provider (seguro en SSR), `localStorage` validado con Zod; alternativas comparadas                                                                                                                                  | [ADR 0003](docs/adr/0003-estado-del-carrito.md)                                                                                                                         |
-| Testing                          | 412 tests unitarios y de integración (~98 % de cobertura en la app, 95 % mínimo en dominio), stories como tests con axe, 26 escenarios BDD en español en 3 navegadores                                                                                                                        | [`docs/testing-strategy.md`](docs/testing-strategy.md), [ADR 0007](docs/adr/0007-estrategia-de-testing.md)                                                              |
+| Testing                          | 424 tests unitarios y de integración (~98 % de cobertura en la app, 95 % mínimo en dominio), stories como tests con axe, 29 escenarios BDD en español en 3 navegadores                                                                                                                        | [`docs/testing-strategy.md`](docs/testing-strategy.md), [ADR 0007](docs/adr/0007-estrategia-de-testing.md)                                                              |
 
 ### Extras sugeridos
 
@@ -40,6 +40,8 @@ Tienda e-commerce construida con **Next.js 16 (App Router)** sobre la [FakeStore
 ### Extras propios
 
 - **Design System** (`@delosi/ui`) con tokens, modo oscuro, Storybook publicado y cada story como test de accesibilidad ([ADR 0006](docs/adr/0006-design-system-css-modules.md)).
+- **Rediseño con identidad propia:** la dirección visual está en [`PRODUCT.md`](apps/web/PRODUCT.md) (para quién es la tienda y qué no se puede cambiar) y [`DESIGN.md`](apps/web/DESIGN.md) (tokens, reglas y componentes). La app nunca sobreescribe estilos del Design System: cada aspecto nuevo es una variante con su story.
+- **Transición entre páginas:** al abrir un producto, su foto viaja de la tarjeta al detalle con `<ViewTransition>` de React; sin animación con movimiento reducido.
 - **Accesibilidad WCAG 2.2 AA** verificada con axe en componentes, en E2E y en Lighthouse (100); skip link, foco gestionado y anuncios con `aria-live`.
 - **SEO técnico:** JSON-LD de `Product` y `BreadcrumbList`, `sitemap.xml`, `robots.txt` y metadata completa para crawlers ([ADR 0011](docs/adr/0011-metadata-del-catalogo.md)).
 - **Observabilidad:** errores del servidor y del navegador, y Web Vitals reales, en JSON estructurado ([ADR 0008](docs/adr/0008-observabilidad-sin-proveedor.md)).
@@ -202,7 +204,7 @@ Desarrollé este proyecto con **Claude Code** (Anthropic) como asistente de prog
 
 **Cómo lo verifiqué:**
 
-- Todo pasa por CI: tipos estrictos, ESLint con reglas de arquitectura, 412 tests con umbrales de cobertura, E2E en tres navegadores y presupuestos de Lighthouse.
+- Todo pasa por CI: tipos estrictos, ESLint con reglas de arquitectura, 424 tests con umbrales de cobertura, E2E en tres navegadores y presupuestos de Lighthouse.
 - Revisé la UI manualmente en el navegador y cada PR de UI pasó axe (tema claro y oscuro) sobre la página real. Problemas que detecté en esa revisión, como el contraste de "Quitar filtros" o el botón "Buscar" redundante, se corrigieron con un test que los reproducía primero.
 - En desarrollo local revisé la consola: por ejemplo, un aviso de hidratación causado por una extensión del navegador que modifica el `<body>`.
 - Cada decisión relevante tiene un ADR con alternativas, que puedo defender en la revisión de código.
