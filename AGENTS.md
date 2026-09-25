@@ -8,20 +8,21 @@ E-commerce storefront built with the Next.js App Router on top of the FakeStore 
 (Delosi Frontend Senior technical challenge). pnpm + Turborepo monorepo:
 
 - `apps/web`: Next.js storefront (`@delosi/web`)
-- `packages/ui`: design system (`@delosi/ui`), CSS Modules + Storybook (added in a later phase)
+- `packages/ui`: design system (`@delosi/ui`), CSS Modules + Storybook. Internal package without a build step: apps compile its sources (`transpilePackages`)
 - `packages/config`: shared tsconfig and ESLint presets (`@delosi/config`)
 
 ## Commands (run from the repository root)
 
-| Task                     | Command                   |
-| ------------------------ | ------------------------- |
-| Install                  | `nvm use && pnpm install` |
-| Dev server               | `pnpm dev`                |
-| Lint                     | `pnpm lint`               |
-| Type check               | `pnpm typecheck`          |
-| Unit + integration tests | `pnpm test`               |
-| Production build         | `pnpm build`              |
-| Format                   | `pnpm format`             |
+| Task                     | Command                                                       |
+| ------------------------ | ------------------------------------------------------------- |
+| Install                  | `nvm use && pnpm install`                                     |
+| Dev server               | `pnpm dev`                                                    |
+| Lint                     | `pnpm lint`                                                   |
+| Type check               | `pnpm typecheck`                                              |
+| Unit + integration tests | `pnpm test`                                                   |
+| Production build         | `pnpm build`                                                  |
+| Storybook (dev / build)  | `pnpm --filter @delosi/ui storybook` / `pnpm build-storybook` |
+| Format                   | `pnpm format`                                                 |
 
 In non-interactive shells, load nvm first: `source ~/.nvm/nvm.sh && nvm use`.
 
@@ -42,7 +43,8 @@ In non-interactive shells, load nvm first: `source ~/.nvm/nvm.sh && nvm use`.
 ## Conventions
 
 - TypeScript strict mode (plus `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes`). `any` is forbidden; use `unknown` and narrow.
-- Styling: CSS Modules and design tokens (CSS custom properties). No inline styles.
+- Styling: CSS Modules and design tokens (CSS custom properties from `@delosi/ui/tokens.css`). No inline styles and no hard-coded colors or spacing.
+- Design system components: only what the store uses; props extend the native element props (`ComponentPropsWithRef<'button'>`) and merge `className` with `cx`. See `packages/ui/README.md` for the checklist to add one.
 - Code, identifiers and commit messages in English. UI copy, README, ADRs and Gherkin features in Spanish.
 - Conventional Commits (enforced by commitlint). Do not add `Co-Authored-By` trailers.
 - Dependencies are pinned to exact versions. Pass a full version when pinning a major (`pnpm add -E eslint@9.39.5`); a range such as `eslint@9` is saved with `^`. Only `peerDependencies` of shared packages use ranges.
@@ -59,6 +61,8 @@ In non-interactive shells, load nvm first: `source ~/.nvm/nvm.sh && nvm use`.
 - Query elements by role and accessible name, not by class names or test ids.
 - Reuse the fakes in `src/test/` (`inMemoryProductRepository`, `makeProduct`, `setupMswServer`).
 - `pnpm test` runs with coverage; thresholds: 80% global, 95% for `domain/`. Routes and the composition root are covered by E2E tests.
+- In `packages/ui` every story is a test (`src/test/stories.test.tsx`): it runs in Chromium (Vitest browser mode), executes its `play` function and must pass axe (WCAG 2.2 AA) in light and dark themes. Add a story for each relevant state. Install Chromium once with `pnpm --filter @delosi/ui exec playwright install chromium`.
+- APIs that prevent accessibility mistakes get type tests with `@ts-expect-error`.
 
 ## Definition of done
 
