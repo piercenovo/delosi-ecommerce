@@ -12,6 +12,9 @@ updates:
       # eslint-plugin-react (via eslint-config-next) crashes on ESLint 10
       - dependency-name: eslint
         versions: ['>=10.0.0']
+      # Node.js types must match the runtime major (Node 24, see .nvmrc)
+      - dependency-name: '@types/node'
+        versions: ['>=25.0.0']
     groups:
       next-react:
         patterns:
