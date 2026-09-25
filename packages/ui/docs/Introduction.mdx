@@ -1,0 +1,32 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Introducción" />
+
+# Delosi UI
+
+Componentes de la tienda Delosi Store: accesibles, livianos y construidos solo con tokens de diseño y CSS Modules.
+
+## Principios
+
+- **Solo entra lo que la tienda usa.** Un componente se agrega al Design System cuando al menos una pantalla lo necesita. Nada de componentes "por si acaso".
+- **Accesible por defecto.** HTML semántico, foco visible, navegación por teclado y contraste AA en tema claro y oscuro. Las APIs impiden errores comunes: `IconButton` no compila sin `aria-label` e `Input` exige un `label`.
+- **Tokens, no valores sueltos.** Los componentes solo usan las variables de `tokens.css`. Cambiar la marca o el tema es cambiar tokens.
+- **Sin layout shift.** Las cajas de imagen tienen proporción fija y los skeletons miden lo mismo que el contenido real.
+- **Respeta la preferencia de movimiento.** Con `prefers-reduced-motion`, las animaciones se detienen.
+
+## Cómo se prueba
+
+Cada story es un test: se ejecuta en Chromium (Vitest browser mode), corre su función `play` y pasa axe con las reglas WCAG 2.2 AA en tema claro y oscuro. Agregar una story agrega su test.
+
+## Uso
+
+```tsx
+import '@delosi/ui/tokens.css'
+import { Button } from '@delosi/ui'
+
+export function AddToCart() {
+  return <Button onClick={addItem}>Agregar al carrito</Button>
+}
+```
+
+`@delosi/ui` es un paquete interno sin paso de build: la app lo compila directamente (en Next.js, con `transpilePackages`).

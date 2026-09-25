@@ -1,0 +1,176 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { TokenSwatch } from './TokenSwatch'
+
+<Meta title="Tokens" />
+
+# Tokens de diseño
+
+Definidos en `src/tokens/tokens.css` como CSS custom properties. El tema oscuro se aplica con `prefers-color-scheme: dark` o forzándolo con `data-theme="dark"` en `<html>`.
+
+## Color
+
+Valores de ambos temas y el contraste del par en que se usa cada token, calculado con la fórmula de WCAG 2.2. El texto requiere 4.5:1 (AA) y los bordes de controles 3:1.
+
+<table>
+  <thead>
+    <tr>
+      <th>Token</th>
+      <th>Uso</th>
+      <th>Tema claro</th>
+      <th>Tema oscuro</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>--color-text</code>
+      </td>
+      <td>
+        Texto principal sobre <code>--color-bg</code>
+      </td>
+      <td>
+        <TokenSwatch color="#1d1b22" contrast="17.04" />
+      </td>
+      <td>
+        <TokenSwatch color="#f2eff6" contrast="16.00" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--color-text-muted</code>
+      </td>
+      <td>
+        Texto secundario sobre <code>--color-bg</code>
+      </td>
+      <td>
+        <TokenSwatch color="#5e5a66" contrast="6.71" />
+      </td>
+      <td>
+        <TokenSwatch color="#b6afc0" contrast="8.57" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--color-primary</code>
+      </td>
+      <td>
+        Acento ("chicha morada"): acciones y links sobre <code>--color-bg</code>
+      </td>
+      <td>
+        <TokenSwatch color="#5b2a86" contrast="9.90" />
+      </td>
+      <td>
+        <TokenSwatch color="#c9a2ea" contrast="8.53" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--color-on-primary</code>
+      </td>
+      <td>
+        Texto sobre <code>--color-primary</code>
+      </td>
+      <td>
+        <TokenSwatch color="#ffffff" contrast="9.90" />
+      </td>
+      <td>
+        <TokenSwatch color="#1d1b22" contrast="7.99" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--color-highlight</code>
+      </td>
+      <td>
+        Contador del carrito ("maracuyá") con <code>--color-on-highlight</code>
+      </td>
+      <td>
+        <TokenSwatch color="#f5c84c" contrast="10.75" />
+      </td>
+      <td>
+        <TokenSwatch color="#f5c84c" contrast="10.75" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--color-danger</code>
+      </td>
+      <td>
+        Errores sobre <code>--color-bg</code>
+      </td>
+      <td>
+        <TokenSwatch color="#b42318" contrast="6.57" />
+      </td>
+      <td>
+        <TokenSwatch color="#f97066" contrast="6.54" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--color-success</code>
+      </td>
+      <td>
+        Confirmaciones sobre <code>--color-bg</code>
+      </td>
+      <td>
+        <TokenSwatch color="#1f7a4d" contrast="5.32" />
+      </td>
+      <td>
+        <TokenSwatch color="#5fd39a" contrast="9.77" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--color-border-strong</code>
+      </td>
+      <td>
+        Borde de controles sobre <code>--color-bg</code>
+      </td>
+      <td>
+        <TokenSwatch color="#8f889a" contrast="3.41" />
+      </td>
+      <td>
+        <TokenSwatch color="#6f6879" contrast="3.41" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--color-bg</code>
+      </td>
+      <td>Fondo de la página</td>
+      <td>
+        <TokenSwatch color="#ffffff" />
+      </td>
+      <td>
+        <TokenSwatch color="#17141c" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--color-surface-muted</code>
+      </td>
+      <td>Fondos de imágenes y skeletons</td>
+      <td>
+        <TokenSwatch color="#f4f2f7" />
+      </td>
+      <td>
+        <TokenSwatch color="#2a2532" />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Espaciado
+
+Escala de 4 px: `--space-1` (0.25rem) · `--space-2` (0.5rem) · `--space-3` (0.75rem) · `--space-4` (1rem) · `--space-5` (1.25rem) · `--space-6` (1.5rem) · `--space-8` (2rem) · `--space-10` (2.5rem) · `--space-12` (3rem).
+
+## Tipografía
+
+Una sola familia (`--font-sans`); la app define `--font-brand` con `next/font`. Tamaños de `--text-xs` (0.75rem) a `--text-3xl` (2rem), pesos de 400 a 700 y _line-heights_ `--leading-tight` (1.2), `--leading-snug` (1.35) y `--leading-normal` (1.5).
+
+## Forma e interacción
+
+- Radios según jerarquía: `--radius-sm` (controles), `--radius-md` (tarjetas), `--radius-pill` (chips y badges).
+- `--focus-ring`: anillo de foco de 2 px con separación, visible en ambos temas.
+- `--target-min`: 44 px, área táctil mínima de los controles.
+- `--duration-fast` y `--duration-base`, que pasan a 0 con `prefers-reduced-motion`.

@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["vite/client", "@vitest/browser-playwright"]
   },
-  "include": ["src", ".storybook", "vitest.config.ts", "vitest.setup.ts"]
+  "include": ["src", "docs", ".storybook", "vitest.config.ts", "vitest.setup.ts"]
 }
