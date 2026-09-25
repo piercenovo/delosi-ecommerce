@@ -13,6 +13,9 @@ minimumReleaseAge: 1440
 # Install scripts are blocked unless a package is explicitly allowed here.
 # strictDepBuilds (default true) makes `pnpm install` fail on unreviewed scripts.
 allowBuilds:
+  # Its postinstall only validates/optimizes the native binary or downloads it when the
+  # platform optional dependency is missing; esbuild works without it. Reviewed: not needed.
+  esbuild: false
   # Its postinstall only copies the browser service worker when package.json sets
   # msw.workerDirectory; we only use msw/node in tests. Reviewed: not needed.
   msw: false
