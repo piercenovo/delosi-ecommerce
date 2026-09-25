@@ -11,6 +11,19 @@ Característica: Detalle de producto
     Entonces el título de la página es "Mens Cotton Jacket"
     Y la ruta de navegación muestra "Catálogo" y "Ropa de hombre"
 
+  @transiciones
+  Escenario: La foto del producto viaja de la tarjeta al detalle
+    Dado que abro el catálogo
+    Cuando abro el producto "Mens Cotton Jacket"
+    Entonces la foto del producto viaja de la tarjeta al detalle
+
+  @transiciones
+  Escenario: Sin animación para quien prefiere reducir el movimiento
+    Dado que prefiero reducir el movimiento
+    Y que abro el catálogo
+    Cuando abro el producto "Mens Cotton Jacket"
+    Entonces la página cambia sin animar la foto
+
   Escenario: Metadatos para buscadores y redes sociales
     Cuando abro la página "/products/5"
     Entonces el título del documento empieza con "John Hardy Women's Legends Naga"

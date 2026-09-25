@@ -24,3 +24,52 @@ body {
   line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
 }
+
+/*
+ * View transitions between pages (React <ViewTransition>, run by Next's navigations).
+ * The product photo morphs from its card to the detail page and back; the rest of the page
+ * keeps the browser's default crossfade.
+ */
+::view-transition-group(.product-image) {
+  animation-duration: var(--duration-slow);
+  animation-timing-function: var(--easing-standard);
+}
+
+/*
+ * The page itself swaps instantly (React does not animate the root). Other product photos on
+ * the old page are named too, in case one of them pairs with the new page; the ones that do
+ * not (they have no partner, so they are the only child) leave at once instead of fading
+ * over the new page.
+ */
+::view-transition-old(*):only-child {
+  animation: none;
+  opacity: 0;
+}
+
+/* The header (named in SiteHeader.tsx) never moves: the photo travels under it. */
+::view-transition-group(site-header) {
+  z-index: 1;
+  animation: none;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* Clicks during the animation reach the new page instead of the overlay. */
+::view-transition {
+  pointer-events: none;
+}
+
+/* Reduced motion: pages swap instantly, as without view transitions. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

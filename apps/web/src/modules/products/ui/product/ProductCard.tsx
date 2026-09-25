@@ -1,9 +1,13 @@
 import { Card } from '@delosi/ui'
 import Image from 'next/image'
 import Link from 'next/link'
-import type { ReactNode } from 'react'
+import { ViewTransition, type ReactNode } from 'react'
 import type { Product } from '../../domain/product'
 import styles from './ProductCard.module.css'
+import {
+  PRODUCT_IMAGE_TRANSITION_CLASS,
+  productImageTransitionName,
+} from './product-image-transition'
 import { ProductPrice } from './ProductPrice'
 import { ProductRating } from './ProductRating'
 
@@ -31,15 +35,25 @@ export function ProductCard({
 }: ProductCardProps) {
   return (
     <Card className={styles.card}>
-      <Card.Media>
-        <Image
-          src={product.image}
-          alt={product.title}
-          fill
-          sizes={PRODUCT_CARD_IMAGE_SIZES}
-          {...(highPriority ? { loading: 'eager', fetchPriority: 'high' } : {})}
-        />
-      </Card.Media>
+      {/* Morphs into the detail page's photo (and back). `default="none"`: no animation on
+          unrelated transitions, like filtering the catalog. */}
+      <ViewTransition
+        name={productImageTransitionName(product.id)}
+        share={PRODUCT_IMAGE_TRANSITION_CLASS}
+        enter="none"
+        exit="none"
+        default="none"
+      >
+        <Card.Media>
+          <Image
+            src={product.image}
+            alt={product.title}
+            fill
+            sizes={PRODUCT_CARD_IMAGE_SIZES}
+            {...(highPriority ? { loading: 'eager', fetchPriority: 'high' } : {})}
+          />
+        </Card.Media>
+      </ViewTransition>
       <Card.Body>
         <Card.Title as={headingLevel} className={styles.title}>
           <Card.Link as={Link} href={`/products/${product.id}`}>

@@ -260,4 +260,4 @@ Una sola familia (`--font-sans`); la app define `--font-brand` con `next/font`. 
 - Radios según jerarquía: `--radius-sm` (controles), `--radius-md` (tarjetas), `--radius-pill` (chips y badges).
 - `--focus-ring`: anillo de foco de 2 px con separación, visible en ambos temas.
 - `--target-min`: 44 px, área táctil mínima de los controles.
-- `--duration-fast` y `--duration-base`, que pasan a 0 con `prefers-reduced-motion`.
+- `--duration-fast` (120 ms) y `--duration-base` (200 ms) para cambios de estado, y `--duration-slow` (350 ms) para movimientos a lo largo de la página, como la foto que viaja de la tarjeta al detalle. Los tres pasan a 0 con `prefers-reduced-motion`.

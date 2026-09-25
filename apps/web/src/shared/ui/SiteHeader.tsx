@@ -15,7 +15,9 @@ interface SiteHeaderProps {
  */
 export function SiteHeader({ actions }: SiteHeaderProps) {
   return (
-    <header className={styles.header}>
+    // Its own layer in page transitions: it stays put while the content changes (globals.css).
+    // Inline, because CSS Modules would rename a view-transition-name declared in the module.
+    <header className={styles.header} style={{ viewTransitionName: 'site-header' }}>
       <div className={styles.inner}>
         <Link href="/products" className={styles.brand}>
           <BrandMark className={styles.mark} />
