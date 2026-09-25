@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { clientErrorReporter } from '@/shared/observability/client-reporters'
+import { clientErrorReporter } from '@/shared/observability/client/client-reporters'
 import { ErrorView } from './ErrorView'
 
-vi.mock('@/shared/observability/client-reporters', () => ({
+vi.mock('@/shared/observability/client/client-reporters', () => ({
   clientErrorReporter: { capture: vi.fn() },
 }))
 

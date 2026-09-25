@@ -1,9 +1,9 @@
 // @vitest-environment node
 import { describe, expect, it, vi } from 'vitest'
 import { onRequestError } from './instrumentation'
-import { errorReporter } from './shared/observability/reporters'
+import { errorReporter } from './shared/observability/server/reporters'
 
-vi.mock('./shared/observability/reporters', () => ({ errorReporter: { capture: vi.fn() } }))
+vi.mock('./shared/observability/server/reporters', () => ({ errorReporter: { capture: vi.fn() } }))
 
 const request = { path: '/products?q=gold', method: 'GET', headers: {} }
 const context = {

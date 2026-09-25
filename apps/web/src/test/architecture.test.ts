@@ -31,7 +31,7 @@ describe('architecture rules', { timeout: 30_000 }, () => {
     [
       'domain → infrastructure (relative path)',
       `${PRODUCTS}/domain/example.ts`,
-      "import { UpstreamHttpError } from '../infrastructure/fakestore-client'\nexport const x = UpstreamHttpError\n",
+      "import { UpstreamHttpError } from '../infrastructure/fakestore/fakestore-client'\nexport const x = UpstreamHttpError\n",
       /domain\/ is pure/,
     ],
     [
@@ -43,13 +43,13 @@ describe('architecture rules', { timeout: 30_000 }, () => {
     [
       'application → infrastructure',
       `${PRODUCTS}/application/example.ts`,
-      "import { CATALOG_CACHE_TAGS } from '../infrastructure/cache-tags'\nexport const x = CATALOG_CACHE_TAGS\n",
+      "import { CATALOG_CACHE_TAGS } from '../infrastructure/cache/cache-tags'\nexport const x = CATALOG_CACHE_TAGS\n",
       /application\/ depends only on domain/,
     ],
     [
       'ui → infrastructure',
       `${PRODUCTS}/ui/example.tsx`,
-      "import { CATALOG_CACHE_TAGS } from '@/modules/products/infrastructure/cache-tags'\nexport const x = CATALOG_CACHE_TAGS\n",
+      "import { CATALOG_CACHE_TAGS } from '@/modules/products/infrastructure/cache/cache-tags'\nexport const x = CATALOG_CACHE_TAGS\n",
       /ui\/ must not use infrastructure/,
     ],
     [
@@ -74,7 +74,7 @@ describe('architecture rules', { timeout: 30_000 }, () => {
       'store → ui',
       // The rule is generic (modules/*/store); the imported file must exist to be resolved.
       `${PRODUCTS}/store/example.ts`,
-      "import { ProductGrid } from '../ui/ProductGrid'\nexport const x = ProductGrid\n",
+      "import { ProductGrid } from '../ui/product/ProductGrid'\nexport const x = ProductGrid\n",
       /store\/ holds client state/,
     ],
     [
@@ -98,7 +98,7 @@ describe('architecture rules', { timeout: 30_000 }, () => {
     [
       'url → ui',
       `${PRODUCTS}/url/example.ts`,
-      "import { ProductGrid } from '../ui/ProductGrid'\nexport const x = ProductGrid\n",
+      "import { ProductGrid } from '../ui/product/ProductGrid'\nexport const x = ProductGrid\n",
       /url\/ maps the URL to the domain/,
     ],
     [
@@ -110,7 +110,7 @@ describe('architecture rules', { timeout: 30_000 }, () => {
     [
       'seo → infrastructure',
       `${PRODUCTS}/seo/example.ts`,
-      "import { CATALOG_CACHE_TAGS } from '../infrastructure/cache-tags'\nexport const x = CATALOG_CACHE_TAGS\n",
+      "import { CATALOG_CACHE_TAGS } from '../infrastructure/cache/cache-tags'\nexport const x = CATALOG_CACHE_TAGS\n",
       /seo\/ builds metadata from domain data/,
     ],
     [

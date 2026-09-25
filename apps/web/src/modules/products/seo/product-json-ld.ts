@@ -56,11 +56,3 @@ export function buildBreadcrumbJsonLd(items: readonly BreadcrumbItem[], siteUrl:
     })),
   }
 }
-
-/**
- * JSON for a `<script type="application/ld+json">`. Escaping `<` keeps data such as
- * "</script>" from closing the tag and injecting HTML; JSON parsers read `<` back as `<`.
- */
-export function serializeJsonLd(data: JsonLd): string {
-  return JSON.stringify(data).replace(/</g, '\\u003c')
-}

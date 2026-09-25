@@ -1,5 +1,5 @@
 import { revalidateTag } from 'next/cache'
-import { handleRevalidateRequest } from '@/modules/products/infrastructure/revalidate-request'
+import { handleRevalidateRequest } from '@/modules/products/infrastructure/cache/revalidate-request'
 import { serverEnv } from '@/shared/config/server-env'
 
 export function POST(request: Request) {
