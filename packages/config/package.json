@@ -1,0 +1,21 @@
+{
+  "name": "@delosi/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/nextjs.json": "./tsconfig/nextjs.json",
+    "./tsconfig/react-library.json": "./tsconfig/react-library.json",
+    "./eslint/base": "./eslint/base.mjs"
+  },
+  "dependencies": {
+    "eslint-config-prettier": "10.1.8"
+  },
+  "peerDependencies": {
+    "eslint": "^9.0.0"
+  },
+  "devDependencies": {
+    "eslint": "9.39.5"
+  }
+}
